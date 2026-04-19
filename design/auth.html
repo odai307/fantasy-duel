@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>FantasyDuel GH | Obsidian Gold Elite Auth</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#ffd37b",
+                        "inverse-primary": "#7a5900",
+                        "on-primary": "#402d00",
+                        "on-secondary-fixed": "#002204",
+                        "on-secondary-fixed-variant": "#005312",
+                        "on-background": "#e4e2e1",
+                        "inverse-surface": "#e4e2e1",
+                        "surface-tint": "#f3be4d",
+                        "surface-container-low": "#111111",
+                        "on-surface": "#f5f5f5",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#121212",
+                        "on-primary-container": "#634700",
+                        "secondary-fixed": "#a3f69c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "primary-container": "#e9b544",
+                        "surface-container-lowest": "#080808",
+                        "primary-fixed": "#ffdea3",
+                        "on-secondary-container": "#81d27c",
+                        "surface-bright": "#222222",
+                        "surface-variant": "#282828",
+                        "on-tertiary": "#2f3131",
+                        "outline": "#5f5e5b",
+                        "tertiary-container": "#bcbdbd",
+                        "background": "#0a0a0a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#5c4200",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-fixed-dim": "#88d982",
+                        "surface-container-highest": "#1c1c1c",
+                        "surface": "#0a0a0a",
+                        "error-container": "#93000a",
+                        "surface-container": "#151515",
+                        "primary-fixed-dim": "#f3be4d",
+                        "on-secondary": "#003909",
+                        "outline-variant": "#3a3834",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary-container": "#005b14",
+                        "on-tertiary-container": "#4a4c4d",
+                        "on-error": "#690005",
+                        "secondary": "#88d982",
+                        "surface-dim": "#0a0a0a",
+                        "on-surface-variant": "#a0a0a0",
+                        "surface-container-high": "#181818",
+                        "tertiary": "#d8d9d9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #ffd37b 0%, #e9b544 50%, #c69c3a 100%);
+        }
+
+        .obsidian-panel {
+            background: rgba(21, 21, 21, 0.95);
+            border: 1px solid rgba(255, 211, 123, 0.1);
+        }
+
+        .input-focus-gold:focus {
+            border-color: #ffd37b;
+            box-shadow: 0 0 0 1px rgba(255, 211, 123, 0.2);
+            background-color: #1a1a1a;
+        }
+
+        .button-glow:hover {
+            box-shadow: 0 0 20px rgba(255, 211, 123, 0.3);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary min-h-screen flex items-center justify-center p-4 lg:p-0">
+    <!-- Background Ambience -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-48 -left-48 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-0 right-0 w-full h-1/2 bg-gradient-to-t from-primary/5 to-transparent"></div>
+    </div>
+    <!-- Main Auth Canvas -->
+    <main
+        class="relative z-10 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 obsidian-panel rounded-xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.8)] border border-outline-variant/10">
+        <!-- Branding Side -->
+        <div class="hidden lg:flex flex-col justify-between p-12 relative overflow-hidden bg-surface-container-lowest">
+            <div class="absolute inset-0 z-0">
+                <img class="w-full h-full object-cover opacity-20 grayscale brightness-50"
+                    data-alt="Cinematic shot of a modern football stadium at night under bright floodlights with a slight hazy atmosphere"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuByt6bqMdh_A--zbwE-BNWPgWjPbD30_WqbH3VLXc3BswfOO0JusyGCiztDT7iMz0g7qu9eAROxQk6Qg9PnILZJdgTUgMsyC3iyhnv15EMOE_-IPql2xW1l860FWzoIEqM4ZUTXis7vhn4xQdJyI4HyBCHpH3vS5CQOmMuueHYnO-sl6m9f7DtHN8vxWKBEPkK3_hMAA9tSfbMq-RJwOnpaNnQ8uqWG3bkrpuvUImRaOUol-cAI01rDPE9p26pnwKWpd19I31C-xgxg" />
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+            </div>
+            <div class="relative z-10">
+                <h1 class="font-headline text-5xl font-bold tracking-tighter text-primary flex flex-col">
+                    <span class="text-xs uppercase tracking-[0.5em] text-primary/60 font-medium mb-2">The Elite
+                        League</span>
+                    FantasyDuel GH
+                </h1>
+                <p
+                    class="mt-6 text-on-surface-variant font-medium max-w-xs leading-relaxed border-l-2 border-primary/30 pl-4">
+                    Enter the premier arena for Ghana's tactical masterminds. Stake your reputation, challenge the
+                    elite, and secure your legacy.
+                </p>
+            </div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="flex -space-x-3">
+                        <img class="w-10 h-10 rounded-full border-2 border-surface-container-lowest object-cover grayscale"
+                            data-alt="Manager avatar"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIj7p1c6Mg-lVvQErPgiaUyVMmElgiRf2bDBqf32tT5fHkP4AVBhGtgvMQmCyslUTrx0YOoqosotto7msXbuPVpWkLC5F90pOyskNgpzkIihBCRYjaED2_3JS3jA2irOMNUS7MvRI1XxE629wHHfjlE7R3EfMLJsYe07dLDUWLyOtgPJ0I55dO-RbERPoaU6na3LLuI11uT9t_UxAPy9G4d9X4foAygOF_IEtRzim5bqAomQ9JYF28QUsMZNtrB2rWNoYMxIpdr2jC" />
+                        <img class="w-10 h-10 rounded-full border-2 border-surface-container-lowest object-cover grayscale"
+                            data-alt="Manager avatar"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtIZkUnPQWem6PSvA3h74Ucm9aqULUe_T7N9XusuT63JgqsiIcdAtygud2SjRCHtgrCotLK8GcVoaX4cl7aZE2m_x58xIqbS_kR-Wd92_pRpHpx5Ub1MEV02tzh7yOqVCfUo-HYWKOzUM4mEGH38qCDZpzhBCMoLuBpv47rBfE7-UeUaQN1JmowPWZlDyWQ8lPW6vEif69_rM6dxSR5k2tM9wkZo_IdJfEiKuVMibzh2xN3xSZkXtScLW_M7jpapoL7ljLewUieDaL" />
+                        <img class="w-10 h-10 rounded-full border-2 border-surface-container-lowest object-cover grayscale"
+                            data-alt="Manager avatar"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjin5vwjwUmrd4STz0r6Vq4VrfpFtzvpNLheFNShBMxaa-rkqGZ6sMpZClwzATdIvFWHhNuhaKKDrMtTkpf5ElFQ6P07NbgV-dQGuGk6X1pne51_6Ieik8ubYBMd-sN__t8_sg-FDSm_-hY86a-93CdONhiKRrtuQQBQBHa3f_ZQEnx9UvefR8432YZBkqC8uGIXzMvIwSXGcnpuawPsNg_ZoOOtEARQ4jrU_3uyUIEXFzOH32NkUZ6MH5ropU0Dzvbypi70aILFkf" />
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface/40">15,000+ Verified
+                        Managers</span>
+                </div>
+                <div
+                    class="bg-primary/5 backdrop-blur-xl p-6 rounded-lg border border-primary/10 group hover:border-primary/30 transition-all duration-500">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="material-symbols-outlined text-primary text-sm"
+                            style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Live Prize
+                            Pools</span>
+                    </div>
+                    <p
+                        class="text-sm font-headline font-bold leading-relaxed tracking-tight group-hover:text-on-surface transition-colors">
+                        "THE HIGHEST STAKES IN GHANA FANTASY HISTORY ARE OPEN NOW."</p>
+                </div>
+            </div>
+        </div>
+        <!-- Forms Side -->
+        <div class="p-8 lg:p-16 bg-surface-container-low flex flex-col justify-center">
+            <!-- Auth Toggle Tabs -->
+            <div
+                class="flex gap-0 bg-surface-container-lowest p-1 rounded-lg mb-12 w-fit border border-outline-variant/10">
+                <button
+                    class="px-8 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all bg-primary text-on-primary shadow-lg">
+                    Register
+                </button>
+                <button
+                    class="px-8 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest transition-all text-on-surface-variant hover:text-on-surface">
+                    Login
+                </button>
+            </div>
+            <!-- Registration Form Area -->
+            <div class="space-y-8" id="register-view">
+                <div>
+                    <h2 class="font-headline text-3xl font-bold uppercase tracking-tighter text-on-surface">Create Elite
+                        Account</h2>
+                    <div class="w-12 h-1 bg-primary mt-3"></div>
+                </div>
+                <form class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label
+                                class="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">Full
+                                Name</label>
+                            <div class="relative group">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">person</span>
+                                <input
+                                    class="w-full pl-12 bg-surface-container-highest/50 border border-outline-variant/20 rounded-lg text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none input-focus-gold py-3.5 text-sm transition-all"
+                                    placeholder="Kwame Mensah" type="text" />
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label
+                                class="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">FPL
+                                Team ID</label>
+                            <div class="relative group">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">sports_soccer</span>
+                                <input
+                                    class="w-full pl-12 bg-surface-container-highest/50 border border-outline-variant/20 rounded-lg text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none input-focus-gold py-3.5 text-sm transition-all"
+                                    placeholder="827391" type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">Email
+                            Address</label>
+                        <div class="relative group">
+                            <span
+                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">alternate_email</span>
+                            <input
+                                class="w-full pl-12 bg-surface-container-highest/50 border border-outline-variant/20 rounded-lg text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none input-focus-gold py-3.5 text-sm transition-all"
+                                placeholder="manager@fantasyduel.gh" type="email" />
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">Create
+                            Password</label>
+                        <div class="relative group">
+                            <span
+                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">lock</span>
+                            <input
+                                class="w-full pl-12 bg-surface-container-highest/50 border border-outline-variant/20 rounded-lg text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none input-focus-gold py-3.5 text-sm transition-all"
+                                placeholder="••••••••" type="password" />
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 py-2">
+                        <div class="relative flex items-center">
+                            <input
+                                class="w-4 h-4 rounded-sm border-outline-variant/50 bg-surface-container-highest text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                                type="checkbox" />
+                        </div>
+                        <label class="text-[11px] text-on-surface-variant leading-relaxed select-none">
+                            I agree to the <a
+                                class="text-primary hover:text-primary-container transition-colors font-medium"
+                                href="#">Terms of Service</a> and confirm I am over 18 years of age.
+                        </label>
+                    </div>
+                    <button
+                        class="w-full gold-gradient text-on-primary font-headline font-bold uppercase py-4 rounded-lg shadow-xl button-glow hover:-translate-y-0.5 active:translate-y-0 transition-all tracking-[0.2em] flex items-center justify-center gap-3"
+                        type="submit">
+                        Complete Registration
+                        <span class="material-symbols-outlined text-xl">arrow_right_alt</span>
+                    </button>
+                </form>
+                <div class="relative flex items-center py-4">
+                    <div class="flex-grow border-t border-outline-variant/10"></div>
+                    <span
+                        class="flex-shrink mx-4 text-[9px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/30">Trusted
+                        Partners</span>
+                    <div class="flex-grow border-t border-outline-variant/10"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button
+                        class="flex items-center justify-center gap-3 bg-surface-container-highest/30 border border-outline-variant/10 py-3.5 rounded-lg hover:bg-surface-container-highest hover:border-primary/20 transition-all group">
+                        <svg class="w-5 h-5 grayscale group-hover:grayscale-0 transition-all" viewbox="0 0 24 24">
+                            <path
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                fill="#4285F4"></path>
+                            <path
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                fill="#34A853"></path>
+                            <path
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                                fill="#FBBC05"></path>
+                            <path
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                fill="#EA4335"></path>
+                        </svg>
+                        <span
+                            class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Google</span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center gap-3 bg-surface-container-highest/30 border border-outline-variant/10 py-3.5 rounded-lg hover:bg-surface-container-highest hover:border-primary/20 transition-all group">
+                        <svg class="w-5 h-5 text-[#1877F2] grayscale group-hover:grayscale-0 transition-all"
+                            fill="currentColor" viewbox="0 0 24 24">
+                            <path
+                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z">
+                            </path>
+                        </svg>
+                        <span
+                            class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Facebook</span>
+                    </button>
+                </div>
+                <p class="text-center text-[10px] font-medium tracking-wide text-on-surface-variant/60 pt-4">
+                    Already an elite manager? <a class="text-primary font-bold hover:underline underline-offset-4"
+                        href="#">LOGIN TO VAULT</a>
+                </p>
+            </div>
+        </div>
+    </main>
+    <!-- Floating Support -->
+    <div class="fixed bottom-8 right-8 z-20">
+        <button
+            class="bg-surface-container-highest hover:bg-surface-bright p-3.5 rounded-full shadow-2xl border border-outline-variant/20 text-on-surface-variant hover:text-primary transition-all duration-300 flex items-center gap-3 group">
+            <span
+                class="material-symbols-outlined text-lg group-hover:rotate-12 transition-transform">headset_mic</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest pr-2 hidden sm:inline">Concierge Support</span>
+        </button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>FantasyDuel GH | Pools</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#ffd37b",
+                        "inverse-primary": "#7a5900",
+                        "on-primary": "#402d00",
+                        "on-secondary-fixed": "#002204",
+                        "on-secondary-fixed-variant": "#005312",
+                        "on-background": "#e4e2e1",
+                        "inverse-surface": "#e4e2e1",
+                        "surface-tint": "#f3be4d",
+                        "surface-container-low": "#1b1c1c",
+                        "on-surface": "#e4e2e1",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#303030",
+                        "on-primary-container": "#634700",
+                        "secondary-fixed": "#a3f69c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "primary-container": "#e9b544",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary-fixed": "#ffdea3",
+                        "on-secondary-container": "#81d27c",
+                        "surface-bright": "#393939",
+                        "surface-variant": "#353535",
+                        "on-tertiary": "#2f3131",
+                        "outline": "#9b8f7c",
+                        "tertiary-container": "#bcbdbd",
+                        "background": "#131313",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#5c4200",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-fixed-dim": "#88d982",
+                        "surface-container-highest": "#353535",
+                        "surface": "#131313",
+                        "error-container": "#93000a",
+                        "surface-container": "#1f2020",
+                        "primary-fixed-dim": "#f3be4d",
+                        "on-secondary": "#003909",
+                        "outline-variant": "#4f4635",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary-container": "#005b14",
+                        "on-tertiary-container": "#4a4c4d",
+                        "on-error": "#690005",
+                        "secondary": "#88d982",
+                        "surface-dim": "#131313",
+                        "on-surface-variant": "#d3c5af",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary": "#d8d9d9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .stadium-glow {
+            background: linear-gradient(135deg, #ffd37b 0%, #e9b544 100%);
+        }
+
+        .obsidian-gold-btn {
+            background: #131313;
+            border: 1px solid #ffd37b;
+            color: #ffd37b;
+        }
+
+        .obsidian-gold-btn:hover {
+            background: #ffd37b;
+            color: #131313;
+        }
+
+        .progress-subtle {
+            background: rgba(255, 255, 255, 0.05);
+            height: 4px;
+        }
+
+        .card-border {
+            border: 1px solid rgba(255, 211, 123, 0.08);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
+    <div class="flex min-h-screen">
+        <!-- SideNavBar -->
+        <aside
+            class="h-screen w-64 hidden lg:flex flex-col border-r border-[#ffd37b]/10 bg-[#1f2020] py-8 px-4 gap-4 sticky top-0">
+            <div class="mb-8 px-2">
+                <h1 class="text-xl font-black text-[#ffd37b] tracking-widest font-headline uppercase">FantasyDuel GH
+                </h1>
+                <p class="text-xs text-white/40 font-medium uppercase tracking-wider">Premier League Season 24/25</p>
+            </div>
+            <nav class="flex flex-col gap-1">
+                <a class="flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium rounded-lg group"
+                    href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary">home</span>
+                    <span>Home</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium rounded-lg group"
+                    href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary">sports_kabaddi</span>
+                    <span>Duels</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 text-[#ffd37b] bg-[#ffd37b]/5 border-r-4 border-[#ffd37b] font-headline font-medium group"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">sports_score</span>
+                    <span>Pools</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium rounded-lg group"
+                    href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary">emoji_events</span>
+                    <span>Leaderboard</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium rounded-lg group"
+                    href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary">account_balance_wallet</span>
+                    <span>Wallet</span>
+                </a>
+            </nav>
+            <div class="mt-auto">
+                <button
+                    class="w-full obsidian-gold-btn font-headline font-bold py-4 rounded-xl scale-98 transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">add_circle</span>
+                    Create Duel
+                </button>
+            </div>
+        </aside>
+        <!-- Main Content Area -->
+        <main class="flex-1 min-w-0 bg-background pb-20 lg:pb-8">
+            <!-- TopNavBar -->
+            <header
+                class="fixed top-0 w-full z-50 bg-surface dark:bg-[#131313]/60 backdrop-blur-xl flex justify-between items-center px-6 h-16 shadow-[0_24px_24px_rgba(0,0,0,0.06)] lg:static lg:bg-transparent lg:shadow-none lg:backdrop-blur-none">
+                <div class="lg:hidden">
+                    <span
+                        class="text-2xl font-black italic text-[#ffd37b] font-headline uppercase tracking-tighter">FantasyDuel
+                        GH</span>
+                </div>
+                <!-- Desktop Breadcrumbs/Context -->
+                <div class="hidden lg:flex flex-col">
+                    <h2 class="text-2xl font-black text-on-surface font-headline uppercase tracking-tighter">Global
+                        Pools</h2>
+                    <div class="flex items-center gap-2 text-xs font-bold text-primary/60 tracking-widest uppercase">
+                        <span>Lobby</span>
+                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                        <span>Open Competitions</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button
+                        class="p-2 rounded-full hover:bg-surface-container-highest transition-colors text-[#ffd37b]">
+                        <span class="material-symbols-outlined">account_balance_wallet</span>
+                    </button>
+                    <div class="h-10 w-10 rounded-lg overflow-hidden border border-primary/20">
+                        <img class="w-full h-full object-cover"
+                            data-alt="close-up portrait of a determined young man with short hair looking confidently towards the side, moody low-key lighting with stadium reflections"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe2C2O58BK-q6CbtUcgLHWrUvG4bpiooezvdSV2r4RpKVauvG9l-ruYqqJXcfQh_GuSXvPqNltvfkfndrT0wUV5YdQaWwBRkSfQaNBog0pRH6dzHEewMo-Pc21djDbWAXCrB3TEc0foOYvaX-UwcLM2CPdXUEj8puO-S-3XU8CBAy8CDpAbK_qhlKl2vfDtXZPluU4nRbtDX1Jb5zUwuxF2NLSaLonKqoLg4JjHJoK_RPj9sOcDL2-YvcdvDbuFIVDNVwrO-B58B69" />
+                    </div>
+                </div>
+            </header>
+            <div class="max-w-7xl mx-auto px-4 lg:px-8 pt-20 lg:pt-8">
+                <!-- Hero & Action Section -->
+                <section
+                    class="mb-12 relative rounded-3xl overflow-hidden aspect-[21/9] lg:aspect-[25/7] flex flex-col justify-end p-10">
+                    <div class="absolute inset-0 z-0">
+                        <img class="w-full h-full object-cover opacity-30"
+                            data-alt="cinematic wide shot of a modern football stadium at night under bright floodlights with a slight haze and deep shadows"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFBMA0KQ0hAVkpzoCenaA3s7CdmN_KLhVm6rMAqhEUumq5HaKH9GfdSSF6Q2Q3XmSf5VUSiiS-ldemF1QHg-j9hn9B4PPPulzWWhF2C02GnRJfsX_Rk6vXlpoUyshxY1fXvdiu2W2I7hxoGeAvWGdt99UCp0acWE03_5aVCObMe5Hswz7ALdl1GCIvA-uNekoUoTu4YwEzgLZO3AABwPfJSavR5hy4VF1cyz6L1Ij04-nOBVQwKF4YVUXM5qNAQGKhhSYHqlx7aoaa" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent">
+                        </div>
+                    </div>
+                    <div class="relative z-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+                        <div>
+                            <span
+                                class="inline-flex items-center gap-2 bg-[#ffd37b]/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em] mb-4 border border-[#ffd37b]/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                Live Pools Open
+                            </span>
+                            <h3
+                                class="text-5xl lg:text-7xl font-black font-headline uppercase leading-none tracking-tighter text-white mb-3">
+                                The Golden<br />Gameweek</h3>
+                            <p class="text-on-surface-variant/80 max-w-lg font-medium leading-relaxed">Join high-stakes
+                                pools and compete against thousands of managers. Every goal counts towards the ultimate
+                                prize pool.</p>
+                        </div>
+                        <button
+                            class="obsidian-gold-btn font-headline font-bold px-12 py-5 rounded-2xl text-lg uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+                            Create Pool
+                        </button>
+                    </div>
+                </section>
+                <!-- Filter & Stats Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-6 mb-10 pb-6 border-b border-white/5">
+                    <div class="flex p-1 bg-surface-container rounded-xl gap-1">
+                        <button
+                            class="px-8 py-2.5 bg-primary text-on-primary font-bold rounded-lg text-xs uppercase tracking-widest transition-all shadow-lg">All
+                            Pools</button>
+                        <button
+                            class="px-8 py-2.5 text-on-surface-variant hover:text-white font-bold rounded-lg text-xs uppercase tracking-widest transition-all">High
+                            Stakes</button>
+                        <button
+                            class="px-8 py-2.5 text-on-surface-variant hover:text-white font-bold rounded-lg text-xs uppercase tracking-widest transition-all">Free
+                            Entry</button>
+                    </div>
+                    <div
+                        class="flex items-center gap-8 text-on-surface-variant/60 font-semibold text-xs tracking-widest uppercase">
+                        <span class="flex items-center gap-3">Active Pools <span
+                                class="text-primary font-black text-base">1,248</span></span>
+                        <div class="w-px h-4 bg-white/10"></div>
+                        <span class="flex items-center gap-3">Total Prizes <span
+                                class="text-secondary font-black text-base">GHS 250k+</span></span>
+                    </div>
+                </div>
+                <!-- Pools Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                    <!-- Pool Card 1 -->
+                    <div
+                        class="group bg-surface-container-low card-border rounded-2xl transition-all duration-500 hover:border-primary/40 hover:-translate-y-1">
+                        <div class="p-8 h-full flex flex-col">
+                            <div class="flex justify-between items-start mb-8">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-[10px] font-bold text-primary tracking-[0.2em] uppercase mb-1.5 opacity-80">Gameweek
+                                        24</span>
+                                    <h4
+                                        class="text-2xl font-black font-headline uppercase leading-tight group-hover:text-primary transition-colors tracking-tight">
+                                        Elite Stadium Masters</h4>
+                                </div>
+                                <div
+                                    class="bg-secondary/10 text-secondary text-[9px] font-black px-2 py-1 rounded border border-secondary/20 uppercase tracking-widest">
+                                    Verified</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-px bg-white/5 mb-8 rounded-xl overflow-hidden card-border">
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-2">Entry
+                                        Fee</span>
+                                    <span class="text-xl font-black font-headline text-white">GHS 50.00</span>
+                                </div>
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-2">Prize
+                                        Pool</span>
+                                    <span class="text-xl font-black font-headline text-primary">GHS 5,000</span>
+                                </div>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span
+                                        class="text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest">Enrollment
+                                        Status</span>
+                                    <span class="text-xs font-black font-headline text-white">42 / 150 <span
+                                            class="text-on-surface-variant/40 font-medium ml-1">SPOTS</span></span>
+                                </div>
+                                <div class="w-full progress-subtle rounded-full overflow-hidden mb-8">
+                                    <div class="h-full bg-primary transition-all duration-1000" style="width: 72%;">
+                                    </div>
+                                </div>
+                                <button
+                                    class="w-full py-4 obsidian-gold-btn font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-xs transition-all">
+                                    Join Competition
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pool Card 2 -->
+                    <div
+                        class="group bg-surface-container-low card-border rounded-2xl transition-all duration-500 hover:border-primary/40 hover:-translate-y-1">
+                        <div class="p-8 h-full flex flex-col">
+                            <div class="flex justify-between items-start mb-8">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-[10px] font-bold text-primary tracking-[0.2em] uppercase mb-1.5 opacity-80">Gameweek
+                                        24</span>
+                                    <h4
+                                        class="text-2xl font-black font-headline uppercase leading-tight group-hover:text-primary transition-colors tracking-tight">
+                                        Weekend Warriors</h4>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-px bg-white/5 mb-8 rounded-xl overflow-hidden card-border">
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-2">Entry
+                                        Fee</span>
+                                    <span class="text-xl font-black font-headline text-white">GHS 10.00</span>
+                                </div>
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-2">Prize
+                                        Pool</span>
+                                    <span class="text-xl font-black font-headline text-primary">GHS 1,200</span>
+                                </div>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span
+                                        class="text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest">Enrollment
+                                        Status</span>
+                                    <span class="text-xs font-black font-headline text-white">188 / 200 <span
+                                            class="text-on-surface-variant/40 font-medium ml-1">SPOTS</span></span>
+                                </div>
+                                <div class="w-full progress-subtle rounded-full overflow-hidden mb-8">
+                                    <div class="h-full bg-secondary transition-all duration-1000" style="width: 12%;">
+                                    </div>
+                                </div>
+                                <button
+                                    class="w-full py-4 obsidian-gold-btn font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-xs transition-all">
+                                    Join Competition
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pool Card 3 (Premium Focused) -->
+                    <div
+                        class="group bg-surface-container-low card-border border-primary/20 rounded-2xl transition-all duration-500 hover:border-primary/60 hover:-translate-y-1 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-20">
+                            <span class="material-symbols-outlined text-primary text-6xl"
+                                style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                        </div>
+                        <div class="p-8 h-full flex flex-col relative z-10">
+                            <div class="flex justify-between items-start mb-8">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-[10px] font-bold text-primary tracking-[0.2em] uppercase mb-1.5">Premium
+                                        • GW25</span>
+                                    <h4
+                                        class="text-2xl font-black font-headline uppercase leading-tight text-white group-hover:text-primary transition-colors tracking-tight">
+                                        Accra Grand Cup</h4>
+                                </div>
+                            </div>
+                            <div
+                                class="grid grid-cols-2 gap-px bg-primary/10 mb-8 rounded-xl overflow-hidden border border-primary/20">
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-primary/60 font-bold uppercase tracking-widest mb-2">Entry
+                                        Fee</span>
+                                    <span class="text-xl font-black font-headline text-white">GHS 500.00</span>
+                                </div>
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-primary/60 font-bold uppercase tracking-widest mb-2">Prize
+                                        Pool</span>
+                                    <span class="text-xl font-black font-headline text-primary">GHS 25k</span>
+                                </div>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span
+                                        class="text-[10px] text-primary/60 font-bold uppercase tracking-widest">Enrollment
+                                        Status</span>
+                                    <span class="text-xs font-black font-headline text-white">2 / 50 <span
+                                            class="text-on-surface-variant/40 font-medium ml-1">SPOTS</span></span>
+                                </div>
+                                <div class="w-full progress-subtle rounded-full overflow-hidden mb-8">
+                                    <div class="h-full bg-error transition-all duration-1000" style="width: 96%;"></div>
+                                </div>
+                                <button
+                                    class="w-full py-4 stadium-glow text-on-primary font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-xs transition-all shadow-[0_10px_20px_rgba(255,211,123,0.2)]">
+                                    Join Competition
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pool Card 4 -->
+                    <div
+                        class="group bg-surface-container-low card-border rounded-2xl transition-all duration-500 hover:border-primary/40 hover:-translate-y-1">
+                        <div class="p-8 h-full flex flex-col">
+                            <div class="flex justify-between items-start mb-8">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-[10px] font-bold text-primary tracking-[0.2em] uppercase mb-1.5 opacity-80">Gameweek
+                                        24</span>
+                                    <h4
+                                        class="text-2xl font-black font-headline uppercase leading-tight group-hover:text-primary transition-colors tracking-tight">
+                                        Underdog Specials</h4>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-px bg-white/5 mb-8 rounded-xl overflow-hidden card-border">
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-2">Entry
+                                        Fee</span>
+                                    <span class="text-xl font-black font-headline text-white">GHS 5.00</span>
+                                </div>
+                                <div class="bg-surface-container-high/40 p-5">
+                                    <span
+                                        class="block text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-2">Prize
+                                        Pool</span>
+                                    <span class="text-xl font-black font-headline text-primary">GHS 750</span>
+                                </div>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span
+                                        class="text-[10px] text-on-surface-variant/60 font-bold uppercase tracking-widest">Enrollment
+                                        Status</span>
+                                    <span class="text-xs font-black font-headline text-white">450 / 500 <span
+                                            class="text-on-surface-variant/40 font-medium ml-1">SPOTS</span></span>
+                                </div>
+                                <div class="w-full progress-subtle rounded-full overflow-hidden mb-8">
+                                    <div class="h-full bg-secondary transition-all duration-1000" style="width: 10%;">
+                                    </div>
+                                </div>
+                                <button
+                                    class="w-full py-4 obsidian-gold-btn font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-xs transition-all">
+                                    Join Competition
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add More Card Placeholder -->
+                    <div
+                        class="border-2 border-dashed border-white/5 rounded-2xl p-8 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-primary/30 transition-all">
+                        <div
+                            class="w-20 h-20 rounded-2xl bg-surface-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform group-hover:bg-primary/5 border border-white/5">
+                            <span
+                                class="material-symbols-outlined text-primary/40 text-4xl group-hover:text-primary transition-colors">add</span>
+                        </div>
+                        <h4
+                            class="text-xl font-black font-headline uppercase text-white/80 group-hover:text-primary transition-colors tracking-tight">
+                            Start Your Own</h4>
+                        <p class="text-xs text-on-surface-variant/60 font-medium px-8 mt-3 leading-relaxed">Challenge
+                            friends in a private or public pool with custom entry fees.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- BottomNavBar (Mobile Only) -->
+    <nav
+        class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 pb-safe px-2 bg-surface dark:bg-[#131313]/80 backdrop-blur-md z-50 border-t border-[#ffd37b]/15">
+        <a class="flex flex-col items-center justify-center text-white/50 px-3 py-1" href="#">
+            <span class="material-symbols-outlined text-xl">home</span>
+            <span class="font-['Inter'] text-[9px] font-bold uppercase tracking-wider">Home</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-white/50 px-3 py-1" href="#">
+            <span class="material-symbols-outlined text-xl">swords</span>
+            <span class="font-['Inter'] text-[9px] font-bold uppercase tracking-wider">Duels</span>
+        </a>
+        <a class="flex flex-col items-center justify-center bg-[#ffd37b]/10 text-[#ffd37b] rounded-xl px-4 py-1.5 scale-95 transition-transform"
+            href="#">
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">groups</span>
+            <span class="font-['Inter'] text-[9px] font-bold uppercase tracking-wider">Pools</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-white/50 px-3 py-1" href="#">
+            <span class="material-symbols-outlined text-xl">leaderboard</span>
+            <span class="font-['Inter'] text-[9px] font-bold uppercase tracking-wider">Rank</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-white/50 px-3 py-1" href="#">
+            <span class="material-symbols-outlined text-xl">account_balance_wallet</span>
+            <span class="font-['Inter'] text-[9px] font-bold uppercase tracking-wider">Wallet</span>
+        </a>
+    </nav>
+</body>
+
+</html>

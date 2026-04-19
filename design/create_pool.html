@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Create Pool - FantasyDuel GH</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;family=Public+Sans:wght@400;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#0e0e0e",
+                        "surface-container-highest": "#353534",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-high": "#2a2a2a",
+                        "outline-variant": "#4d4635",
+                        "on-error": "#690005",
+                        "surface-tint": "#e9c349",
+                        "on-surface-variant": "#d0c5af",
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-tertiary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#e9c349",
+                        "outline": "#99907c",
+                        "surface-container": "#201f1f",
+                        "inverse-primary": "#735c00",
+                        "secondary-fixed-dim": "#c6c6c6",
+                        "on-secondary": "#2f3131",
+                        "on-primary": "#3c2f00",
+                        "on-tertiary-fixed-variant": "#27438a",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-primary-container": "#554300",
+                        "tertiary": "#bfcdff",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#b5b5b5",
+                        "primary-container": "#d4af37",
+                        "tertiary-container": "#97b0ff",
+                        "secondary": "#c6c6c6",
+                        "primary": "#f2ca50",
+                        "inverse-on-surface": "#313030",
+                        "error-container": "#93000a",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-bright": "#393939",
+                        "surface-dim": "#0e0e0e",
+                        "secondary-container": "#454747",
+                        "surface": "#131313",
+                        "on-surface": "#e5e2e1",
+                        "on-primary-fixed-variant": "#574500",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "primary-fixed": "#ffe088",
+                        "on-tertiary-container": "#254188",
+                        "on-primary-fixed": "#241a00",
+                        "tertiary-fixed": "#dbe1ff",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-variant": "#353534",
+                        "on-tertiary": "#082b72"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {},
+                    "fontFamily": {
+                        "headline": [
+                            "Inter"
+                        ],
+                        "body": [
+                            "Public Sans"
+                        ],
+                        "label": [
+                            "Inter"
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, theme('colors.primary'), theme('colors.primary-container'));
+        }
+
+        .shadow-ambient {
+            box-shadow: 0 16px 32px -4px rgba(229, 226, 225, 0.06);
+        }
+
+        .shadow-glow {
+            box-shadow: 0 4px 20px 0 rgba(242, 202, 80, 0.2);
+        }
+    </style>
+</head>
+
+<body class="font-body min-h-screen flex">
+    <!-- SideNavBar -->
+    <nav class="hidden md:flex h-screen w-64 fixed left-0 top-0 border-none bg-[#1C1B1B] flex-col py-6 z-50">
+        <div class="px-6 mb-8 flex flex-col gap-1">
+            <h1 class="text-xl font-black text-[#D4AF37] tracking-tighter uppercase font-headline">FantasyDuel GH</h1>
+            <span class="text-xs text-on-surface-variant font-label uppercase tracking-widest">Elite Athletics</span>
+        </div>
+        <div class="flex-1 px-4 space-y-2">
+            <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:text-[#D4AF37] hover:bg-[#201F1F] transition-all duration-200"
+                href="#">
+                <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                <span class="font-headline font-bold text-sm tracking-tight">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:text-[#D4AF37] hover:bg-[#201F1F] transition-all duration-200"
+                href="#">
+                <span class="material-symbols-outlined" data-icon="swords">swords</span>
+                <span class="font-headline font-bold text-sm tracking-tight">Duels</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#F2CA50] border-r-2 border-[#D4AF37] font-bold bg-[#1C1B1B]"
+                href="#">
+                <span class="material-symbols-outlined" data-icon="groups">groups</span>
+                <span class="font-headline font-bold text-sm tracking-tight">Pools</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:text-[#D4AF37] hover:bg-[#201F1F] transition-all duration-200"
+                href="#">
+                <span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+                <span class="font-headline font-bold text-sm tracking-tight">Leaderboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:text-[#D4AF37] hover:bg-[#201F1F] transition-all duration-200"
+                href="#">
+                <span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+                <span class="font-headline font-bold text-sm tracking-tight">Wallet</span>
+            </a>
+        </div>
+        <div class="mt-auto px-6">
+            <div
+                class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/15">
+                <img alt="User Avatar" class="w-10 h-10 rounded-full object-cover"
+                    data-alt="professional headshot of a person with dramatic side lighting against a dark background"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2wn_TvnAZxfN3XxIV3KrsIyDs6m2gthqdIkhEiRHcjYGFoeVWQLrCaLklRz4BA8d1BkjLLuhalT1GZgvzoBPlVceUZQtcRex5JyvwdIMH_hYTMBu11M0WTZ1QPGyYCJy9Q7gV8_ZvRMPlK83_79tovoT1W-cVenhVxzOvBjl0yY8ThmvNlbJsMH19wmhQ0jE667Vbyg2DHf0ZfcUgT48oOxHat8GqtzEObzrzOtfxxldYU6wU9lKit8Fn7dNk6CiSlFhPC__8aFe8" />
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-on-surface">Alex Mercer</span>
+                    <span class="text-xs text-primary font-headline">GH₵ 4,250</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+        <!-- TopAppBar -->
+        <header
+            class="fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] h-16 z-40 bg-[#0e0e0e]/60 backdrop-blur-md border-b border-[#4D4635]/15 shadow-2xl shadow-black/20 flex justify-between items-center px-8">
+            <div class="flex-1 flex justify-start items-center gap-4">
+                <button class="md:hidden text-gray-400 hover:text-[#D4AF37]">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="hidden md:flex relative w-64">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">search</span>
+                    <input
+                        class="w-full bg-surface-container-lowest border-none rounded-DEFAULT pl-9 pr-3 py-2 text-sm text-on-surface focus:ring-0 focus:border-b focus:border-primary transition-colors placeholder-gray-500"
+                        placeholder="Search pools, players..." type="text" />
+                </div>
+            </div>
+            <h1 class="md:hidden text-lg font-black text-[#D4AF37] tracking-tighter uppercase font-headline">FantasyDuel
+                GH</h1>
+            <div class="flex items-center gap-2">
+                <button class="p-2 text-gray-400 hover:bg-[#1C1B1B] hover:text-[#D4AF37] rounded-md transition-all">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <button
+                    class="p-2 text-gray-400 hover:bg-[#1C1B1B] hover:text-[#D4AF37] rounded-md transition-all hidden md:block">
+                    <span class="material-symbols-outlined">settings</span>
+                </button>
+                <img alt="User Profile" class="w-8 h-8 rounded-full ml-2 md:hidden object-cover"
+                    data-alt="professional headshot of a person with dramatic side lighting against a dark background"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuALiLFxy-3gVfpXKHm60cJURoBsAszBleJs9VengSAhE7GBrGq3DBpnh7aomB2USspG5O_rkR56WdkadUKwWU4rVG3CLm9QprZ_lUDHo4OFd5comdE0GiI52xlO78PW9RdNXdEMhuHm5E84ZGP8IlUAz6L6pNnrKON5GYVfPCR_oTvp6zGlAbj2p8EPEFmw62OTg6GwJbTUg1PXikgmXgNw0X3CMz3g8hOoxtOp0AoUMo6pNw9uhZyR9NtZJjrTMShck51cFoiME8q1" />
+            </div>
+        </header>
+        <!-- Page Content -->
+        <div class="pt-24 px-4 md:px-8 pb-12 flex-1 flex flex-col">
+            <!-- Page Header -->
+            <div class="mb-8"><a
+                    class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors duration-200 mb-6 group w-fit"
+                    href="#">
+                    <span
+                        class="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-1">arrow_back</span>
+                    <span class="text-sm font-label font-semibold tracking-wide uppercase">Back to Pools</span>
+                </a>
+                <h2 class="text-3xl md:text-[2rem] font-headline font-bold text-on-surface tracking-tight mb-2">Create
+                    New Pool</h2>
+                <p class="text-on-surface-variant text-sm md:text-base max-w-2xl">Establish a private league, set the
+                    stakes, and invite rivals. Define the parameters for your custom FantasyDuel competition.</p>
+            </div>
+            <!-- Main Layout Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Form Area (Left) -->
+                <div class="lg:col-span-7 xl:col-span-8 space-y-8">
+                    <!-- Section 1: Basic Details -->
+                    <section class="bg-surface-container-low rounded-lg p-6 md:p-8">
+                        <h3
+                            class="font-headline font-bold text-lg text-on-surface mb-6 border-b border-outline-variant/15 pb-2">
+                            Pool Configuration</h3>
+                        <div class="space-y-6">
+                            <!-- Input Group -->
+                            <div>
+                                <label class="block font-label text-xs text-on-surface-variant mb-2" for="poolName">POOL
+                                    NAME</label>
+                                <div
+                                    class="bg-surface-container-lowest rounded-DEFAULT p-1 focus-within:border-b focus-within:border-primary transition-all">
+                                    <input
+                                        class="w-full bg-transparent border-none text-on-surface text-base focus:ring-0 px-3 py-2"
+                                        id="poolName" placeholder="e.g., Accra Elite Division" type="text" />
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1 ml-1">Make it memorable. This will be visible to
+                                    all invitees.</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Select Group -->
+                                <div>
+                                    <label class="block font-label text-xs text-on-surface-variant mb-2"
+                                        for="gameweek">STARTING GAMEWEEK</label>
+                                    <div
+                                        class="bg-surface-container-lowest rounded-DEFAULT p-1 focus-within:border-b focus-within:border-primary transition-all relative">
+                                        <select
+                                            class="w-full bg-transparent border-none text-on-surface text-base focus:ring-0 px-3 py-2 appearance-none"
+                                            id="gameweek">
+                                            <option class="bg-surface-container-highest text-on-surface" value="gw10">
+                                                Gameweek 10 (Upcoming)</option>
+                                            <option class="bg-surface-container-highest text-on-surface" value="gw11">
+                                                Gameweek 11</option>
+                                            <option class="bg-surface-container-highest text-on-surface" value="gw12">
+                                                Gameweek 12</option>
+                                        </select>
+                                        <span
+                                            class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+                                    </div>
+                                </div>
+                                <!-- Input Group -->
+                                <div>
+                                    <label class="block font-label text-xs text-on-surface-variant mb-2"
+                                        for="maxParticipants">MAX PARTICIPANTS (2-20)</label>
+                                    <div
+                                        class="bg-surface-container-lowest rounded-DEFAULT p-1 focus-within:border-b focus-within:border-primary transition-all">
+                                        <input
+                                            class="w-full bg-transparent border-none text-on-surface text-base focus:ring-0 px-3 py-2"
+                                            id="maxParticipants" max="20" min="2" type="number" value="10" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Section 2: Financials -->
+                    <section class="bg-surface-container-low rounded-lg p-6 md:p-8">
+                        <h3
+                            class="font-headline font-bold text-lg text-on-surface mb-6 border-b border-outline-variant/15 pb-2">
+                            Entry &amp; Stakes</h3>
+                        <div>
+                            <label class="block font-label text-xs text-on-surface-variant mb-2" for="entryFee">ENTRY
+                                FEE (GHS)</label>
+                            <div
+                                class="bg-surface-container-lowest rounded-DEFAULT p-1 focus-within:border-b focus-within:border-primary transition-all flex items-center">
+                                <span class="text-gray-500 pl-3 font-semibold">GH₵</span>
+                                <input
+                                    class="w-full bg-transparent border-none text-on-surface text-lg focus:ring-0 px-3 py-2"
+                                    id="entryFee" placeholder="0.00" type="number" />
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 ml-1">The amount each participant must pay to join.
+                                Funds are held in escrow.</p>
+                        </div>
+                    </section>
+                    <!-- Section 3: Rules -->
+                    <section class="bg-surface-container-low rounded-lg p-6 md:p-8">
+                        <h3
+                            class="font-headline font-bold text-lg text-on-surface mb-6 border-b border-outline-variant/15 pb-2">
+                            Description &amp; Rules</h3>
+                        <div>
+                            <div
+                                class="bg-surface-container-lowest rounded-DEFAULT p-1 focus-within:border-b focus-within:border-primary transition-all">
+                                <textarea
+                                    class="w-full bg-transparent border-none text-on-surface text-base focus:ring-0 px-3 py-2 resize-none"
+                                    id="description"
+                                    placeholder="Briefly describe the rules, payout structure, or trash talk..."
+                                    rows="4"></textarea>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Actions -->
+                    <div class="flex justify-end gap-4 pt-4 border-t border-outline-variant/15 mt-8">
+                        <button
+                            class="px-6 py-3 rounded-DEFAULT border border-outline-variant/15 text-primary font-semibold text-sm hover:bg-surface-container-highest transition-colors">
+                            Cancel
+                        </button>
+                        <button
+                            class="px-8 py-3 rounded-DEFAULT bg-primary-gradient text-on-primary font-bold text-sm hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5">
+                            Create Pool
+                        </button>
+                    </div>
+                </div>
+                <!-- Preview Card (Right) -->
+                <div class="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-24">
+                    <div class="bg-surface-container-high rounded-lg p-6 shadow-ambient">
+                        <div class="flex justify-between items-start mb-6">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-outline-variant/30 text-xs font-label text-tertiary">
+                                <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                                DRAFT
+                            </span>
+                            <span class="text-xs font-label text-gray-500">PREVIEW</span>
+                        </div>
+                        <h4 class="font-headline font-bold text-xl text-on-surface mb-2 truncate">Accra Elite Division
+                        </h4>
+                        <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">Standard head-to-head format.
+                            Winner takes 70%, runner-up 30%.</p>
+                        <div class="space-y-4 mb-8">
+                            <div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+                                <span class="text-sm text-gray-500">Entry Fee</span>
+                                <span class="font-semibold text-on-surface">GH₵ 50.00</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+                                <span class="text-sm text-gray-500">Participants</span>
+                                <span class="font-semibold text-on-surface">1 / 10</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+                                <span class="text-sm text-gray-500">Starts</span>
+                                <span class="font-semibold text-on-surface">GW 10</span>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-surface-container-lowest p-4 rounded-DEFAULT border border-outline-variant/15 flex flex-col items-center justify-center text-center">
+                            <span class="font-label text-xs text-on-surface-variant mb-1">ESTIMATED PRIZE POT</span>
+                            <span class="font-headline font-extrabold text-3xl text-primary tracking-tight">GH₵
+                                500.00</span>
+                            <span class="text-[10px] text-gray-600 mt-2 uppercase tracking-wide">Based on max
+                                capacity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

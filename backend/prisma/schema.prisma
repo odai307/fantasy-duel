@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PoolVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum PoolStatus {
+  OPEN
+  LOCKED
+  CLOSED
+}
+
+model User {
+  id            String   @id @default(uuid())
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  fplTeamId     Int?     @map("fpl_team_id")
+  walletBalance Decimal  @default(0.00) @db.Decimal(10, 2) @map("wallet_balance")
+  createdAt     DateTime @default(now()) @map("created_at")
+  pools         Pool[]
+
+  @@map("users")
+}
+
+model Pool {
+  id              String         @id @default(uuid())
+  name            String
+  description     String?
+  gameweek        Int
+  entryFee        Decimal        @default(0.00) @db.Decimal(10, 2) @map("entry_fee")
+  maxParticipants Int?           @map("max_participants")
+  visibility      PoolVisibility @default(PUBLIC)
+  inviteCode      String?        @unique @map("invite_code")
+  status          PoolStatus     @default(OPEN)
+  createdById     String         @map("created_by_id")
+  createdBy       User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  @@index([createdById])
+  @@index([visibility, status])
+  @@index([gameweek])
+  @@unique([createdById, gameweek])
+  @@map("pools")
+}

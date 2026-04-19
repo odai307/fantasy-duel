@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Pool Details | FantasyDuel GH</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#ffd37b",
+                        "inverse-primary": "#7a5900",
+                        "on-primary": "#402d00",
+                        "on-secondary-fixed": "#002204",
+                        "on-secondary-fixed-variant": "#005312",
+                        "on-background": "#e4e2e1",
+                        "inverse-surface": "#e4e2e1",
+                        "surface-tint": "#f3be4d",
+                        "surface-container-low": "#1b1c1c",
+                        "on-surface": "#e4e2e1",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#303030",
+                        "on-primary-container": "#634700",
+                        "secondary-fixed": "#a3f69c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "primary-container": "#e9b544",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary-fixed": "#ffdea3",
+                        "on-secondary-container": "#81d27c",
+                        "surface-bright": "#393939",
+                        "surface-variant": "#353535",
+                        "on-tertiary": "#2f3131",
+                        "outline": "#9b8f7c",
+                        "tertiary-container": "#bcbdbd",
+                        "background": "#131313",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#5c4200",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-fixed-dim": "#88d982",
+                        "surface-container-highest": "#353535",
+                        "surface": "#131313",
+                        "error-container": "#93000a",
+                        "surface-container": "#1f2020",
+                        "primary-fixed-dim": "#f3be4d",
+                        "on-secondary": "#003909",
+                        "outline-variant": "#4f4635",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary-container": "#005b14",
+                        "on-tertiary-container": "#4a4c4d",
+                        "on-error": "#690005",
+                        "secondary": "#88d982",
+                        "surface-dim": "#131313",
+                        "on-surface-variant": "#d3c5af",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary": "#d8d9d9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .surface-shift-nesting {
+            background: linear-gradient(180deg, #1f2020 0%, #131313 100%);
+        }
+
+        .obsidian-card {
+            background: linear-gradient(145deg, #1f2020 0%, #131313 100%);
+            border: 1px solid rgba(255, 211, 123, 0.05);
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(255, 211, 123, 0.08);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
+    <div class="flex min-h-screen">
+        <!-- SideNavBar -->
+        <aside
+            class="h-screen w-64 hidden lg:flex flex-col border-r border-[#ffd37b]/10 bg-[#1f2020] py-8 px-4 gap-4 sticky top-0">
+            <div class="px-2 mb-8">
+                <h1 class="text-xl font-black text-[#ffd37b] tracking-widest uppercase font-headline">FantasyDuel GH
+                </h1>
+                <p class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Premier League Season 24/25</p>
+            </div>
+            <nav class="flex flex-col gap-2">
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">home</span> Home
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">sports_kabaddi</span> Duels
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#ffd37b] bg-[#ffd37b]/5 border-r-4 border-[#ffd37b] font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">sports_score</span> Pools
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">emoji_events</span> Leaderboard
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white hover:bg-[#131313] transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">account_balance_wallet</span> Wallet
+                </a>
+            </nav>
+            <div class="mt-auto pt-6 border-t border-white/5">
+                <button
+                    class="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-xl shadow-lg shadow-primary/10 hover:scale-102 transition-transform active:opacity-80">
+                    Create Duel
+                </button>
+            </div>
+        </aside>
+        <!-- Main Content Area -->
+        <main class="flex-1 min-w-0 bg-background pb-20">
+            <!-- TopNavBar -->
+            <header
+                class="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-[#131313]/80 backdrop-blur-xl border-b border-outline-variant/10 flex justify-between items-center px-6 h-16">
+                <div class="flex items-center gap-4">
+                    <button class="lg:hidden text-primary">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                    <span
+                        class="font-headline uppercase tracking-tighter text-[#ffd37b] font-bold border-b-2 border-[#ffd37b] pb-1">Pool
+                        Overview</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div
+                        class="hidden md:flex items-center gap-4 text-xs font-headline uppercase tracking-widest text-on-surface-variant/70">
+                        <span>Active Duels: 14</span>
+                        <div class="h-4 w-[1px] bg-outline-variant/30"></div>
+                        <span>GW 24 Deadline: 12h 45m</span>
+                    </div>
+                    <button class="text-[#ffd37b] hover:scale-102 transition-transform duration-200">
+                        <span class="material-symbols-outlined">account_balance_wallet</span>
+                    </button>
+                </div>
+            </header>
+            <!-- Content Canvas -->
+            <div class="pt-24 px-6 lg:px-12 max-w-7xl mx-auto">
+                <!-- Obsidian Gold Hero Section -->
+                <div class="relative overflow-hidden rounded-2xl obsidian-card mb-12 p-10 border border-primary/10">
+                    <div class="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-primary/5 blur-[120px] rounded-full">
+                    </div>
+                    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        <div class="lg:col-span-6">
+                            <span
+                                class="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Public
+                                Pool</span>
+                            <h2
+                                class="text-5xl lg:text-7xl font-black font-headline text-on-surface leading-tight uppercase mb-6 tracking-tighter">
+                                Elite Strikers Hub</h2>
+                            <div class="flex items-center gap-6">
+                                <div
+                                    class="bg-secondary/10 px-4 py-1.5 rounded-full flex items-center gap-2 border border-secondary/20">
+                                    <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Live
+                                        Track</span>
+                                </div>
+                                <span
+                                    class="text-on-surface-variant/70 text-sm font-medium font-headline uppercase tracking-widest">GW
+                                    24 • Season 24/25</span>
+                            </div>
+                        </div>
+                        <div
+                            class="lg:col-span-3 flex flex-col items-center justify-center p-8 bg-black/40 rounded-3xl border border-white/5 backdrop-blur-sm">
+                            <span
+                                class="text-on-surface-variant text-[10px] uppercase font-bold tracking-[0.2em] mb-2 opacity-60">Entry
+                                Fee</span>
+                            <div class="text-4xl font-black text-primary font-headline italic tracking-tighter">GH₵
+                                250.00</div>
+                        </div>
+                        <div class="lg:col-span-3">
+                            <span
+                                class="text-on-surface-variant text-[10px] uppercase font-bold tracking-[0.2em] mb-4 block opacity-60">Prize
+                                Pool Distribution</span>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1.5">
+                                        <span class="opacity-70 font-medium">1st Place (60%)</span>
+                                        <span class="text-primary font-black">GH₵ 12,000</span>
+                                    </div>
+                                    <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1.5">
+                                        <span class="opacity-70 font-medium">2nd Place (30%)</span>
+                                        <span class="font-bold">GH₵ 6,000</span>
+                                    </div>
+                                    <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                                        <div class="h-full bg-white/20" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Leaderboard Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-10">
+                    <!-- Main Leaderboard Table -->
+                    <div class="lg:col-span-3">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                            <h3
+                                class="text-2xl font-black font-headline uppercase tracking-tight flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-3xl">leaderboard</span>
+                                Live Rankings
+                            </h3>
+                            <div class="flex bg-surface-container-low p-1 rounded-xl border border-outline-variant/10">
+                                <button
+                                    class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 hover:text-white transition-all">By
+                                    Gameweek</button>
+                                <button
+                                    class="px-6 py-2.5 bg-primary text-on-primary rounded-lg text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/10">Overall</button>
+                            </div>
+                        </div>
+                        <!-- Table Headers -->
+                        <div
+                            class="grid grid-cols-12 px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50 border-b border-outline-variant/10">
+                            <div class="col-span-1">Pos</div>
+                            <div class="col-span-6">Manager &amp; Team</div>
+                            <div class="col-span-2 text-right">GW Points</div>
+                            <div class="col-span-3 text-right">Total Points</div>
+                        </div>
+                        <!-- Participants List -->
+                        <div class="space-y-3 mt-4">
+                            <!-- Ranked 1 (Obsidian Gold Highlight) -->
+                            <div
+                                class="grid grid-cols-12 items-center px-8 py-6 obsidian-card border-l-4 border-primary rounded-xl group hover:scale-[1.01] transition-all cursor-pointer gold-glow">
+                                <div class="col-span-1 text-primary font-black font-headline text-2xl">01</div>
+                                <div class="col-span-6 flex items-center gap-5">
+                                    <div class="relative">
+                                        <div
+                                            class="absolute -inset-1 bg-primary/20 rounded-full blur-md group-hover:bg-primary/40 transition-all">
+                                        </div>
+                                        <img class="relative w-12 h-12 rounded-full border-2 border-primary object-cover"
+                                            data-alt="close-up portrait of a confident male football manager avatar with professional aesthetic"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtL4EOPikzkEpEmxvOViX2VUdJvb621aH3_C2y4EzNKdgrs6MCSXTm60mnmAgsxYBrSeCXhbyQVs4M85bWpEwragFQXpQbhJUAcoAvJSxFMzbpS4EB8l5lPfg6j2jn-KXDytNfCdmPiKrTe4RzGndcE6MlyP4P8ieOhOkpqLwb7SJ8zcUpkWeqKz17Y9XAVcTPvPxK2qlk4YxMh9qXYY-ZKYG-bRygFKEs8PW2bh9uinTwVqv6m_Q-xaue1iambLEY1VLLwVA-RmgV" />
+                                        <span
+                                            class="absolute -top-1 -right-1 bg-primary text-on-primary text-[8px] font-black px-1.5 py-0.5 rounded-full shadow-sm">MVP</span>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="font-bold text-lg text-on-surface group-hover:text-primary transition-colors">
+                                            Kofi Mensah</div>
+                                        <div
+                                            class="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
+                                            Accra United FC</div>
+                                    </div>
+                                </div>
+                                <div class="col-span-2 text-right font-headline text-2xl font-bold text-secondary">82
+                                </div>
+                                <div class="col-span-3 text-right font-headline text-2xl font-black">1,452</div>
+                            </div>
+                            <!-- Ranked 2 -->
+                            <div
+                                class="grid grid-cols-12 items-center px-8 py-6 bg-surface-container-low/40 border border-white/5 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group">
+                                <div
+                                    class="col-span-1 text-on-surface-variant/30 font-black font-headline text-2xl group-hover:text-white transition-colors">
+                                    02</div>
+                                <div class="col-span-6 flex items-center gap-5">
+                                    <img class="w-12 h-12 rounded-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all border border-white/10"
+                                        data-alt="portrait avatar of a female gamer with athletic gear and focused expression"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO5R3YQJtuUEe5LmbP_CFzLmP0DohyDZMiVV4HRem5ULvCRRhgH4rgkAXb6K8vKrvJCcg81pCg8bdaOOkdoa0xYwUW06a3Lqw71g1pcrEFRkN3HolgNF6ifcpKiIaO0oa7GTWwwiRjEORxP0Kt_Gw0v1YATa1XECmK7iYuBlS4lD0XffkJDxPDSsOIWbU6zH179td2GE1i6Lq01KLeBcbkUXMWgDRCMA8BLqYo2WDhBo-pTT7ZEvGtOZ5o6CJbzIVNhzzTUBUjtizK" />
+                                    <div>
+                                        <div class="font-bold text-lg text-on-surface">Abena Serwaa</div>
+                                        <div
+                                            class="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
+                                            Queen Stars</div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-span-2 text-right font-headline text-xl font-bold text-on-surface-variant/80">
+                                    74</div>
+                                <div class="col-span-3 text-right font-headline text-xl font-bold">1,418</div>
+                            </div>
+                            <!-- Ranked 3 -->
+                            <div
+                                class="grid grid-cols-12 items-center px-8 py-6 bg-surface-container-low/40 border border-white/5 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group">
+                                <div
+                                    class="col-span-1 text-on-surface-variant/30 font-black font-headline text-2xl group-hover:text-white transition-colors">
+                                    03</div>
+                                <div class="col-span-6 flex items-center gap-5">
+                                    <img class="w-12 h-12 rounded-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all border border-white/10"
+                                        data-alt="stylized avatar of a male football fan with a team jersey and excited expression"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-RmD0bIXu2G_gwRlfhZJN33pLSAEh_q5k-Z7iXzOpCyGOAEPVYmXEDpB1TetbKlgotejY-3pa72wlEXCuV3_fVw4BcawgJApcmQt_MrK5wV820ZbgWQxNdU3d0pI4u8v-9Ep__dFkmBg--nF_3YTuNSSiWC6wpG4d9Ze_wVcX4cAUxN8gn8TPRQwySuHXtDrl1XHEj04dHN1GJi1ZBp-edaTbKCAcBQ8B6BeZu_utVn2j_JrVFY_2s2KGrkc5XouiEsePbEULzONi" />
+                                    <div>
+                                        <div class="font-bold text-lg text-on-surface">Yaw Boateng</div>
+                                        <div
+                                            class="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
+                                            Kumasi Kings</div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-span-2 text-right font-headline text-xl font-bold text-on-surface-variant/80">
+                                    71</div>
+                                <div class="col-span-3 text-right font-headline text-xl font-bold">1,405</div>
+                            </div>
+                            <!-- Current User Rank (High-Performance Context Card) -->
+                            <div
+                                class="grid grid-cols-12 items-center px-8 py-6 bg-primary/5 border border-primary/20 rounded-xl relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
+                                <div class="col-span-1 text-primary/40 font-black font-headline text-2xl relative">14
+                                </div>
+                                <div class="col-span-6 flex items-center gap-5 relative">
+                                    <img class="w-12 h-12 rounded-full ring-2 ring-primary ring-offset-4 ring-offset-background object-cover"
+                                        data-alt="professional user profile placeholder avatar with soft lighting"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa4Qxpd7ZL_gV_pG_ElgUPnbKHQcM9Rpmzdfwk8ND8K7LfJDBodpGX6hnd3k7KWkwUDXaBSeimBs0mjoQGFMolxl-Eevi-OG308MdS3gAkkCnQiCpSj_XoDy1zwvPO1k9Yz1BrBqcZSNgbaLZtnJlHxPEzxOICHhk8Fw9-os36rTB-g-DXWRkrgFDJEh27kKs8DX6duTJfnLeZ5O7zRLAiIkEZ_jm48J4cHpxqr1hIHxQ5vzsHHbw6QSxjn3PS41E1IYCqOiS5spR1" />
+                                    <div>
+                                        <div class="font-black text-lg text-primary italic uppercase tracking-tight">You
+                                            (Kwame)</div>
+                                        <div
+                                            class="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
+                                            Black Star Tactics</div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-span-2 text-right font-headline text-xl font-bold text-on-surface relative">
+                                    58</div>
+                                <div class="col-span-3 text-right font-headline text-xl font-black relative">1,288</div>
+                            </div>
+                            <!-- Standard Row -->
+                            <div
+                                class="grid grid-cols-12 items-center px-8 py-6 bg-surface-container-low/20 border border-white/5 rounded-xl opacity-60 hover:opacity-100 transition-all cursor-pointer">
+                                <div class="col-span-1 text-on-surface-variant/30 font-black font-headline text-2xl">15
+                                </div>
+                                <div class="col-span-6 flex items-center gap-5">
+                                    <img class="w-12 h-12 rounded-full grayscale opacity-50 border border-white/5"
+                                        data-alt="minimalist avatar of a male gamer with sleek modern design"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2a6I6cDZWCozxtU8nBjdIYQJo4M3d4fBm315q_3Ot1G43s8O7Ss3Mis6KcAe-93nWjfY4Z-XLWqasGfBcgya4fIJ9MstB5w6-aXqFjSyQmKZ1uPRpLs88OQLVcXltn5TD4JzOwHbgykXOpcyCn1XHKGmC-1e5foREtA9Nbiij3vpUkIJNDBq4yyseHq6otcrhpbLMPnsvtyi6qHoA3zI2EgAkmrZwhZXNkSoWVVIJbOPOHx8zfxXGbBfYpCLjHMW3HC8qpG9xOoUi" />
+                                    <div>
+                                        <div class="font-bold text-lg text-on-surface">Ekow Smith</div>
+                                        <div
+                                            class="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
+                                            Coastal FC</div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-span-2 text-right font-headline text-xl font-bold text-on-surface-variant/60">
+                                    54</div>
+                                <div class="col-span-3 text-right font-headline text-xl font-bold">1,275</div>
+                            </div>
+                        </div>
+                        <div class="mt-12 flex justify-center">
+                            <button
+                                class="flex items-center gap-3 px-10 py-4 bg-surface-container-highest/50 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-all border border-white/5">
+                                Load Full Leaderboard
+                                <span class="material-symbols-outlined text-sm">expand_more</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Sidebar Stats & Insights -->
+                    <div class="space-y-8">
+                        <!-- Pool Status Card -->
+                        <div class="obsidian-card rounded-2xl p-8">
+                            <h4
+                                class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70 mb-6 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                                Pool Pulse
+                            </h4>
+                            <div class="space-y-6">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="opacity-60 font-medium">Participants</span>
+                                        <span class="font-black text-on-surface">128 / 150</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+                                        <div class="bg-secondary h-full rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center py-4 border-y border-white/5">
+                                    <span class="text-xs opacity-60 font-medium">Avg. GW Score</span>
+                                    <span class="font-black text-secondary text-lg">62.4</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs opacity-60 font-medium">Status</span>
+                                    <span
+                                        class="bg-secondary/10 text-secondary text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-secondary/20">Verified</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Top Captains Section -->
+                        <div class="bg-surface-container-low/40 rounded-2xl p-8 border border-white/5">
+                            <h4
+                                class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/70 mb-6">
+                                Captained (GW 24)</h4>
+                            <div class="space-y-5">
+                                <div class="flex items-center gap-4 group">
+                                    <div
+                                        class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center font-black text-primary text-sm group-hover:scale-110 transition-transform">
+                                        1</div>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-black text-on-surface">Erling Haaland</div>
+                                        <div class="text-[9px] uppercase tracking-widest opacity-50 font-bold">MCI • 72%
+                                            Ownership</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 group">
+                                    <div
+                                        class="w-10 h-10 rounded-xl bg-surface-container-highest/50 flex items-center justify-center font-black text-on-surface-variant text-sm group-hover:scale-110 transition-transform">
+                                        2</div>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-black text-on-surface">Mohamed Salah</div>
+                                        <div class="text-[9px] uppercase tracking-widest opacity-50 font-bold">LIV • 14%
+                                            Ownership</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 group">
+                                    <div
+                                        class="w-10 h-10 rounded-xl bg-surface-container-highest/50 flex items-center justify-center font-black text-on-surface-variant text-sm group-hover:scale-110 transition-transform">
+                                        3</div>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-black text-on-surface">Bukayo Saka</div>
+                                        <div class="text-[9px] uppercase tracking-widest opacity-50 font-bold">ARS • 9%
+                                            Ownership</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- CTA Promo -->
+                        <div
+                            class="relative overflow-hidden rounded-3xl aspect-[4/5] bg-primary-container group cursor-pointer border border-primary/20">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10">
+                            </div>
+                            <img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60"
+                                data-alt="cinematic shot of a professional football stadium illuminated by floodlights at night with a vibrant atmosphere"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAm9eszj4Hv8j56LB6CzbsG7i9gdwKGHlEDfd7_1eWUn8xi0D_rzZ7SEh5QnFIrnKblgGdOuFudRcFNaav2fTvfLoMfzsfJDGwfpDI7rfELbWOZnGUFAM6jIK799rpNqz6mvfgcJDXZ1WiED_FaIg--LzLdV2tHY7D8UMGITze_Lzuwru_Jto30YJtdUTlQfXPxCupadkftpvLbd0LnHPQWvqxbWcN5PzMD2YxQk5xkm2N0LRKG89qlV7TCzIblYIH6UDk4elaFAOlu" />
+                            <div
+                                class="absolute inset-0 z-15 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            </div>
+                            <div class="relative z-20 h-full flex flex-col justify-end p-8">
+                                <span
+                                    class="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-2">Premium
+                                    Access</span>
+                                <h5 class="text-2xl font-black font-headline uppercase leading-tight text-white mb-6">
+                                    Unlock Scout Insights</h5>
+                                <button
+                                    class="w-full py-4 bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Get
+                                    Pro Membership</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- BottomNavBar (Mobile Only) -->
+        <nav
+            class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 pb-safe px-2 bg-[#131313]/90 backdrop-blur-xl border-t border-primary/10 z-50">
+            <button class="flex flex-col items-center justify-center text-white/40">
+                <span class="material-symbols-outlined text-2xl">home</span>
+                <span class="text-[8px] font-black uppercase tracking-tighter mt-1">Home</span>
+            </button>
+            <button class="flex flex-col items-center justify-center text-white/40">
+                <span class="material-symbols-outlined text-2xl">swords</span>
+                <span class="text-[8px] font-black uppercase tracking-tighter mt-1">Duels</span>
+            </button>
+            <button class="flex flex-col items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-2xl">groups</span>
+                <span class="text-[8px] font-black uppercase tracking-tighter mt-1">Pools</span>
+            </button>
+            <button class="flex flex-col items-center justify-center text-white/40">
+                <span class="material-symbols-outlined text-2xl">leaderboard</span>
+                <span class="text-[8px] font-black uppercase tracking-tighter mt-1">Rankings</span>
+            </button>
+            <button class="flex flex-col items-center justify-center text-white/40">
+                <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
+                <span class="text-[8px] font-black uppercase tracking-tighter mt-1">Wallet</span>
+            </button>
+        </nav>
+    </div>
+</body>
+
+</html>

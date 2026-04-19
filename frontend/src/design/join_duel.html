@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>FantasyDuel GH - Join Duel | Obsidian Gold Elite</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#ffd37b",
+                        "inverse-primary": "#7a5900",
+                        "on-primary": "#402d00",
+                        "on-secondary-fixed": "#002204",
+                        "on-secondary-fixed-variant": "#005312",
+                        "on-background": "#e4e2e1",
+                        "inverse-surface": "#e4e2e1",
+                        "surface-tint": "#f3be4d",
+                        "surface-container-low": "#1b1c1c",
+                        "on-surface": "#e4e2e1",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#303030",
+                        "on-primary-container": "#634700",
+                        "secondary-fixed": "#a3f69c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "primary-container": "#e9b544",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary-fixed": "#ffdea3",
+                        "on-secondary-container": "#81d27c",
+                        "surface-bright": "#393939",
+                        "surface-variant": "#353535",
+                        "on-tertiary": "#2f3131",
+                        "outline": "#9b8f7c",
+                        "tertiary-container": "#bcbdbd",
+                        "background": "#0e0e0e",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#5c4200",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-fixed-dim": "#88d982",
+                        "surface-container-highest": "#282828",
+                        "surface": "#0e0e0e",
+                        "error-container": "#93000a",
+                        "surface-container": "#181818",
+                        "primary-fixed-dim": "#f3be4d",
+                        "on-secondary": "#003909",
+                        "outline-variant": "#4f4635",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary-container": "#005b14",
+                        "on-tertiary-container": "#4a4c4d",
+                        "on-error": "#690005",
+                        "secondary": "#88d982",
+                        "surface-dim": "#0e0e0e",
+                        "on-surface-variant": "#d3c5af",
+                        "surface-container-high": "#222222",
+                        "tertiary": "#d8d9d9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .obsidian-panel {
+            background: linear-gradient(145deg, #181818 0%, #121212 100%);
+            border: 1px solid rgba(255, 211, 123, 0.08);
+        }
+
+        .gold-glow-button {
+            background: linear-gradient(135deg, #ffd37b 0%, #e9b544 100%);
+            box-shadow: 0 10px 25px -5px rgba(255, 211, 123, 0.3);
+        }
+
+        .gold-glow-button:hover {
+            box-shadow: 0 15px 30px -5px rgba(255, 211, 123, 0.4);
+        }
+
+        .input-focus-ring:focus-within {
+            border-color: #ffd37b;
+            box-shadow: 0 0 0 1px #ffd37b;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
+    <div class="flex min-h-screen">
+        <!-- SideNavBar -->
+        <aside
+            class="h-screen w-72 hidden lg:flex flex-col border-r border-white/5 bg-surface-container-low py-8 px-6 gap-4 fixed left-0 top-0 z-40">
+            <div class="mb-10 px-2">
+                <h1 class="text-2xl font-black text-primary tracking-tighter font-headline uppercase italic">FantasyDuel
+                    GH</h1>
+                <p class="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em] mt-1">Premier League 24/25</p>
+            </div>
+            <nav class="flex flex-col gap-2">
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all group"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+                    <span class="font-headline font-semibold">Home</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-primary bg-primary/10 border-r-2 border-primary group"
+                    href="#">
+                    <span class="material-symbols-outlined fill-1" data-icon="swords">swords</span>
+                    <span class="font-headline font-semibold">Duels</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all group"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="groups">groups</span>
+                    <span class="font-headline font-semibold">Pools</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all group"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+                    <span class="font-headline font-semibold">Rankings</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all group"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="account_balance_wallet">account_balance_wallet</span>
+                    <span class="font-headline font-semibold">Wallet</span>
+                </a>
+            </nav>
+            <div class="mt-auto">
+                <button
+                    class="w-full gold-glow-button text-on-primary font-headline font-black py-4 rounded-xl uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all">
+                    Create Duel
+                </button>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-72 relative pb-24">
+            <!-- TopAppBar -->
+            <header
+                class="fixed top-0 right-0 left-0 lg:left-72 z-50 bg-background/80 backdrop-blur-xl flex justify-between items-center px-8 h-20 border-b border-white/5">
+                <div class="flex items-center gap-4">
+                    <span
+                        class="lg:hidden text-xl font-black italic text-primary font-headline uppercase tracking-tighter">FantasyDuel
+                        GH</span>
+                    <h2
+                        class="hidden lg:block text-on-surface/80 font-headline font-bold uppercase tracking-widest text-xs">
+                        Join Existing Duel</h2>
+                </div>
+                <div class="flex items-center gap-6">
+                    <button class="relative text-white/60 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                        <span
+                            class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border-2 border-background"></span>
+                    </button>
+                    <div
+                        class="flex items-center gap-3 bg-surface-container px-4 py-2 rounded-full border border-white/5">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-[10px] text-white/40 font-bold uppercase">Balance</p>
+                            <p class="text-sm font-headline font-bold text-primary">₵1,240.50</p>
+                        </div>
+                        <div class="h-8 w-8 rounded-full overflow-hidden border border-primary/30">
+                            <img alt="User profile"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_pZdPxZqLUvFrrXZrvKll8_GGcY6mjbWX37jP018-y51Fb3-jzunvDYxsXuPGbRn2KRFQvw8atY5POnOsAMMqvjbuKq781tr0qxMLJx0xEzSHFuB2wpeFric3AKNlDdK4KnOjKISiE_1pWwa2EnVUNLk30JZpa7dqq6ooylCHb5cec2IOyF0X6p8ycgKB3C0o7Kxjpa-Cz86kYMb5-26_OdJA_eim_vkQlmXXoj1IShjIMgeEwchHS1QdCyGGYSstkMWBKBRSq2AS" />
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Page Content -->
+            <div class="pt-32 px-8 max-w-5xl mx-auto">
+                <!-- Headline Section -->
+                <div class="mb-14">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full mb-4">
+                        <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                        <span class="text-primary font-headline font-bold text-[10px] tracking-widest uppercase">Arena
+                            Access</span>
+                    </div>
+                    <h1
+                        class="text-6xl lg:text-8xl font-headline font-black uppercase tracking-tighter leading-[0.9] italic">
+                        Battle For <br /><span class="text-primary">Glory.</span>
+                    </h1>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+                    <!-- Left: Input Form -->
+                    <div class="md:col-span-7 space-y-8">
+                        <div class="obsidian-panel p-10 rounded-2xl">
+                            <label
+                                class="block text-white/40 font-headline font-bold uppercase text-[10px] tracking-[0.2em] mb-6">Duel
+                                Invitation Code</label>
+                            <div
+                                class="relative group input-focus-ring border border-white/10 bg-black rounded-xl overflow-hidden transition-all duration-300">
+                                <input
+                                    class="w-full bg-transparent border-none py-8 px-8 text-3xl font-headline font-bold text-primary placeholder:text-white/5 focus:ring-0 uppercase tracking-[0.25em]"
+                                    placeholder="FD-XXXX-XXXX" type="text" />
+                                <div class="absolute inset-y-0 right-8 flex items-center">
+                                    <button class="text-white/20 hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined text-3xl"
+                                            data-icon="qr_code_scanner">qr_code_scanner</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mt-6">
+                                <span class="material-symbols-outlined text-white/20 text-sm"
+                                    data-icon="security">security</span>
+                                <p class="text-white/30 text-[10px] font-bold uppercase tracking-widest">Codes are
+                                    private and single-use</p>
+                            </div>
+                        </div>
+                        <!-- Enhanced Info Card -->
+                        <div
+                            class="flex gap-5 p-6 bg-secondary-container/5 border border-secondary-container/10 rounded-2xl items-center">
+                            <div
+                                class="h-10 w-10 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-secondary text-xl"
+                                    data-icon="info">info</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white uppercase tracking-widest mb-1">Instant Preview
+                                </h4>
+                                <p class="text-xs text-white/40 leading-relaxed">Enter a code to automatically reveal
+                                    your opponent's stats and the prize pool before confirming entry.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right: Preview Card -->
+                    <div class="md:col-span-5">
+                        <div class="obsidian-panel rounded-2xl overflow-hidden shadow-2xl relative">
+                            <!-- Premium Background Glow -->
+                            <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 blur-[100px]"></div>
+                            <!-- Card Header Image -->
+                            <div class="relative h-44">
+                                <img class="w-full h-full object-cover grayscale brightness-50 contrast-125"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0tNzZoN3P7Jud4L-RE7GwGq7IZjxPoeqGp_wBesuk_R3qXziaBWGK1SzY7EIK65EI-3-2a2wliw4JAOyHDL1dfSaaLCged4a_yA1ISTFSx-jwKElZ7jnTzYuqZqWot7Vv5D5Bd8B-bqMRnc7W2b0IVOlScnHSQKp5ljC2yAx3LCxSog199Mk5lQlqG5SRZEjJAGQwS3qsXqLZ9lg1nPgKFRYZiAMJq9L20_h2tIljJZvd_T5dSWBFdY6MzgALCUOjh0-5micBU8jF" />
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-[#181818] via-transparent to-transparent">
+                                </div>
+                                <div class="absolute top-6 left-6 flex items-center gap-2">
+                                    <span
+                                        class="bg-primary/20 backdrop-blur-md text-primary text-[9px] font-black px-2.5 py-1 rounded border border-primary/20 uppercase tracking-tighter">Gold
+                                        Elite Duel</span>
+                                    <span
+                                        class="bg-black/50 backdrop-blur-md text-white/70 text-[9px] font-black px-2.5 py-1 rounded border border-white/10 uppercase tracking-tighter">Verified</span>
+                                </div>
+                            </div>
+                            <!-- Card Content -->
+                            <div class="px-8 pb-10 -mt-12 relative z-10 space-y-8">
+                                <div class="flex items-end justify-between">
+                                    <div class="space-y-1">
+                                        <p class="text-[9px] text-white/40 font-bold uppercase tracking-[0.2em]">
+                                            Opponent</p>
+                                        <h3
+                                            class="text-2xl font-headline font-black text-white uppercase italic tracking-tight">
+                                            Kwadwo_Striker</h3>
+                                    </div>
+                                    <div class="relative">
+                                        <div class="absolute inset-0 bg-primary/20 blur-lg rounded-full"></div>
+                                        <img class="h-16 w-16 rounded-xl border-2 border-primary/30 relative z-10 grayscale hover:grayscale-0 transition-all duration-500"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSFRUjcRg6bRQRNjCYvsFyrXAQitLH4eLehRgv1iZWW_w9tbLI7QNbAmuBCpCoDNvmaxPAI3OX8ucJ-TZCWQohwN8IvIbkXhA2UrUmM6_U-slfBN9kTerwP_MlHwcGzvwLMSey203lNmRGaUFBqpKPBGTZh_SmMYlsJUtNvpwPw7ryirBizJ5dUvTFvv5Ibp0lseICa8My2sZ3m9DFRRzuSkTz2XykR_dVlcrCoBwC2MdD7WrdAPAsVgXY9zEt7MpPG9map8JyQ1sY" />
+                                    </div>
+                                </div>
+                                <div
+                                    class="grid grid-cols-2 gap-px bg-white/5 rounded-xl overflow-hidden border border-white/5">
+                                    <div class="bg-surface-container-high p-5">
+                                        <p class="text-[9px] text-white/30 font-bold uppercase tracking-widest mb-1">
+                                            Gameweek</p>
+                                        <p class="text-xl font-headline font-bold text-white italic">GW 24</p>
+                                    </div>
+                                    <div class="bg-surface-container-high p-5 text-right">
+                                        <p class="text-[9px] text-white/30 font-bold uppercase tracking-widest mb-1">
+                                            Entry Fee</p>
+                                        <p class="text-xl font-headline font-bold text-primary">₵50.00</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div
+                                        class="flex justify-between items-center text-[11px] font-bold uppercase tracking-widest">
+                                        <span class="text-white/40">Prize Pool</span>
+                                        <span class="text-secondary italic">₵90.00 Winner Takes All</span>
+                                    </div>
+                                    <div class="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent">
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center text-[11px] font-bold uppercase tracking-widest">
+                                        <span class="text-white/40">Platform Fee</span>
+                                        <span class="text-white/80">₵10.00</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="w-full gold-glow-button py-6 rounded-xl text-on-primary font-headline font-black uppercase tracking-[0.2em] text-sm hover:scale-[1.04] active:scale-[0.96] transition-all duration-300">
+                                    Confirm &amp; Pay ₵50
+                                </button>
+                            </div>
+                        </div>
+                        <p
+                            class="mt-8 text-[9px] text-center text-white/20 font-bold px-8 uppercase tracking-[0.2em] leading-loose">
+                            Automated smart-match distribution system. Terms &amp; conditions apply.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- BottomNavBar (Mobile only) -->
+        <nav
+            class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-background/95 backdrop-blur-xl z-50 border-t border-white/5">
+            <a class="flex flex-col items-center justify-center text-white/40 px-4" href="#">
+                <span class="material-symbols-outlined text-2xl" data-icon="grid_view">grid_view</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-2xl h-14 w-14"
+                href="#">
+                <span class="material-symbols-outlined text-2xl" data-icon="swords">swords</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-white/40 px-4" href="#">
+                <span class="material-symbols-outlined text-2xl" data-icon="groups">groups</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-white/40 px-4" href="#">
+                <span class="material-symbols-outlined text-2xl"
+                    data-icon="account_balance_wallet">account_balance_wallet</span>
+            </a>
+        </nav>
+    </div>
+</body>
+
+</html>

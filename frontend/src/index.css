@@ -1,0 +1,319 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/container-queries";
+
+@theme {
+  --color-primary: #f3be4d;
+  --color-inverse-primary: #7a5900;
+  --color-on-primary: #402d00;
+  --color-on-secondary-fixed: #002204;
+  --color-on-secondary-fixed-variant: #005312;
+  --color-on-background: #e4e2e1;
+  --color-inverse-surface: #e4e2e1;
+  --color-surface-tint: #f3be4d;
+  --color-surface-container-low: #111111;
+  --color-on-surface: #e4e2e1;
+  --color-error: #ffb4ab;
+  --color-inverse-on-surface: #303030;
+  --color-on-primary-container: #634700;
+  --color-secondary-fixed: #a3f69c;
+  --color-on-error-container: #ffdad6;
+  --color-on-tertiary-fixed-variant: #454747;
+  --color-primary-container: #e9b544;
+  --color-surface-container-lowest: #0b0b0b;
+  --color-primary-fixed: #ffdea3;
+  --color-on-secondary-container: #81d27c;
+  --color-surface-bright: #393939;
+  --color-surface-variant: #353535;
+  --color-on-tertiary: #2f3131;
+  --color-outline: #4f4635;
+  --color-tertiary-container: #bcbcbc;
+  --color-background: #0e0e0e;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-on-primary-fixed: #261900;
+  --color-on-primary-fixed-variant: #5c4200;
+  --color-tertiary-fixed-dim: #c6c6c7;
+  --color-secondary-fixed-dim: #88d982;
+  --color-surface-container-highest: #2e2f2f;
+  --color-surface: #131313;
+  --color-error-container: #93000a;
+  --color-surface-container: #1b1c1c;
+  --color-primary-fixed-dim: #f3be4d;
+  --color-on-secondary: #003909;
+  --color-outline-variant: #353535;
+  --color-on-tertiary-fixed: #1a1c1c;
+  --color-secondary-container: #005b14;
+  --color-on-tertiary-container: #4a4c4d;
+  --color-on-error: #690005;
+  --color-secondary: #88d982;
+  --color-surface-dim: #0a0a0a;
+  --color-on-surface-variant: #9b8f7c;
+  --color-surface-container-high: #232424;
+  --color-tertiary: #d8d9d9;
+  --color-gold-muted: #a6892c;
+  --color-text-muted: #888888;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #0e0e0e;
+  color: #e4e2e1;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  line-height: 1;
+}
+
+.page-landing .gold-matte {
+  background: #d4af37;
+  transition: all 0.3s ease;
+}
+
+.page-landing .gold-matte:hover {
+  background: #c4a133;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.page-landing .obsidian-gradient {
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0) 0%, rgba(18, 18, 18, 1) 100%);
+}
+
+.page-landing .text-outline-gold {
+  -webkit-text-stroke: 1px #d4af37;
+  color: transparent;
+}
+
+.page-dashboard .obsidian-panel {
+  background: #1b1c1c;
+  border: 1px solid rgba(243, 190, 77, 0.08);
+}
+
+.page-dashboard .gold-glow-text {
+  text-shadow: 0 0 20px rgba(243, 190, 77, 0.3);
+}
+
+.page-dashboard .gold-gradient {
+  background: linear-gradient(135deg, #f3be4d 0%, #e9b544 100%);
+}
+
+.page-auth .gold-gradient {
+  background: linear-gradient(135deg, #ffd37b 0%, #e9b544 50%, #c69c3a 100%);
+}
+
+.page-auth .obsidian-panel {
+  background: rgba(21, 21, 21, 0.95);
+  border: 1px solid rgba(255, 211, 123, 0.1);
+}
+
+.page-auth .input-focus-gold:focus {
+  border-color: #ffd37b;
+  box-shadow: 0 0 0 1px rgba(255, 211, 123, 0.2);
+  background-color: #1a1a1a;
+}
+
+.page-auth .button-glow:hover {
+  box-shadow: 0 0 20px rgba(255, 211, 123, 0.3);
+}
+
+.page-create-duel .stadium-glow,
+.page-pools-list .stadium-glow {
+  background: linear-gradient(135deg, #ffd37b 0%, #e9b544 100%);
+}
+
+.page-create-duel .gold-border-gradient {
+  border: 1px solid transparent;
+  background: linear-gradient(#0e0e0e, #0e0e0e) padding-box,
+    linear-gradient(135deg, #ffd37b, #7a5900) border-box;
+}
+
+.page-create-duel .premium-shadow {
+  box-shadow: 0 0 40px -10px rgba(255, 211, 123, 0.15);
+}
+
+.page-create-duel .obsidian-panel {
+  background: linear-gradient(180deg, #1f2020 0%, #131313 100%);
+}
+
+.page-join-duel .obsidian-panel {
+  background: linear-gradient(145deg, #181818 0%, #121212 100%);
+  border: 1px solid rgba(255, 211, 123, 0.08);
+}
+
+.page-join-duel .gold-glow-button {
+  background: linear-gradient(135deg, #ffd37b 0%, #e9b544 100%);
+  box-shadow: 0 10px 25px -5px rgba(255, 211, 123, 0.3);
+}
+
+.page-join-duel .gold-glow-button:hover {
+  box-shadow: 0 15px 30px -5px rgba(255, 211, 123, 0.4);
+}
+
+.page-join-duel .input-focus-ring:focus-within {
+  border-color: #ffd37b;
+  box-shadow: 0 0 0 1px #ffd37b;
+}
+
+.page-duel-details .surface-shift {
+  background-color: #1f2020;
+}
+
+.page-duel-details .stadium-glow {
+  background: linear-gradient(135deg, #ffd37b 0%, #e9b544 100%);
+}
+
+.page-duel-details .glass-surface {
+  background: rgba(53, 53, 53, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+.page-duel-details .obsidian-card {
+  background: linear-gradient(180deg, rgba(31, 32, 32, 0.8) 0%, rgba(14, 14, 14, 1) 100%);
+  border: 1px solid rgba(255, 211, 123, 0.1);
+}
+
+.page-duel-details .leader-glow {
+  box-shadow: 0 0 30px rgba(255, 211, 123, 0.15);
+  border: 1px solid rgba(255, 211, 123, 0.4);
+}
+
+.page-duel-details .broadcast-vs {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.05), transparent);
+}
+
+.page-pools-list .obsidian-gold-btn {
+  background: #131313;
+  border: 1px solid #ffd37b;
+  color: #ffd37b;
+}
+
+.page-pools-list .obsidian-gold-btn:hover {
+  background: #ffd37b;
+  color: #131313;
+}
+
+.page-pools-list .progress-subtle {
+  background: rgba(255, 255, 255, 0.05);
+  height: 4px;
+}
+
+.page-pools-list .card-border {
+  border: 1px solid rgba(255, 211, 123, 0.08);
+}
+
+.page-pool-details .surface-shift-nesting {
+  background: linear-gradient(180deg, #1f2020 0%, #131313 100%);
+}
+
+.page-pool-details .obsidian-card {
+  background: linear-gradient(145deg, #1f2020 0%, #131313 100%);
+  border: 1px solid rgba(255, 211, 123, 0.05);
+}
+
+.page-pool-details .gold-glow {
+  box-shadow: 0 0 20px rgba(255, 211, 123, 0.08);
+}
+
+.page-profile .obsidian-card {
+  background: #1f2020;
+  border: 1px solid rgba(255, 211, 123, 0.05);
+}
+
+.page-profile .gold-gradient-bg {
+  background: linear-gradient(135deg, #f3be4d 0%, #e9b544 100%);
+}
+
+.page-profile .gold-text-gradient {
+  background: linear-gradient(to bottom right, #ffd37b, #e9b544);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-leaderboard .obsidian-gradient {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+}
+
+.page-leaderboard .gold-glow {
+  box-shadow: 0 0 40px rgba(255, 211, 123, 0.1);
+}
+
+.page-leaderboard .glass-dark {
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(20px);
+}
+
+.page-wallet .obsidian-gold-card {
+  background: linear-gradient(145deg, #1a1a1a 0%, #0b0b0b 100%);
+  border: 1px solid rgba(255, 211, 123, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.page-wallet .gold-glow-text {
+  background: linear-gradient(to bottom, #ffd37b 20%, #e9b544 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 211, 123, 0.15);
+}
+
+.page-wallet .elite-button {
+  background: linear-gradient(to bottom, #ffd37b, #e9b544);
+  box-shadow: 0 4px 15px -4px rgba(233, 181, 68, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-wallet .elite-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -4px rgba(233, 181, 68, 0.5);
+}
+
+.page-wallet .secondary-elite-button {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 211, 123, 0.2);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.page-wallet .secondary-elite-button:hover {
+  background: rgba(255, 211, 123, 0.08);
+  border-color: rgba(255, 211, 123, 0.4);
+}
+
+.page-wallet .transaction-row:hover {
+  background: rgba(255, 211, 123, 0.02);
+}
+
+.page-wallet .headline-font {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.page-not-found .glass-overlay {
+  background: rgba(57, 57, 57, 0.6);
+  backdrop-filter: blur(20px);
+}
+
+.page-not-found .font-body {
+  font-family: 'Public Sans', 'Inter', sans-serif;
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #f3be4d 0%, #e9b544 100%);
+}
+
+.page-create-pool .bg-primary-gradient {
+  background: linear-gradient(135deg, #f2ca50, #d4af37);
+}
+
+.page-create-pool .shadow-ambient {
+  box-shadow: 0 16px 32px -4px rgba(229, 226, 225, 0.06);
+}
+
+.page-create-pool .shadow-glow {
+  box-shadow: 0 4px 20px 0 rgba(242, 202, 80, 0.2);
+}

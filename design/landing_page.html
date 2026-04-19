@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FantasyDuel GH | Obsidian Gold Elite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#D4AF37", // Obsidian Gold
+                    "on-primary": "#121212",
+                    "background": "#121212", // Deep Obsidian Charcoal
+                    "surface": "#1A1A1A",
+                    "surface-container": "#242424",
+                    "outline": "#333333",
+                    "gold-muted": "#A6892C",
+                    "text-muted": "#888888"
+            },
+            "fontFamily": {
+                    "sans": ["Inter", "sans-serif"],
+                    "headline": ["Inter", "sans-serif"],
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .gold-matte {
+            background: #D4AF37;
+            transition: all 0.3s ease;
+        }
+        .gold-matte:hover {
+            background: #C4A133;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+        .obsidian-gradient {
+            background: linear-gradient(180deg, rgba(18, 18, 18, 0) 0%, rgba(18, 18, 18, 1) 100%);
+        }
+        .text-outline-gold {
+            -webkit-text-stroke: 1px #D4AF37;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-white font-sans selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/5 h-20 flex items-center px-8 md:px-12">
+<div class="flex justify-between items-center w-full max-w-7xl mx-auto">
+<div class="text-xl font-black tracking-[0.2em] text-primary uppercase">
+            FantasyDuel GH
+        </div>
+<div class="hidden md:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.15em]">
+<a class="text-primary" href="#">Home</a>
+<a class="text-text-muted hover:text-white transition-colors" href="#">Duels</a>
+<a class="text-text-muted hover:text-white transition-colors" href="#">Pools</a>
+<a class="text-text-muted hover:text-white transition-colors" href="#">Rankings</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-white/60 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+<button class="hidden md:block gold-matte text-on-primary text-[11px] font-black px-8 py-3 rounded-sm uppercase tracking-widest">
+                Get Started
+            </button>
+</div>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-6 py-24">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 obsidian-gradient z-10"></div>
+<img class="w-full h-full object-cover opacity-20 scale-105" data-alt="Dark, high-contrast aerial view of a professional football stadium at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgTxldbQw5iTTuyuBo5RaQrftEvZ3w2QKA6nMbE-grkEQ1oib4U0H1qJirC9lgQWYRVR-zfJ3Xoow_8jd2wPK011J-7yHMadwvh31oKg2J63FzoigTtDv66U3ZbQYhd8xRiZFtpn--2rY9wci0a0BH9hcriPYonYlfQo36sBjuRxDB0KnCYxuKqAqWIXd9FaQd-scktUEYzT9hy43aEbyEYTxTQ-rgtcnNBCYcgBgm8IMuO1ydKGaLC8RQF5sgnSSWqUZHnGy70DMt"/>
+</div>
+<div class="relative z-20 max-w-5xl w-full text-center space-y-12">
+<div class="inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-[0.2em]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#D4AF37]"></span>
+                Premier League 24/25 Season
+            </div>
+<div class="space-y-4">
+<h1 class="font-black text-6xl md:text-8xl leading-[0.9] tracking-tighter text-white uppercase italic">
+                    Challenge Your Friends.<br/>
+<span class="text-primary">Win Real Cash.</span>
+</h1>
+<p class="max-w-2xl mx-auto text-lg md:text-xl text-text-muted font-light tracking-wide leading-relaxed">
+                    Elite head-to-head fantasy duels for the dedicated manager. <br class="hidden md:block"/>
+                    Join the premier high-stakes arena in Ghana.
+                </p>
+</div>
+<div class="flex flex-col md:row items-center justify-center gap-6 pt-8">
+<button class="w-full md:w-auto gold-matte text-on-primary font-black text-xs px-16 py-5 rounded-sm uppercase tracking-[0.2em]">
+                    Get Started
+                </button>
+<button class="w-full md:w-auto border border-white/10 text-white font-black text-xs px-16 py-5 rounded-sm uppercase tracking-[0.2em] hover:bg-white/5 transition-all">
+                    View Pools
+                </button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Section -->
+<section class="max-w-7xl mx-auto px-8 md:px-12 py-32">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- The Arena -->
+<div class="md:col-span-8 bg-surface rounded-sm p-10 border border-white/5 relative overflow-hidden group">
+<div class="relative z-10 space-y-6">
+<h3 class="font-black text-3xl text-white uppercase italic tracking-tight">The Arena</h3>
+<p class="text-text-muted max-w-md leading-relaxed">Experience the adrenaline of daily winner-take-all duels and exclusive season-long pools with Ghana's top fantasy managers.</p>
+<div class="flex items-center gap-4 pt-6">
+<div class="flex -space-x-4">
+<img class="w-12 h-12 rounded-full border-2 border-surface" data-alt="manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMIV2dKYApyJHCm3hRgw17ApVvq2VxUwDu6qzsxqOTIcmvZDmiBINw9WLWVezezfRmCSb0o-_XTWHfrrMKSWfP3m9rhCoojpLySAPWKxGTpuCUza6vNTMsNDKVhjd6lM7e8b6kms-KTVF9U75rN4KH-TIzUIyzZ1wofSFU5sTFGVp18zVRQ20oMudn4WGdP2jOA4ZBDh8o0EM_EKvAfLMf5Jtr6qQOQv_q3S2zY5mgK-gLj503_-lxuBlzZY2Md5niI04gre9J4_yK"/>
+<img class="w-12 h-12 rounded-full border-2 border-surface" data-alt="manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDObi5V84tY3DyIQW0SDLfu3hH8W4SVKq_lvTSfbZbvtHfipZYN_zc3m-m9ErlEmoA80HUpgdqc0LPkmKNgtWSyx5KYgjJBJfJxTWsK94o4QK_PAA0Es3iS81kXSW79rH4cFhN8inuNyTGsdRvnj_IfhJlOmHvuyfjXXKiCVItyLMP4ZlvUAfPu-t1bW82kSmQjRX7PdHxcnVyXK3k19x0wm-wheEyPlW6axXOb5sPqmTV7nHCkogWiK69Iuc6nDnCxMRUnqdiJE7hf"/>
+</div>
+<span class="text-[10px] font-black text-primary uppercase tracking-[0.2em]">12k+ Elite Managers</span>
+</div>
+</div>
+<div class="absolute right-[-20px] bottom-[-20px] opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
+<span class="material-symbols-outlined text-[15rem]">sports_kabaddi</span>
+</div>
+</div>
+<!-- Instant Payouts -->
+<div class="md:col-span-4 bg-surface rounded-sm p-10 border border-white/5 flex flex-col justify-between">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">account_balance_wallet</span>
+</div>
+<div class="space-y-3">
+<h4 class="font-bold text-lg uppercase tracking-wider text-white italic">Instant Payouts</h4>
+<p class="text-sm text-text-muted leading-relaxed">Secure Mobile Money transfers. Withdraw your winnings immediately after gameweek validation.</p>
+</div>
+</div>
+<!-- Verified Data -->
+<div class="md:col-span-4 bg-surface rounded-sm p-10 border border-white/5 flex flex-col justify-between">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">verified</span>
+</div>
+<div class="space-y-3">
+<h4 class="font-bold text-lg uppercase tracking-wider text-white italic">Official Data</h4>
+<p class="text-sm text-text-muted leading-relaxed">Real-time synchronization with the official FPL API ensures unparalleled accuracy.</p>
+</div>
+</div>
+<!-- Leaderboard -->
+<div class="md:col-span-8 bg-surface rounded-sm p-10 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="space-y-4">
+<h4 class="font-black text-3xl uppercase italic text-white">Elite Rankings</h4>
+<p class="text-text-muted text-sm max-w-xs">Compete for the weekly GHS 5,000 bonus pool awarded to the top 10 performing managers.</p>
+</div>
+<div class="w-full md:w-64 space-y-2">
+<div class="bg-background/50 border border-white/5 p-3 flex justify-between items-center rounded-sm">
+<span class="text-[10px] font-bold tracking-tighter">01. Kwesi_FPL</span>
+<span class="text-[10px] text-primary font-black">98 PTS</span>
+</div>
+<div class="bg-background/50 border border-white/5 p-3 flex justify-between items-center rounded-sm opacity-70">
+<span class="text-[10px] font-bold tracking-tighter">02. Abena_Utd</span>
+<span class="text-[10px] text-primary font-black">94 PTS</span>
+</div>
+<div class="bg-background/50 border border-white/5 p-3 flex justify-between items-center rounded-sm opacity-40">
+<span class="text-[10px] font-bold tracking-tighter">03. Kofi_Striker</span>
+<span class="text-[10px] text-primary font-black">92 PTS</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="bg-[#161616] py-40 border-y border-white/5">
+<div class="max-w-7xl mx-auto px-12">
+<div class="text-center mb-32 space-y-6">
+<h2 class="font-black text-5xl md:text-7xl uppercase italic tracking-tighter">The Process</h2>
+<div class="w-24 h-1 bg-primary mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-24">
+<!-- Step 1 -->
+<div class="text-center space-y-10 group">
+<div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+<div class="absolute inset-0 border border-primary/30 rounded-full group-hover:scale-110 transition-transform"></div>
+<span class="material-symbols-outlined text-primary text-3xl">link</span>
+</div>
+<div class="space-y-4">
+<h3 class="font-black text-xl uppercase italic tracking-wide text-white">01. Sync Team</h3>
+<p class="text-text-muted text-sm leading-relaxed px-4">Securely connect your official Fantasy Premier League account ID.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="text-center space-y-10 group">
+<div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+<div class="absolute inset-0 border border-primary/30 rounded-full group-hover:scale-110 transition-transform"></div>
+<span class="material-symbols-outlined text-primary text-3xl">swords</span>
+</div>
+<div class="space-y-4">
+<h3 class="font-black text-xl uppercase italic tracking-wide text-white">02. Issue Duel</h3>
+<p class="text-text-muted text-sm leading-relaxed px-4">Set your stake and challenge rivals in direct head-to-head combat.</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="text-center space-y-10 group">
+<div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+<div class="absolute inset-0 border border-primary/30 rounded-full group-hover:scale-110 transition-transform"></div>
+<span class="material-symbols-outlined text-primary text-3xl">payments</span>
+</div>
+<div class="space-y-4">
+<h3 class="font-black text-xl uppercase italic tracking-wide text-white">03. Claim Pot</h3>
+<p class="text-text-muted text-sm leading-relaxed px-4">Outscore your opponent and receive instant mobile money payouts.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="max-w-6xl mx-auto px-8 py-40 text-center">
+<div class="bg-surface rounded-sm p-16 md:p-32 border border-white/5 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 grayscale pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="Geometric stadium architecture detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl663gFbx9gv5d5OXACCaNgmgK7qyM7hiqMvrjkeZB1Wh7T7VkvkMJS-pY1WvvImNET66zwnQTkfOYx1-Howk_nBIdqMmqppYF99dKIgHzviiLfB9mcIY-xYSoGhDrlU8RJxeYhmpju2N3wXiE9NNFFmgPmwsTrZQOOy2FuN87B_JrJA3R21565KRUYiXYzqKy6OIjqB3bPdYA1_VUD0tUQYBbDHzG3qvIT_B9_Q7PKhryrq57XqKCVjPkw9XxxSPa86OiCH-fhpiU"/>
+</div>
+<div class="relative z-10 space-y-12">
+<h2 class="font-black text-5xl md:text-7xl uppercase italic leading-[0.9] tracking-tighter">
+                    Ready to Prove <br/> You're the <span class="text-primary">Best?</span>
+</h2>
+<p class="text-text-muted text-lg max-w-lg mx-auto font-light tracking-wide">
+                    Join Ghana's elite community of managers. No shortcuts. Just pure skill and strategy.
+                </p>
+<div class="pt-6">
+<button class="gold-matte text-on-primary font-black text-sm px-20 py-6 rounded-sm uppercase tracking-[0.25em]">
+                        Get Started Now
+                    </button>
+</div>
+<div class="flex items-center justify-center gap-10 opacity-30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">security</span>
+<span class="text-[9px] font-bold uppercase tracking-widest">SSL Secure</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">payments</span>
+<span class="text-[9px] font-bold uppercase tracking-widest">MoMo Ready</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0A0A0A] border-t border-white/5 pt-24 pb-12">
+<div class="max-w-7xl mx-auto px-8 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+<div class="md:col-span-1 space-y-8">
+<div class="text-xl font-black tracking-[0.2em] text-primary uppercase">
+                FantasyDuel GH
+            </div>
+<p class="text-xs text-text-muted leading-relaxed font-light">
+                The premier peer-to-peer fantasy sports destination in Ghana. Designed for the serious manager.
+            </p>
+</div>
+<div>
+<h5 class="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8">Platform</h5>
+<ul class="space-y-4 text-xs text-text-muted">
+<li><a class="hover:text-primary transition-colors" href="#">How it Works</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Leaderboards</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Prize Pools</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8">Legal</h5>
+<ul class="space-y-4 text-xs text-text-muted">
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Responsible Gaming</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8">Connect</h5>
+<div class="flex gap-4">
+<a class="w-10 h-10 border border-white/10 rounded-sm flex items-center justify-center hover:border-primary/50 transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">alternate_email</span>
+</a>
+<a class="w-10 h-10 border border-white/10 rounded-sm flex items-center justify-center hover:border-primary/50 transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">chat_bubble</span>
+</a>
+</div>
+<div class="mt-10">
+<p class="text-[9px] text-text-muted font-bold uppercase tracking-[0.2em] mb-2">Powered By</p>
+<div class="text-[10px] font-black text-white/40 uppercase tracking-tighter">Official FPL API Integration</div>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-8 md:px-12 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-[9px] text-text-muted/40 uppercase tracking-[0.2em]">© 2024 FantasyDuel GH. Obsidian Elite Series.</p>
+<p class="text-[9px] text-text-muted/40 uppercase tracking-[0.1em] text-center">18+ Play Responsibly. Gaming can be addictive.</p>
+</div>
+</footer>
+<!-- Mobile Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 bg-background/95 backdrop-blur-md border-t border-white/10 z-50 px-4">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[8px] font-black uppercase tracking-widest">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-white/40" href="#">
+<span class="material-symbols-outlined">swords</span>
+<span class="text-[8px] font-black uppercase tracking-widest">Duels</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-white/40" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[8px] font-black uppercase tracking-widest">Elite</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-white/40" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[8px] font-black uppercase tracking-widest">Wallet</span>
+</a>
+</nav>
+</body></html>

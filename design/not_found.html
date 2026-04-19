@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=Public_Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#4d4635",
+                    "error": "#ffb4ab",
+                    "surface-tint": "#e9c349",
+                    "primary": "#f2ca50",
+                    "primary-fixed": "#ffe088",
+                    "on-surface": "#e5e2e1",
+                    "background": "#131313",
+                    "on-error-container": "#ffdad6",
+                    "surface-dim": "#131313",
+                    "on-primary-fixed": "#241a00",
+                    "secondary-fixed": "#e2e2e2",
+                    "tertiary-container": "#97b0ff",
+                    "surface-container-highest": "#353534",
+                    "surface-container-high": "#2a2a2a",
+                    "surface-container-low": "#1c1b1b",
+                    "on-primary-fixed-variant": "#574500",
+                    "on-tertiary-fixed": "#00174b",
+                    "on-secondary-fixed-variant": "#454747",
+                    "on-secondary": "#2f3131",
+                    "surface-bright": "#393939",
+                    "outline": "#99907c",
+                    "on-tertiary": "#082b72",
+                    "on-error": "#690005",
+                    "inverse-surface": "#e5e2e1",
+                    "on-background": "#e5e2e1",
+                    "secondary-fixed-dim": "#c6c6c6",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-primary": "#3c2f00",
+                    "tertiary": "#bfcdff",
+                    "inverse-primary": "#735c00",
+                    "on-tertiary-container": "#254188",
+                    "surface-variant": "#353534",
+                    "secondary": "#c6c6c6",
+                    "primary-container": "#d4af37",
+                    "surface-container": "#201f1f",
+                    "on-tertiary-fixed-variant": "#27438a",
+                    "secondary-container": "#454747",
+                    "on-surface-variant": "#d0c5af",
+                    "inverse-on-surface": "#313030",
+                    "on-secondary-container": "#b5b5b5",
+                    "error-container": "#93000a",
+                    "tertiary-fixed-dim": "#b4c5ff",
+                    "surface": "#131313",
+                    "primary-fixed-dim": "#e9c349",
+                    "on-secondary-fixed": "#1a1c1c",
+                    "tertiary-fixed": "#dbe1ff",
+                    "on-primary-container": "#554300"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Public Sans"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-overlay {
+            background: rgba(57, 57, 57, 0.6);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased overflow-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#131313] flex justify-between items-center px-6 h-16 w-full shadow-none font-['Inter'] font-extrabold tracking-tight">
+<div class="text-xl font-black text-[#D4AF37] uppercase tracking-tighter">FantasyDuel GH</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-gray-400 hover:text-[#F2CA50] transition-colors duration-200 active:scale-95 transition-transform" href="#">Lobby</a>
+<a class="text-gray-400 hover:text-[#F2CA50] transition-colors duration-200 active:scale-95 transition-transform" href="#">Contests</a>
+<a class="text-gray-400 hover:text-[#F2CA50] transition-colors duration-200 active:scale-95 transition-transform" href="#">Standings</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#D4AF37] cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-[#D4AF37] cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</nav>
+<!-- Shell Container -->
+<div class="flex h-screen pt-16">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-full w-64 bg-[#1C1B1B] shadow-xl flex flex-col gap-2 p-4 z-40 hidden md:flex">
+<div class="flex items-center gap-3 mb-6 p-2">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a high-stakes fantasy sports player in a dark studio setting with soft gold rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJbQJQMcycVa8Xqb3idpPqjYbNWU_Gw9XxVidw1OQhQNP8X_0PhgNFbxow7fnbslEdVNTxxqiq5Zr0bpS8aQwZNXLvIHlmXuhWdXcMkcIB8f3TwtbpdGO-p_ggZ-3ym8VdjqQ26XvAMUtrEK2gjbotOTf2iVhooVIPGW3i6ecqOgC7my-osSabkq0DqcU5lFjclZcAEwuQUID1bcuyYeQciwU3jstwxwqnhJHc0J708I_006YpoPlNK78ktQyz6Bz2CAdZjovz9nc7"/>
+</div>
+<div>
+<p class="text-[#D4AF37] font-bold text-sm font-['Public_Sans']">Elite Player</p>
+<p class="text-gray-500 text-xs font-['Public_Sans']">Pro Tier</p>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3 p-3 cursor-pointer transition-colors hover:bg-[#2A2A2A] hover:text-gray-200 text-gray-500 font-['Public_Sans'] text-sm font-semibold">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+<span>Lobby</span>
+</div>
+<div class="flex items-center gap-3 p-3 cursor-pointer transition-colors hover:bg-[#2A2A2A] hover:text-gray-200 text-gray-500 font-['Public_Sans'] text-sm font-semibold">
+<span class="material-symbols-outlined" data-icon="Format_list_bulleted">format_list_bulleted</span>
+<span>My Contests</span>
+</div>
+<div class="flex items-center gap-3 p-3 cursor-pointer transition-colors hover:bg-[#2A2A2A] hover:text-gray-200 text-gray-500 font-['Public_Sans'] text-sm font-semibold">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span>Leaderboard</span>
+</div>
+<div class="flex items-center gap-3 p-3 cursor-pointer transition-colors hover:bg-[#2A2A2A] hover:text-gray-200 text-gray-500 font-['Public_Sans'] text-sm font-semibold">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+<span>Promotions</span>
+</div>
+<div class="flex items-center gap-3 p-3 cursor-pointer transition-colors hover:bg-[#2A2A2A] hover:text-gray-200 text-gray-500 font-['Public_Sans'] text-sm font-semibold">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span>Support</span>
+</div>
+</div>
+<button class="mt-auto mb-20 w-full py-3 bg-gradient-to-br from-[#F2CA50] to-[#D4AF37] text-on-primary font-bold text-sm rounded-lg active:scale-95 transition-transform shadow-[0px_4px_20px_rgba(212,175,55,0.2)]">
+                Deposit Now
+            </button>
+</aside>
+<!-- Main Content (404 Page) -->
+<main class="flex-1 ml-0 md:ml-64 bg-surface flex items-center justify-center relative overflow-hidden">
+<!-- Atmospheric Depth Background Texture -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary rounded-full blur-[120px]"></div>
+<div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-primary-container rounded-full blur-[120px]"></div>
+</div>
+<!-- 404 Hero Section -->
+<section class="relative z-10 max-w-2xl w-full px-6 flex flex-col items-center text-center">
+<!-- Large Display Number with Editorial Scale -->
+<div class="relative mb-8">
+<h1 class="text-[10rem] md:text-[14rem] font-headline font-extrabold leading-none tracking-tighter text-surface-container-highest/30 select-none">
+                        404
+                    </h1>
+<!-- Overlaid Icon Representing Missing Player -->
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-8xl md:text-9xl drop-shadow-[0_0_30px_rgba(242,202,80,0.4)]" data-icon="person_search" style="font-variation-settings: 'FILL' 1;">person_search</span>
+</div>
+</div>
+<!-- Headline -->
+<h2 class="text-3xl md:text-5xl font-headline font-bold text-on-surface mb-4 tracking-tight">
+                    PAGE NOT FOUND
+                </h2>
+<!-- Subtext -->
+<p class="text-on-surface-variant text-lg md:text-xl font-body max-w-md mb-10 leading-relaxed">
+                    The whistle has blown, but this page isn't on the field. It looks like you've wandered out of bounds.
+                </p>
+<!-- Action Button -->
+<div class="flex flex-col sm:flex-row gap-4 items-center">
+<a class="group relative px-8 py-4 bg-gradient-to-br from-primary to-primary-container rounded-lg flex items-center gap-3 transition-all duration-300 hover:shadow-[0px_4px_24px_rgba(242,202,80,0.3)] active:scale-95" href="#">
+<span class="text-on-primary font-headline font-extrabold tracking-tight">BACK TO DASHBOARD</span>
+<span class="material-symbols-outlined text-on-primary group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+<button class="px-8 py-4 bg-transparent border border-outline-variant/30 hover:bg-surface-container-high transition-colors rounded-lg flex items-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+<span class="font-headline font-bold text-sm tracking-wide">TRY RELOADING</span>
+</button>
+</div>
+<!-- Technical Broadcast Ticker (Unique Component) -->
+<div class="mt-20 w-full bg-surface-container-lowest border-l-4 border-primary p-4 flex items-center gap-6 overflow-hidden">
+<span class="text-primary font-headline font-bold text-xs uppercase tracking-widest whitespace-nowrap">LIVE STATUS:</span>
+<div class="flex gap-12 animate-marquee whitespace-nowrap overflow-hidden">
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-label text-[10px] uppercase">Lobby Status:</span>
+<span class="text-tertiary font-label text-xs">OPERATIONAL</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-label text-[10px] uppercase">Match 404:</span>
+<span class="text-error font-label text-xs">NOT FOUND</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-label text-[10px] uppercase">Server Load:</span>
+<span class="text-tertiary font-label text-xs">OPTIMAL</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-label text-[10px] uppercase">Next Draft:</span>
+<span class="text-primary font-label text-xs">00:14:52</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Mobile Bottom Navigation Shell -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-low flex justify-around items-center px-4 z-50 border-t border-outline-variant/10">
+<div class="flex flex-col items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+<span class="text-[10px] font-bold uppercase">Lobby</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined" data-icon="Format_list_bulleted">format_list_bulleted</span>
+<span class="text-[10px] font-bold uppercase">My Walks</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-[10px] font-bold uppercase">Error</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="text-[10px] font-bold uppercase">Rank</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="text-[10px] font-bold uppercase">Profile</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>FantasyDuel GH | Obsidian Gold Wallet</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#ffd37b",
+                        "inverse-primary": "#7a5900",
+                        "on-primary": "#402d00",
+                        "on-secondary-fixed": "#002204",
+                        "on-secondary-fixed-variant": "#005312",
+                        "on-background": "#e4e2e1",
+                        "inverse-surface": "#e4e2e1",
+                        "surface-tint": "#f3be4d",
+                        "surface-container-low": "#131313",
+                        "on-surface": "#e4e2e1",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#303030",
+                        "on-primary-container": "#634700",
+                        "secondary-fixed": "#a3f69c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "primary-container": "#e9b544",
+                        "surface-container-lowest": "#0b0b0b",
+                        "primary-fixed": "#ffdea3",
+                        "on-secondary-container": "#81d27c",
+                        "surface-bright": "#1a1a1a",
+                        "surface-variant": "#262626",
+                        "on-tertiary": "#2f3131",
+                        "outline": "#4d4d4d",
+                        "tertiary-container": "#bcbcbc",
+                        "background": "#0b0b0b",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#261900",
+                        "on-primary-fixed-variant": "#5c4200",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-fixed-dim": "#88d982",
+                        "surface-container-highest": "#1f1f1f",
+                        "surface": "#0b0b0b",
+                        "error-container": "#93000a",
+                        "surface-container": "#161616",
+                        "primary-fixed-dim": "#f3be4d",
+                        "on-secondary": "#003909",
+                        "outline-variant": "#333333",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary-container": "#005b14",
+                        "on-tertiary-container": "#4a4c4d",
+                        "on-error": "#690005",
+                        "secondary": "#88d982",
+                        "surface-dim": "#0b0b0b",
+                        "on-surface-variant": "#a6a6a6",
+                        "surface-container-high": "#1a1a1a",
+                        "tertiary": "#d8d9d9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .obsidian-gold-card {
+            background: linear-gradient(145deg, #1a1a1a 0%, #0b0b0b 100%);
+            border: 1px solid rgba(255, 211, 123, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .gold-glow-text {
+            background: linear-gradient(to bottom, #ffd37b 20%, #e9b544 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 211, 123, 0.15);
+        }
+
+        .elite-button {
+            background: linear-gradient(to bottom, #ffd37b, #e9b544);
+            box-shadow: 0 4px 15px -4px rgba(233, 181, 68, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .elite-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -4px rgba(233, 181, 68, 0.5);
+        }
+
+        .secondary-elite-button {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 211, 123, 0.2);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .secondary-elite-button:hover {
+            background: rgba(255, 211, 123, 0.08);
+            border-color: rgba(255, 211, 123, 0.4);
+        }
+
+        .headline-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .transaction-row:hover {
+            background: rgba(255, 211, 123, 0.02);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background min-h-screen selection:bg-primary/30">
+    <div class="flex">
+        <!-- SideNavBar -->
+        <aside
+            class="h-screen w-72 hidden lg:flex flex-col border-r border-white/5 bg-surface-container-lowest py-10 px-6 gap-4 sticky top-0">
+            <div class="mb-12 px-2">
+                <h1 class="text-2xl font-black text-[#ffd37b] tracking-tighter headline-font uppercase italic">
+                    FantasyDuel</h1>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Elite League Season 24/25
+                    </p>
+                </div>
+            </div>
+            <nav class="flex flex-col gap-3 flex-grow">
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all headline-font font-semibold group"
+                    href="#">
+                    <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+                        data-icon="dashboard">dashboard</span>
+                    <span>Dashboard</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all headline-font font-semibold group"
+                    href="#">
+                    <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+                        data-icon="swords">swords</span>
+                    <span>Active Duels</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all headline-font font-semibold group"
+                    href="#">
+                    <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+                        data-icon="trophy">trophy</span>
+                    <span>Prize Pools</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3.5 rounded-xl text-primary bg-primary/5 border border-primary/10 shadow-[0_0_20px_rgba(255,211,123,0.05)] headline-font font-bold"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="account_balance_wallet"
+                        style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                    <span>My Wallet</span>
+                </a>
+            </nav>
+            <button
+                class="elite-button text-on-primary font-black py-4 px-4 rounded-xl headline-font uppercase tracking-tighter text-sm">
+                Launch New Duel
+            </button>
+        </aside>
+        <main class="flex-grow pb-24 lg:pb-12">
+            <!-- TopAppBar -->
+            <header
+                class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-2xl flex justify-between items-center px-8 h-20 border-b border-white/5 lg:static lg:bg-transparent lg:border-none lg:backdrop-blur-none">
+                <div
+                    class="lg:hidden text-2xl font-black italic text-[#ffd37b] headline-font uppercase tracking-tighter">
+                    FantasyDuel</div>
+                <div class="hidden lg:block">
+                    <h2 class="text-xs font-black headline-font uppercase tracking-[0.3em] text-white/40">Financial
+                        Overview</h2>
+                    <h3 class="text-2xl font-bold headline-font text-white">Elite Wallet</h3>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="hidden md:flex flex-col items-end">
+                        <span class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Active
+                            Balance</span>
+                        <span class="text-sm font-bold text-primary headline-font">GHS 4,250.00</span>
+                    </div>
+                    <button class="relative p-2 text-white/60 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+                    </button>
+                    <div class="w-10 h-10 rounded-full border border-primary/20 p-0.5">
+                        <img alt="User profile" class="w-full h-full rounded-full object-cover"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUvGlkAIRkRess_4d4eZw7I5MCq_e0Vz3wnWVymFN_621zQtX27zFblc1yClv8D-1HLo-Xa2YNrZD2fqDnLBvF4Ht5MAsX4p_-KhWbRADbTVt22gqgKTd8-1eKV6-Xfow3251WTErppVLQ9tJ1VUBUBP2TdhCBVqXZBcO6_85r-ldmaZPEMIL2GpsmRS27HxmyzEpaCltH8GcRugeWrRJbO56TlDi659YJDZUUTLuCM-7Ng0F0bZAi70YU0sR2_drCa-6AoAK39Sha" />
+                    </div>
+                </div>
+            </header>
+            <div class="mt-24 lg:mt-12 px-8 max-w-7xl mx-auto">
+                <!-- Wallet Bento Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Balance Card (Large) -->
+                    <div
+                        class="lg:col-span-8 obsidian-gold-card rounded-3xl p-10 flex flex-col justify-between min-h-[300px] relative group overflow-hidden">
+                        <div
+                            class="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 rounded-full blur-[100px] group-hover:bg-primary/10 transition-colors duration-700">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-8 h-[1px] bg-primary/40"></div>
+                                <p class="text-white/40 text-xs font-bold uppercase tracking-[0.4em]">Available Capital
+                                </p>
+                            </div>
+                            <h3
+                                class="text-7xl font-black headline-font gold-glow-text tracking-tighter leading-none mb-2">
+                                GHS 4,250.00
+                            </h3>
+                            <p class="text-white/20 text-xs font-medium italic">Verified secure balance • Updated just
+                                now</p>
+                        </div>
+                        <div class="flex flex-wrap gap-4 mt-12 relative">
+                            <button
+                                class="elite-button text-on-primary font-black px-10 py-4 rounded-xl flex items-center gap-3 headline-font uppercase tracking-tight text-sm">
+                                <span class="material-symbols-outlined text-xl" data-icon="add_circle">add_circle</span>
+                                Deposit Funds
+                            </button>
+                            <button
+                                class="secondary-elite-button text-white/80 font-bold px-10 py-4 rounded-xl flex items-center gap-3 headline-font uppercase tracking-tight text-sm">
+                                <span class="material-symbols-outlined text-xl" data-icon="payments">payments</span>
+                                Request Payout
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Quick Stats -->
+                    <div class="lg:col-span-4 grid grid-cols-1 gap-6">
+                        <div
+                            class="obsidian-gold-card rounded-2xl p-8 flex flex-col justify-center border-l-4 border-l-secondary/40">
+                            <p class="text-white/30 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Total
+                                Winnings</p>
+                            <div class="flex items-end justify-between">
+                                <span class="text-3xl font-bold headline-font text-secondary tracking-tight">GHS
+                                    12,840</span>
+                                <div class="flex flex-col items-end">
+                                    <span
+                                        class="text-[10px] font-bold text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">+12%</span>
+                                    <span class="material-symbols-outlined text-secondary/40 mt-1"
+                                        data-icon="trending_up">trending_up</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="obsidian-gold-card rounded-2xl p-8 flex flex-col justify-center border-l-4 border-l-primary/40">
+                            <p class="text-white/30 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Contest
+                                Participation</p>
+                            <div class="flex items-end justify-between">
+                                <span class="text-3xl font-bold headline-font text-white tracking-tight">142</span>
+                                <span class="material-symbols-outlined text-white/20"
+                                    data-icon="query_stats">query_stats</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Transaction History -->
+                    <div class="lg:col-span-12 mt-4">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-4">
+                                <h4 class="text-xl font-bold headline-font uppercase tracking-tight">Activity Log</h4>
+                                <span class="h-4 w-[1px] bg-white/10 hidden md:block"></span>
+                                <span class="text-white/30 text-xs hidden md:block">Real-time ledger</span>
+                            </div>
+                            <div class="flex p-1 bg-surface-container-lowest rounded-xl border border-white/5">
+                                <button
+                                    class="px-5 py-2 rounded-lg text-xs font-black bg-primary text-on-primary uppercase tracking-tight">All</button>
+                                <button
+                                    class="px-5 py-2 rounded-lg text-xs font-bold text-white/40 hover:text-white transition-colors uppercase tracking-tight">Inflow</button>
+                                <button
+                                    class="px-5 py-2 rounded-lg text-xs font-bold text-white/40 hover:text-white transition-colors uppercase tracking-tight">Outflow</button>
+                            </div>
+                        </div>
+                        <div class="obsidian-gold-card rounded-3xl overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr
+                                            class="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 border-b border-white/5">
+                                            <th class="px-8 py-5">Transaction Details</th>
+                                            <th class="px-8 py-5">Date &amp; Time</th>
+                                            <th class="px-8 py-5">Execution Status</th>
+                                            <th class="px-8 py-5 text-right">Amount (GHS)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-white/5">
+                                        <!-- Row 1 -->
+                                        <tr class="transaction-row transition-all duration-200">
+                                            <td class="px-8 py-6">
+                                                <div class="flex items-center gap-5">
+                                                    <div
+                                                        class="w-12 h-12 rounded-2xl bg-secondary/5 border border-secondary/20 flex items-center justify-center text-secondary">
+                                                        <span class="material-symbols-outlined"
+                                                            data-icon="trophy">trophy</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-bold text-white">Pool Payout</p>
+                                                        <p class="text-xs text-white/30">EPL Matchweek 12 Champion</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <p class="text-sm text-white/60">Nov 24, 2024</p>
+                                                <p class="text-[10px] text-white/20 uppercase">14:22 GMT</p>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <span
+                                                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-black uppercase tracking-widest">
+                                                    <span
+                                                        class="w-1 h-1 rounded-full bg-secondary animate-pulse"></span>
+                                                    Cleared
+                                                </span>
+                                            </td>
+                                            <td class="px-8 py-6 text-right">
+                                                <span
+                                                    class="text-lg font-black text-secondary headline-font">+850.00</span>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 2 -->
+                                        <tr class="transaction-row transition-all duration-200">
+                                            <td class="px-8 py-6">
+                                                <div class="flex items-center gap-5">
+                                                    <div
+                                                        class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40">
+                                                        <span class="material-symbols-outlined"
+                                                            data-icon="sports_kabaddi">sports_kabaddi</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-bold text-white">Entry Fee</p>
+                                                        <p class="text-xs text-white/30">H2H: Apex Predators vs Dynasty
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <p class="text-sm text-white/60">Nov 22, 2024</p>
+                                                <p class="text-[10px] text-white/20 uppercase">09:15 GMT</p>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <span
+                                                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest">
+                                                    Processed
+                                                </span>
+                                            </td>
+                                            <td class="px-8 py-6 text-right">
+                                                <span class="text-lg font-black text-white headline-font">-100.00</span>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 3 -->
+                                        <tr class="transaction-row transition-all duration-200">
+                                            <td class="px-8 py-6">
+                                                <div class="flex items-center gap-5">
+                                                    <div
+                                                        class="w-12 h-12 rounded-2xl bg-primary/5 border border-primary/20 flex items-center justify-center text-primary">
+                                                        <span class="material-symbols-outlined"
+                                                            data-icon="account_balance">account_balance</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-bold text-white">Deposit</p>
+                                                        <p class="text-xs text-white/30">MTN MoMo Transfer #7821</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <p class="text-sm text-white/60">Nov 20, 2024</p>
+                                                <p class="text-[10px] text-white/20 uppercase">18:45 GMT</p>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <span
+                                                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-black uppercase tracking-widest">
+                                                    <span class="w-1 h-1 rounded-full bg-secondary"></span>
+                                                    Cleared
+                                                </span>
+                                            </td>
+                                            <td class="px-8 py-6 text-right">
+                                                <span
+                                                    class="text-lg font-black text-primary headline-font">+1,500.00</span>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 4 -->
+                                        <tr class="transaction-row transition-all duration-200">
+                                            <td class="px-8 py-6">
+                                                <div class="flex items-center gap-5">
+                                                    <div
+                                                        class="w-12 h-12 rounded-2xl bg-error/5 border border-error/20 flex items-center justify-center text-error">
+                                                        <span class="material-symbols-outlined"
+                                                            data-icon="outbound">outbound</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-bold text-white">Withdrawal</p>
+                                                        <p class="text-xs text-white/30">Bank Transfer • Standard
+                                                            Chartered</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <p class="text-sm text-white/60">Nov 18, 2024</p>
+                                                <p class="text-[10px] text-white/20 uppercase">11:30 GMT</p>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <span
+                                                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-widest">
+                                                    Sent
+                                                </span>
+                                            </td>
+                                            <td class="px-8 py-6 text-right">
+                                                <span
+                                                    class="text-lg font-black text-error headline-font">-2,000.00</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="p-6 flex justify-center border-t border-white/5 bg-white/[0.01]">
+                                <button
+                                    class="text-primary font-black text-xs uppercase tracking-[0.2em] hover:tracking-[0.3em] transition-all flex items-center gap-2 group">
+                                    Full Statement Access
+                                    <span
+                                        class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform"
+                                        data-icon="arrow_forward">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Ad Banner Section -->
+                <section class="mt-16 relative h-48 rounded-3xl overflow-hidden obsidian-gold-card group">
+                    <img class="w-full h-full object-cover opacity-30 grayscale group-hover:grayscale-0 group-hover:opacity-40 transition-all duration-1000 scale-105 group-hover:scale-100"
+                        data-alt="high stakes stadium night lights"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeyDXMs4rNBJL4TWZwF_4lBCOH9_lncqU4Nux0VHhPMrtlX2VfRXB5CsCGlYxuVMPfc9N3TZeC_WPEshS6VnpmWw_Mn-lbqIY75CHMV-XVOKUal9cuJSSji4H5thDNt0tIPJ66tdonlDS1Ju1C5qZQ57AImocHjFGl_YBMdOPy3X-0ozsbYnPj3bakQtUpg933lEi6fiLV0lHosKLoBQMQnLc7bRqvIYqCcN4IaE1Fm2jxYXU5HSYvy2Gx6ihSnRtnueQOD6LsnDOe" />
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent flex items-center p-12">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="flex h-2 w-2 rounded-full bg-error"></span>
+                                <span class="text-error font-black text-[10px] uppercase tracking-widest">Live
+                                    Registration</span>
+                            </div>
+                            <h5
+                                class="text-4xl font-black headline-font text-white uppercase italic tracking-tighter leading-none mb-2">
+                                Grand Slam Pool #04</h5>
+                            <p class="text-primary/80 font-bold headline-font text-lg">Guaranteed GHS 50,000 Prizing</p>
+                            <button
+                                class="mt-6 bg-white text-black text-xs font-black uppercase px-8 py-3 rounded-xl hover:bg-primary transition-colors tracking-widest">Secure
+                                Spot</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <!-- BottomNavBar (Mobile Only) -->
+    <nav
+        class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-background/90 backdrop-blur-2xl border-t border-white/5 z-50 lg:hidden">
+        <div class="flex flex-col items-center justify-center text-white/40">
+            <span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+            <span class="text-[9px] font-black uppercase tracking-widest headline-font">Home</span>
+        </div>
+        <div class="flex flex-col items-center justify-center text-white/40">
+            <span class="material-symbols-outlined mb-1" data-icon="swords">swords</span>
+            <span class="text-[9px] font-black uppercase tracking-widest headline-font">Duels</span>
+        </div>
+        <div class="flex flex-col items-center justify-center text-white/40">
+            <span class="material-symbols-outlined mb-1" data-icon="trophy">trophy</span>
+            <span class="text-[9px] font-black uppercase tracking-widest headline-font">Pools</span>
+        </div>
+        <div
+            class="flex flex-col items-center justify-center bg-primary/10 text-primary rounded-2xl px-5 py-2 border border-primary/20">
+            <span class="material-symbols-outlined mb-1" data-icon="account_balance_wallet"
+                style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+            <span class="text-[9px] font-black uppercase tracking-widest headline-font">Wallet</span>
+        </div>
+    </nav>
+</body>
+
+</html>

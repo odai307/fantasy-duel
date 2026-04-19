@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>FantasyDuel GH | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#f3be4d",
+                        "on-primary": "#261900",
+                        "background": "#0e0e0e",
+                        "surface": "#131313",
+                        "surface-container": "#1b1c1c",
+                        "surface-container-high": "#232424",
+                        "surface-container-highest": "#2e2f2f",
+                        "outline": "#4f4635",
+                        "outline-variant": "#353535",
+                        "secondary": "#88d982",
+                        "on-surface": "#e4e2e1",
+                        "on-surface-variant": "#9b8f7c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .obsidian-panel {
+            background: #1b1c1c;
+            border: 1px solid rgba(243, 190, 77, 0.08);
+        }
+
+        .gold-glow-text {
+            text-shadow: 0 0 20px rgba(243, 190, 77, 0.3);
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #f3be4d 0%, #e9b544 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary">
+    <div class="flex min-h-screen">
+        <!-- SideNavBar -->
+        <aside
+            class="h-screen w-64 hidden lg:flex flex-col border-r border-outline-variant/30 bg-surface py-8 px-4 gap-4 fixed left-0 top-0 z-50">
+            <div class="mb-10 px-2">
+                <h1 class="text-xl font-black text-primary tracking-widest font-headline">FantasyDuel GH</h1>
+                <p class="text-[10px] text-on-surface-variant uppercase tracking-[0.2em] mt-1">Premier League Season
+                    24/25</p>
+            </div>
+            <nav class="flex flex-col gap-1.5">
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary bg-primary/5 border-l-2 border-primary transition-all font-headline font-semibold"
+                    href="#">
+                    <span class="material-symbols-outlined">home</span>
+                    <span>Home</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface/60 hover:text-on-surface hover:bg-surface-container transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">sports_kabaddi</span>
+                    <span>Duels</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface/60 hover:text-on-surface hover:bg-surface-container transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">sports_score</span>
+                    <span>Pools</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface/60 hover:text-on-surface hover:bg-surface-container transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>Leaderboard</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface/60 hover:text-on-surface hover:bg-surface-container transition-colors font-headline font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined">account_balance_wallet</span>
+                    <span>Wallet</span>
+                </a>
+            </nav>
+            <div class="mt-auto">
+                <button
+                    class="w-full gold-gradient text-on-primary font-headline font-bold py-4 rounded-xl shadow-lg hover:brightness-110 transition-all uppercase tracking-tight">
+                    Create Duel
+                </button>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-64 min-h-screen pb-20 lg:pb-8">
+            <!-- TopNavBar -->
+            <header
+                class="fixed top-0 lg:left-64 right-0 z-40 bg-background/80 backdrop-blur-xl border-b border-outline-variant/30 flex justify-between items-center px-8 h-16">
+                <div class="flex items-center gap-4">
+                    <h2 class="font-headline uppercase tracking-tighter text-primary font-black italic text-2xl">
+                        Dashboard</h2>
+                </div>
+                <div class="flex items-center gap-8">
+                    <div class="hidden md:flex gap-8 items-center">
+                        <span
+                            class="text-primary font-bold border-b-2 border-primary pb-1 font-headline uppercase text-xs tracking-[0.2em]">Overview</span>
+                        <span
+                            class="text-on-surface-variant font-headline uppercase text-xs tracking-[0.2em] cursor-pointer hover:text-on-surface transition-colors">Insights</span>
+                        <span
+                            class="text-on-surface-variant font-headline uppercase text-xs tracking-[0.2em] cursor-pointer hover:text-on-surface transition-colors">History</span>
+                    </div>
+                    <button class="text-primary hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
+                    </button>
+                </div>
+            </header>
+            <div class="pt-24 px-8 max-w-7xl mx-auto space-y-8">
+                <!-- Hero Stats -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Premium Wallet Card -->
+                    <div class="lg:col-span-8 obsidian-panel rounded-2xl p-8 relative overflow-hidden group">
+                        <div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 blur-[120px] rounded-full"></div>
+                        <div class="relative z-10">
+                            <p
+                                class="text-on-surface-variant uppercase tracking-[0.25em] text-[10px] font-bold mb-4 flex items-center gap-2">
+                                Available Balance
+                                <span class="h-[1px] w-12 bg-outline-variant"></span>
+                            </p>
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                                <div>
+                                    <div class="flex items-baseline gap-3">
+                                        <span
+                                            class="text-primary font-headline text-2xl font-bold opacity-80 italic">GHS</span>
+                                        <span
+                                            class="text-on-surface font-headline text-6xl font-black tracking-tighter gold-glow-text">12,450.00</span>
+                                    </div>
+                                    <div
+                                        class="mt-4 flex items-center gap-2 text-secondary bg-secondary/10 px-3 py-1 rounded-full w-fit">
+                                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                                        <span class="text-xs font-bold uppercase tracking-widest">+12.4% Profit</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 w-full md:w-auto">
+                                    <button
+                                        class="flex-1 md:flex-none gold-gradient text-on-primary px-8 py-3.5 rounded-xl font-headline font-bold uppercase tracking-widest text-xs hover:brightness-110 transition-all shadow-[0_8px_20px_rgba(243,190,77,0.15)]">
+                                        Create Duel
+                                    </button>
+                                    <button
+                                        class="flex-1 md:flex-none bg-surface-container-highest border border-outline-variant text-on-surface px-8 py-3.5 rounded-xl font-headline font-bold uppercase tracking-widest text-xs hover:bg-surface-container-high transition-colors">
+                                        Join Duel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Live FPL Score -->
+                    <div
+                        class="lg:col-span-4 obsidian-panel rounded-2xl p-8 flex flex-col justify-between border-l-4 border-l-secondary relative">
+                        <div class="flex justify-between items-start mb-6">
+                            <p class="text-on-surface-variant uppercase tracking-[0.25em] text-[10px] font-bold">FPL
+                                SCORE</p>
+                            <div
+                                class="bg-secondary/20 text-secondary text-[10px] font-black px-3 py-1 rounded-full flex items-center gap-1.5 border border-secondary/30">
+                                <span
+                                    class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_#88d982]"></span>
+                                LIVE GW24
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="font-headline text-7xl font-black text-on-surface tracking-tighter">74</span>
+                            <div class="text-right">
+                                <p class="text-on-surface-variant text-[10px] uppercase font-bold mb-1 opacity-60">
+                                    Projected</p>
+                                <p class="font-headline text-2xl font-bold text-secondary">82</p>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-secondary w-[74%] shadow-[0_0_12px_rgba(136,217,130,0.5)]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Dashboard Content Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Active Duels -->
+                    <div class="md:col-span-8 space-y-4">
+                        <div class="flex justify-between items-end mb-2 px-1">
+                            <h3 class="font-headline text-2xl font-black uppercase tracking-tighter italic">Active Duels
+                            </h3>
+                            <a class="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-80 transition-opacity border-b border-primary/30 pb-0.5"
+                                href="#">View All History</a>
+                        </div>
+                        <!-- Duel Card 1 -->
+                        <div
+                            class="obsidian-panel rounded-xl p-6 hover:bg-surface-container-high/50 transition-all group">
+                            <div class="flex items-center justify-between mb-8">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center border border-outline-variant/30 group-hover:border-primary/20 transition-colors">
+                                        <span class="material-symbols-outlined text-primary">sports_kabaddi</span>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="font-headline font-bold text-on-surface uppercase text-sm tracking-tight">
+                                            The High Roller Clash</p>
+                                        <p
+                                            class="text-[10px] text-on-surface-variant uppercase tracking-widest font-medium">
+                                            Head-to-Head Duel</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p
+                                        class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest opacity-60">
+                                        Prize Pool</p>
+                                    <p class="font-headline font-black text-primary text-xl tracking-tight">GHS 500.00
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-12 relative items-center">
+                                <div
+                                    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-headline font-black italic text-white/5 text-5xl select-none">
+                                    VS</div>
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-3">
+                                        <img class="w-8 h-8 rounded-full border border-primary/20"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjCyWDwvTCTPJN3WW4AMeRFzHZghHiHLotsvaLRABgm3dpuDUsTeqnJ0Se9RjUj5JO5oM6jRak8F76Fpfsq5KHBm0YwK2f3qxAZd4e3kZ-u7X14xmZAW6udoCZG98Q6SJicXC0p3T6LL7yMv7zOrz2zADx3NW4JiElWr1bFylNT9ReoRPfcjgvY66doF_TObo8i8UUgxpGkhzb_v1SGwr2C8E7LYYwAwuW9UkL0I3nTiLq2VQbMKipgGSRMRGbc1SbOYttWdMTQrK4" />
+                                        <span class="text-xs font-bold uppercase tracking-tight">Kwesi_FPL <span
+                                                class="text-[10px] text-primary">(You)</span></span>
+                                    </div>
+                                    <div
+                                        class="bg-surface-container-highest/50 p-4 rounded-xl border border-outline-variant/10 flex justify-between items-center">
+                                        <span
+                                            class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Score</span>
+                                        <span class="font-headline font-black text-on-surface text-xl">74</span>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 text-right">
+                                    <div class="flex items-center gap-3 justify-end">
+                                        <span class="text-xs font-bold uppercase tracking-tight">Abena_United</span>
+                                        <img class="w-8 h-8 rounded-full border border-outline-variant"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1Jsa8HHYj-vQ616_39Yb1ODM9OZTtWaAPAm-bgmJsadr8iRe2kVyaykJ5fnCDc51fJM_3aJDpN5JUzKYRoBBORWZAZNkanhxOPD14ZItXg8-YR-OmSBC00HU_c2peBlKL9E6A-VY935hYX4BESzREA0TykVPxuj6yPksj1cEYsfygZO_UVoZJUG3rzBeD_MswnGekg5xPpVIx88jhYpdcffHusz61NSBjgsdC-S30_gE2osLsLDJfpYM3OLH-OulxWQLLYYW2KcLf" />
+                                    </div>
+                                    <div
+                                        class="bg-surface-container-highest/50 p-4 rounded-xl border border-outline-variant/10 flex justify-between items-center">
+                                        <span class="font-headline font-black text-on-surface text-xl">68</span>
+                                        <span
+                                            class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Score</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pool Card -->
+                        <div
+                            class="obsidian-panel rounded-xl p-6 hover:bg-surface-container-high/50 transition-all border-l-4 border-l-primary/40">
+                            <div class="flex items-center justify-between mb-8">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center border border-outline-variant/30">
+                                        <span class="material-symbols-outlined text-primary">groups</span>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="font-headline font-bold text-on-surface uppercase text-sm tracking-tight">
+                                            Accra Weekend League</p>
+                                        <p
+                                            class="text-[10px] text-on-surface-variant uppercase tracking-widest font-medium">
+                                            Tournament Pool</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p
+                                        class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest opacity-60">
+                                        Global Prize</p>
+                                    <p class="font-headline font-black text-primary text-xl tracking-tight">GHS 2,500.00
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="flex -space-x-3">
+                                        <img class="w-10 h-10 rounded-full border-2 border-surface"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3fqlk7pplYKMakhiMYJpgQLbnrvfU6AiOVa857J5xnvMn0hD3Gl7hIZYoczbZGnLa4xPQJJlBxT1IamgLcS_eCYXSC8FzzrmsJZu3w2Xy1hWHEtQY95e_LfCc862umei0YXDb1ia17J7y0Gvo-8e3RiY2o5VQIz0RgKpf5GVCQ9xyJAy74qMwew3RYB3FyliEH6rqlpZULG3BQLbTTVUAaHB9JXwzCHjLTs1wpeQvJEAKeQhIHtm8A08wIo9F8_u090iq-1dxLu3t" />
+                                        <img class="w-10 h-10 rounded-full border-2 border-surface"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvyTo0FYSPUHOHcspQE8cQoBj9Hvt4KOhDMSbxUjthoB1YMxdxBuBLUpDnhEuibrDxFBIyZFfrcLWLzfpHSTPAB_xkx4HXh8J-NufMSsm4qll_xv-IpIZMDw6fcd5wcxOrpTMcKaRYj5JYjEQKeAKXYz3Ygc8XtkK5mf2Ssl417qd8PFh3joRreGnARXc6uBzl4Daqvy37RmSa--k6wFeMHU-PVmhPAT0GwzsZN05lu0Q4aA-EKBjHQM6MYTN_BcOv-wmsrNMPp1kJ" />
+                                        <img class="w-10 h-10 rounded-full border-2 border-surface"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb3LWwRzH8bJLaFfUK6r4wkxfqPMyLDetXYvdBOqT1GPFP1LtrP0TLHJNdICWwyF9pQ7l2CECQNIVB7jsx14nK9pYQSmwtrGZC1ReD1ArbAlXRP2MEoHb_rRlUiFsLinaSjOkpuRJcnCKGOHfsLSQhEKK8_vqkn_d1ROUO4zgUbwqOXdHPN3wbfCwk44PvdAXnwfnsqngZV1Z4_O0CZ2NdjuLHJHT8Dc8NVJm8248IZ__4IKzCCsG9UcJbA9bhPi5vr5FF7VQl13A6" />
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-surface-container-highest border-2 border-surface flex items-center justify-center text-[10px] font-black text-primary">
+                                            +14</div>
+                                    </div>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Enrolled
+                                        Players</span>
+                                </div>
+                                <div class="flex gap-6 items-center">
+                                    <div class="text-right">
+                                        <p
+                                            class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest opacity-60">
+                                            Your Position</p>
+                                        <p class="font-headline font-black text-secondary text-lg">4th <span
+                                                class="text-xs text-on-surface/40 font-bold">/ 18</span></p>
+                                    </div>
+                                    <button
+                                        class="bg-primary/10 p-3 rounded-xl hover:bg-primary/20 transition-all text-primary">
+                                        <span class="material-symbols-outlined">chevron_right</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sidebar Data -->
+                    <div class="md:col-span-4 space-y-6">
+                        <!-- Fixtures -->
+                        <div class="obsidian-panel rounded-xl p-6">
+                            <h4
+                                class="font-headline font-black uppercase text-xs tracking-[0.3em] mb-6 flex items-center gap-2">
+                                Upcoming
+                                <span class="h-[1px] flex-1 bg-outline-variant"></span>
+                            </h4>
+                            <div class="space-y-4">
+                                <div
+                                    class="flex items-center justify-between bg-surface-container rounded-xl p-4 border border-outline-variant/10">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <img class="w-7 h-7"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBKNo2j8JURFmFOnBu9f-SyKxsSQjehF3CJGOA12iOD0gDbs6Bx_CEOQMJ6tX8Rica4GZ06EWpRI-IejsOQjLdqGPmo4Z9Jke8UQt7Mm5g8qvU_mTcnG7jquP69CDIdymPDKZdVC9eG2Ssi6OkARv5QRbIQEoV3TSUxRejfOGhwOGQ9LjhUNtLfZMvPSmuw904oOBQ1uCh0A_Ps8C7jPswG1jBdN85k60jwI5qW1Hh5N6CSIU3sUIsI8iEc1eiG1b-_6PRPKKNMWn4" />
+                                        <span class="text-[10px] font-black uppercase tracking-widest">MUN</span>
+                                    </div>
+                                    <div class="text-center">
+                                        <p
+                                            class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">
+                                            SAT 12:30</p>
+                                        <div
+                                            class="text-xs text-primary font-black italic border-y border-primary/20 py-0.5 px-2">
+                                            VS</div>
+                                    </div>
+                                    <div class="flex flex-col items-center gap-2">
+                                        <img class="w-7 h-7"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB91qw1oLkNn28uAFS_KtSuh7KPD8YFQUyhuGjQ6_XTN8fFWVINWeOTdsfCoQnSjeOFmM1D4gM_IKiNe4z3phTLBj75LvbNZxI8QrQeAUqJFxmPBixEv5wGL_8Fcx9FJME5cFE5Z7WvVazYm_QDPtSMtzic1qYyw6UxiLqSW0T-V__wWHyB3mesCJo5tci2eqEIPOJyetyh9zw6BCuF8QmaXGWx1gZtYSCHH4Cx73bJAbmdEc394_2BJ7FnnH7iDS3ZAPpMxtPMwE0w" />
+                                        <span class="text-[10px] font-black uppercase tracking-widest">ARS</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between bg-surface-container rounded-xl p-4 border border-outline-variant/10">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <img class="w-7 h-7"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIdimqNNoJp8Rbs6rz18rWEX351di4F74nLrKtEhT_jowML7W4D_LKma7doKMcmKjccDMe_ooX-rZ0zSQt-Cc-FfChJwqBP3OCqjENeengzBDi1xbVTXrpyzrUhKA0wYng4rVwEKdWWz-h9gYbs0PpZ1rvL79T4ogXBJEjxtzH__PQmvY6ZsbD0RvsmNBmepclo5aQx0KfxNkRso2WA-8EjEfKpkoGHJ1FbyryEOS1X0wqjQ_wTu-ibPK5-l2PaqVRfHMHmN2reshE" />
+                                        <span class="text-[10px] font-black uppercase tracking-widest">LIV</span>
+                                    </div>
+                                    <div class="text-center">
+                                        <p
+                                            class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">
+                                            SUN 16:30</p>
+                                        <div
+                                            class="text-xs text-primary font-black italic border-y border-primary/20 py-0.5 px-2">
+                                            VS</div>
+                                    </div>
+                                    <div class="flex flex-col items-center gap-2">
+                                        <img class="w-7 h-7"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIPMs1b1nxPtTJMW3VXQMU1DPKlEzlvn-y8CcmJazRAVpSfp5f_33znBbxUzBA2M9-nrr-IEZpnDTJzkj7KnNxh4nZjRIMnFHXYOlhQccRBuHeNQFMJo5fIgYjaLzMHz3WE_THTWrgOs7yet7SaQ23JjbBl8RbF7EjxnlMBg-mjLpuSc5Y1pouAyLvXdYwbmOj3UZrdag9LtpS9UECJQPUHNGA5VDyl42lpfiHsmJcpbsHz0a6gy2_lvexvgvJG558Fi_lydFpkbwT" />
+                                        <span class="text-[10px] font-black uppercase tracking-widest">CHE</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Top Performers -->
+                        <div class="obsidian-panel rounded-xl p-6 relative overflow-hidden">
+                            <div class="absolute -right-8 -bottom-8 opacity-[0.03]">
+                                <span class="material-symbols-outlined text-[140px]">emoji_events</span>
+                            </div>
+                            <h4
+                                class="font-headline font-black uppercase text-xs tracking-[0.3em] mb-6 flex items-center gap-2">
+                                Top Ranked
+                                <span class="h-[1px] flex-1 bg-outline-variant"></span>
+                            </h4>
+                            <div class="space-y-4 relative z-10">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <span class="font-headline font-black text-primary w-4 italic">01</span>
+                                        <span class="text-xs font-bold uppercase tracking-tight">Ekow_Tactics</span>
+                                    </div>
+                                    <span class="font-headline font-bold text-secondary text-xs">1,420 PTS</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <span class="font-headline font-black text-on-surface/30 w-4 italic">02</span>
+                                        <span class="text-xs font-bold uppercase tracking-tight">Nana_FPL</span>
+                                    </div>
+                                    <span class="font-headline font-bold text-on-surface text-xs opacity-80">1,395
+                                        PTS</span>
+                                </div>
+                                <div class="h-[1px] bg-outline-variant/30 my-4"></div>
+                                <div class="flex items-center justify-between opacity-60">
+                                    <div class="flex items-center gap-3">
+                                        <span class="font-headline font-black w-4 italic">128</span>
+                                        <span class="text-xs font-bold uppercase tracking-tight text-primary">You</span>
+                                    </div>
+                                    <span class="font-headline font-bold text-xs">842 PTS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Mobile Bottom NavBar -->
+        <nav
+            class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 pb-safe px-2 bg-surface/90 backdrop-blur-xl z-50 border-t border-outline-variant/30">
+            <a class="flex flex-col items-center justify-center text-primary px-3 py-1 scale-95 transition-transform"
+                href="#">
+                <span class="material-symbols-outlined">home</span>
+                <span class="font-body text-[10px] font-black uppercase mt-1">Home</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-surface/40 hover:text-on-surface transition-colors"
+                href="#">
+                <span class="material-symbols-outlined">sports_kabaddi</span>
+                <span class="font-body text-[10px] font-bold uppercase mt-1">Duels</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-surface/40 hover:text-on-surface transition-colors"
+                href="#">
+                <span class="material-symbols-outlined">groups</span>
+                <span class="font-body text-[10px] font-bold uppercase mt-1">Pools</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-surface/40 hover:text-on-surface transition-colors"
+                href="#">
+                <span class="material-symbols-outlined">leaderboard</span>
+                <span class="font-body text-[10px] font-bold uppercase mt-1">Ranks</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-surface/40 hover:text-on-surface transition-colors"
+                href="#">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="font-body text-[10px] font-bold uppercase mt-1">Wallet</span>
+            </a>
+        </nav>
+    </div>
+</body>
+
+</html>
