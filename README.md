@@ -1,16 +1,8 @@
-# FantasyDuel GH
+# FantasyDuel
 
-FantasyDuel GH is a fantasy football competition platform for Ghana-based users.  
+FantasyDuel is a fantasy football competition platform.  
 Players can register, log in, join duels, create pools, and compete on leaderboards.
 
-## Suggested Repository Names
-
-If you want a strong GitHub repo name, these are solid options:
-
-1. `fantasyduel-gh` (recommended)
-2. `fantasyduel-ghana`
-3. `fantasyduel-platform`
-4. `fantasyduel-web`
 
 ## Tech Stack
 
@@ -144,7 +136,7 @@ Protected:
 
 See:
 
-- `FantasyDuel_GH_Architecture.docx`
+- `FantasyDuel_Architecture.docx`
 - `design/` for UI reference pages used to build React views
 
 ## Next Milestones
