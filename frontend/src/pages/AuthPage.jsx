@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getAuthToken } from '../authUtils';
+import { useAuth } from '../AuthContext';
 
 export default function AuthPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = location.state?.from || '/dashboard';
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const { isAuthenticated, login, register } = useAuth();
 
   const [authMode, setAuthMode] = useState('register');
   const [registerForm, setRegisterForm] = useState({
@@ -26,10 +26,10 @@ export default function AuthPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (getAuthToken()) {
+    if (isAuthenticated) {
       navigate(redirectTo, { replace: true });
     }
-  }, [navigate, redirectTo]);
+  }, [isAuthenticated, navigate, redirectTo]);
 
   function handleRegisterChange(field, value) {
     setRegisterForm((prev) => ({ ...prev, [field]: value }));
@@ -66,21 +66,12 @@ export default function AuthPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email: registerForm.email.trim().toLowerCase(),
-          password: registerForm.password,
-        }),
+      await register({
+        firstName,
+        lastName,
+        email: registerForm.email.trim().toLowerCase(),
+        password: registerForm.password,
       });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.message || 'Registration failed');
-      }
 
       setStatusMessage('Registration successful. Please log in.');
       setRegisterForm({
@@ -106,26 +97,10 @@ export default function AuthPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: loginForm.email.trim().toLowerCase(),
-          password: loginForm.password,
-        }),
+      await login({
+        email: loginForm.email.trim().toLowerCase(),
+        password: loginForm.password,
       });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.message || 'Login failed');
-      }
-
-      if (!data?.token) {
-        throw new Error('Login token missing from response');
-      }
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('fantasyduel_token', data.token);
       navigate(redirectTo, { replace: true });
     } catch (error) {
       setErrorMessage(error.message || 'Login failed');

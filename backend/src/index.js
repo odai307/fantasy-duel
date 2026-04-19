@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./auth/authRoutes');
+const poolRoutes = require('./pools/poolRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/pools', poolRoutes);
 
 app.listen(port, () => {
   console.log(`Backend running on port ${port}`);

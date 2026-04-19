@@ -25,6 +25,7 @@ export default function App() {
       <Route path="/join-duel" element={<ProtectedRoute><JoinDuelPage /></ProtectedRoute>} />
       <Route path="/duel-details" element={<ProtectedRoute><DuelDetailsPage /></ProtectedRoute>} />
       <Route path="/pool-details" element={<ProtectedRoute><PoolDetailsPage /></ProtectedRoute>} />
+      <Route path="/pool-details/:id" element={<ProtectedRoute><PoolDetailsPage /></ProtectedRoute>} />
       <Route path="/pools-list" element={<PoolsListPage />} />
       <Route path="/create-pool" element={<ProtectedRoute><CreatePoolPage /></ProtectedRoute>} />
       <Route path="/leaderboard" element={<LeaderboardPage />} />

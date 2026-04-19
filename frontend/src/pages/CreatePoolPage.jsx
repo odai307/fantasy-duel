@@ -1,35 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { getAuthToken } from '../authUtils';
-
-const BUILT_IN_POOL_KEYS = [
-  'kwame::gw10',
-  'abena::gw11',
-  'yaw::gw12',
-];
-
-const USER_CREATED_POOL_KEYS_STORAGE = 'fantasyduel.poolCreatorGameweekKeys';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+import { useAuth } from '../AuthContext';
+import { createPool } from '../poolApi';
 
 function formatMoney(amount) {
   const value = Number(amount) || 0;
   return `GH₵ ${value.toFixed(2)}`;
-}
-
-function getStoredPoolKeys() {
-  if (typeof window === 'undefined') return [];
-
-  try {
-    const parsed = JSON.parse(localStorage.getItem(USER_CREATED_POOL_KEYS_STORAGE) || '[]');
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function toCreatorGameweekKey(creator, gameweek) {
-  return `${creator.trim().toLowerCase()}::${gameweek}`;
 }
 
 function gameweekLabelFromValue(gameweek) {
@@ -38,11 +15,9 @@ function gameweekLabelFromValue(gameweek) {
 
 export default function CreatePoolPage() {
   const navigate = useNavigate();
+  const { isAuthenticated, isInitializing, userFullName } = useAuth();
 
   const [poolName, setPoolName] = useState('');
-  const [creatorName, setCreatorName] = useState('');
-  const [creatorLoading, setCreatorLoading] = useState(true);
-  const [creatorError, setCreatorError] = useState('');
   const [visibility, setVisibility] = useState('PUBLIC');
   const [inviteCode, setInviteCode] = useState('');
   const [gameweek, setGameweek] = useState('gw10');
@@ -50,54 +25,13 @@ export default function CreatePoolPage() {
   const [noMaxParticipants, setNoMaxParticipants] = useState(false);
   const [entryFee, setEntryFee] = useState(50);
   const [description, setDescription] = useState('Standard head-to-head format. Winner takes 70%, runner-up 30%.');
-  const [storedPoolKeys, setStoredPoolKeys] = useState(() => getStoredPoolKeys());
-
-  useEffect(() => {
-    const token = getAuthToken();
-
-    if (!token) {
-      setCreatorLoading(false);
-      setCreatorError('Login to auto-fill creator name from your account.');
-      return;
-    }
-
-    async function loadCreator() {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to load current user');
-        }
-
-        const data = await response.json();
-        const fullName = `${data?.user?.firstName || ''} ${data?.user?.lastName || ''}`.trim();
-        setCreatorName(fullName);
-      } catch (error) {
-        setCreatorError('Could not fetch creator name from backend.');
-      } finally {
-        setCreatorLoading(false);
-      }
-    }
-
-    loadCreator();
-  }, []);
-
-  const creatorGameweekKey = useMemo(
-    () => toCreatorGameweekKey(creatorName, gameweek),
-    [creatorName, gameweek],
-  );
-
-  const isDuplicateCreatorGameweek = useMemo(
-    () => {
-      if (!creatorName.trim()) return false;
-      return [...BUILT_IN_POOL_KEYS, ...storedPoolKeys].includes(creatorGameweekKey);
-    },
-    [creatorGameweekKey, creatorName, storedPoolKeys],
-  );
+  const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const creatorName = userFullName || '';
+  const creatorLoading = isInitializing;
+  const creatorError = !isAuthenticated
+    ? 'Login to auto-fill creator name from your account.'
+    : '';
 
   const participantsValue = Math.min(20, Math.max(2, Number(maxParticipants) || 2));
   const entryFeeValue = Math.max(0, Number(entryFee) || 0);
@@ -106,35 +40,35 @@ export default function CreatePoolPage() {
   const previewName = poolName.trim() || 'Untitled Pool';
   const previewDescription = description.trim() || 'No description yet.';
 
-  const handleCreatePool = (event) => {
+  const handleCreatePool = async (event) => {
     event.preventDefault();
+    setFormError('');
 
-    if (isDuplicateCreatorGameweek) {
+    if (!isAuthenticated) {
+      setFormError('Please log in to create a pool.');
       return;
     }
 
-    const nextStoredKeys = [...storedPoolKeys, creatorGameweekKey];
-    setStoredPoolKeys(nextStoredKeys);
+    const parsedGameweek = Number(gameweek.replace('gw', ''));
 
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(USER_CREATED_POOL_KEYS_STORAGE, JSON.stringify(nextStoredKeys));
+    setIsSubmitting(true);
+    try {
+      const data = await createPool({
+        name: previewName,
+        description: previewDescription,
+        gameweek: parsedGameweek,
+        entryFee: entryFeeValue,
+        maxParticipants: noMaxParticipants ? null : participantsValue,
+        visibility,
+        inviteCode: visibility === 'PRIVATE' ? inviteCode.trim() : null,
+      });
+
+      navigate(`/pool-details/${data.pool.id}`);
+    } catch (error) {
+      setFormError(error.message || 'Failed to create pool');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    navigate('/pool-details', {
-      state: {
-        pool: {
-          name: previewName,
-          creator: creatorName.trim(),
-          gameweek,
-          gameweekLabel: gameweekLabelFromValue(gameweek),
-          entryFee: entryFeeValue,
-          maxParticipants: noMaxParticipants ? null : participantsValue,
-          visibility,
-          inviteCode: visibility === 'PRIVATE' ? inviteCode.trim() : null,
-          description: previewDescription,
-        },
-      },
-    });
   };
 
   return (
@@ -292,16 +226,15 @@ export default function CreatePoolPage() {
                       ) : <div />}
                     </div>
 
+                    {formError ? (
+                      <p className="text-xs text-error font-semibold">{formError}</p>
+                    ) : null}
                     {!creatorName.trim() ? (
                       <p className="text-xs text-on-surface-variant/80 font-semibold">
                         Waiting for creator identity from your account...
                       </p>
-                    ) : isDuplicateCreatorGameweek ? (
-                      <p className="text-xs text-error font-semibold">
-                        A pool already exists for this creator and gameweek. Change creator or gameweek to continue.
-                      </p>
                     ) : (
-                      <p className="text-xs text-secondary font-semibold">Creator + gameweek is available.</p>
+                      <p className="text-xs text-secondary font-semibold">Creator loaded from account.</p>
                     )}
 
                     <div>
@@ -399,10 +332,10 @@ export default function CreatePoolPage() {
                   </Link>
                   <button
                     className="px-8 py-3 rounded-DEFAULT bg-primary-gradient text-on-primary font-bold text-sm hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={creatorLoading || !creatorName.trim() || isDuplicateCreatorGameweek}
+                    disabled={creatorLoading || !creatorName.trim() || isSubmitting}
                     type="submit"
                   >
-                    Create Pool
+                    {isSubmitting ? 'Creating Pool...' : 'Create Pool'}
                   </button>
                 </div>
               </div>

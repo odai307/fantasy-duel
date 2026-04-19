@@ -1,11 +1,39 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { getPoolById } from '../poolApi';
 export default function PoolDetailsPage() {
+  const { id } = useParams();
   const location = useLocation();
-  const pool = location.state?.pool;
+  const [pool, setPool] = useState(location.state?.pool || null);
+  const [loading, setLoading] = useState(Boolean(id));
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+
+    async function loadPool() {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await getPoolById(id);
+        setPool(data.pool);
+      } catch (loadError) {
+        setError(loadError.message || 'Failed to load pool');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadPool();
+  }, [id]);
+
   const entryFee = Number(pool?.entryFee ?? 250);
-  const maxParticipants = pool?.maxParticipants === null ? null : (pool?.maxParticipants ?? 150);
-  const gameweekLabel = pool?.gameweekLabel ?? 'GW 24';
+  const maxParticipants = pool?.maxParticipants === null ? null : pool?.maxParticipants ?? 150;
+  const gameweekLabel = pool?.gameweekLabel ?? `GW ${pool?.gameweek || 24}`;
   const poolName = pool?.name ?? 'Elite Strikers Hub';
   const visibility = pool?.visibility ?? 'PUBLIC';
 
@@ -41,6 +69,8 @@ export default function PoolDetailsPage() {
             </header>
             {/* Content Canvas */}
             <div className="pt-24 px-6 lg:px-12 max-w-7xl mx-auto">
+                {loading ? <p className="text-on-surface-variant mb-6">Loading pool...</p> : null}
+                {error ? <p className="text-error mb-6">{error}</p> : null}
                 <div className="mb-6">
                     <Link
                         className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-80"
