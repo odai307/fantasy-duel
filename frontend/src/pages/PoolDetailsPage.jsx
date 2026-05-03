@@ -1,41 +1,51 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { getPoolById } from '../poolApi';
+import { useAuth } from '../AuthContext';
+import { usePoolDetails } from '../hooks/usePoolDetails';
+
+function fullName(user) {
+  return [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Unknown User';
+}
+
 export default function PoolDetailsPage() {
-  const { id } = useParams();
+  const { poolId } = useParams();
   const location = useLocation();
-  const [pool, setPool] = useState(location.state?.pool || null);
-  const [loading, setLoading] = useState(Boolean(id));
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!id) {
-      setLoading(false);
-      return;
-    }
-
-    async function loadPool() {
-      setLoading(true);
-      setError('');
-      try {
-        const data = await getPoolById(id);
-        setPool(data.pool);
-      } catch (loadError) {
-        setError(loadError.message || 'Failed to load pool');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadPool();
-  }, [id]);
-
-  const entryFee = Number(pool?.entryFee ?? 250);
-  const maxParticipants = pool?.maxParticipants === null ? null : pool?.maxParticipants ?? 150;
-  const gameweekLabel = pool?.gameweekLabel ?? `GW ${pool?.gameweek || 24}`;
-  const poolName = pool?.name ?? 'Elite Strikers Hub';
-  const visibility = pool?.visibility ?? 'PUBLIC';
+  const { user } = useAuth();
+  const {
+    pool,
+    loading,
+    error,
+    leaderboard,
+    leaderboardLoading,
+    leaderboardError,
+    joinLoading,
+    joinError,
+    joinSuccess,
+    isInviteModalOpen,
+    setIsInviteModalOpen,
+    inviteCode,
+    setInviteCode,
+    joinPoolByFlow,
+    handleJoinClick,
+    entryFee,
+    maxParticipants,
+    gameweekLabel,
+    poolName,
+    visibility,
+    poolStatus,
+    currentParticipants,
+    averageGameweekScore,
+    participantFillPercent,
+    isJoined,
+    isPoolFull,
+    isCreator,
+    isJoinClosed,
+  } = usePoolDetails({
+    poolId,
+    initialPool: location.state?.pool || null,
+    viewerUserId: user?.id || null,
+  });
 
   return (
     <div className="page-pool-details bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
@@ -74,7 +84,7 @@ export default function PoolDetailsPage() {
                 <div className="mb-6">
                     <Link
                         className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-80"
-                        to="/pools-list">
+                        to="/pools">
                         <span className="material-symbols-outlined text-sm">arrow_back</span>
                         Back to Pools
                     </Link>
@@ -102,6 +112,45 @@ export default function PoolDetailsPage() {
                                 <span
                                     className="text-on-surface-variant/70 text-sm font-medium font-headline uppercase tracking-widest">{gameweekLabel} • Season 24/25</span>
                             </div>
+                            <div className="mt-8 flex gap-4">
+                                <button
+                                    className="px-10 py-4 bg-primary text-on-primary font-headline font-black rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest text-xs disabled:opacity-60 disabled:cursor-not-allowed"
+                                    disabled={isJoined || isPoolFull || joinLoading || isJoinClosed}
+                                    onClick={handleJoinClick}
+                                    type="button"
+                                >
+                                    {isJoined
+                                      ? 'Already Joined'
+                                      : isPoolFull
+                                        ? 'Pool Full'
+                                        : isJoinClosed
+                                          ? `Pool ${poolStatus}`
+                                          : joinLoading
+                                            ? 'Joining...'
+                                            : 'Join Pool'}
+                                </button>
+                                <button
+                                    className="px-8 py-4 bg-white/5 border border-white/10 text-on-surface font-headline font-bold rounded-xl hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
+                                    onClick={() => {
+                                      const section = document.getElementById('pool-rules');
+                                      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    }}
+                                    type="button"
+                                >
+                                    View Rules
+                                </button>
+                            </div>
+                            {isCreator && pool?.inviteCode ? (
+                              <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
+                                <span className="material-symbols-outlined text-primary text-base">vpn_key</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">
+                                  Pool Code
+                                </span>
+                                <span className="font-headline font-black text-primary tracking-wider">{pool.inviteCode}</span>
+                              </div>
+                            ) : null}
+                            {joinError ? <p className="mt-4 text-sm text-error">{joinError}</p> : null}
+                            {joinSuccess ? <p className="mt-4 text-sm text-secondary">{joinSuccess}</p> : null}
                         </div>
                         <div
                             className="lg:col-span-3 flex flex-col items-center justify-center p-8 bg-black/40 rounded-3xl border border-white/5 backdrop-blur-sm">
@@ -142,7 +191,7 @@ export default function PoolDetailsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
                     {/* Main Leaderboard Table */}
                     <div className="lg:col-span-3">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4" id="pool-rules">
                             <h3
                                 className="text-2xl font-black font-headline uppercase tracking-tight flex items-center gap-3">
                                 <span className="material-symbols-outlined text-primary text-3xl">leaderboard</span>
@@ -166,129 +215,55 @@ export default function PoolDetailsPage() {
                         </div>
                         {/* Participants List */}
                         <div className="space-y-3 mt-4">
-                            {/* Ranked 1 (Obsidian Gold Highlight) */}
-                            <div
-                                className="grid grid-cols-12 items-center px-8 py-6 obsidian-card border-l-4 border-primary rounded-xl group hover:scale-[1.01] transition-all cursor-pointer gold-glow">
-                                <div className="col-span-1 text-primary font-black font-headline text-2xl">01</div>
-                                <div className="col-span-6 flex items-center gap-5">
-                                    <div className="relative">
-                                        <div
-                                            className="absolute -inset-1 bg-primary/20 rounded-full blur-md group-hover:bg-primary/40 transition-all">
+                            {leaderboardLoading ? (
+                                <div className="px-8 py-6 rounded-xl border border-white/10 bg-surface-container-low/40 text-on-surface-variant">
+                                    Loading rankings...
+                                </div>
+                            ) : null}
+                            {leaderboardError ? (
+                                <div className="px-8 py-6 rounded-xl border border-error/30 bg-error/10 text-error">
+                                    {leaderboardError}
+                                </div>
+                            ) : null}
+                            {!leaderboardLoading && !leaderboardError && currentParticipants === 0 ? (
+                                <div className="px-8 py-6 rounded-xl border border-white/10 bg-surface-container-low/40 text-on-surface-variant">
+                                    No participants on this pool yet.
+                                </div>
+                            ) : null}
+
+                            {!leaderboardLoading && !leaderboardError && leaderboard.map((row) => (
+                                <div
+                                    className={`grid grid-cols-12 items-center px-8 py-6 rounded-xl border transition-all ${
+                                        row.isCurrentUser
+                                          ? 'bg-primary/5 border-primary/25'
+                                          : 'bg-surface-container-low/40 border-white/5'
+                                    }`}
+                                    key={row.user.id}
+                                >
+                                    <div className={`col-span-1 font-black font-headline text-2xl ${row.rank === 1 ? 'text-primary' : 'text-on-surface-variant/60'}`}>
+                                        {String(row.rank).padStart(2, '0')}
+                                    </div>
+                                    <div className="col-span-6 flex items-center gap-5">
+                                        <div className="w-12 h-12 rounded-full border border-primary/20 bg-surface-container-highest flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-primary">person</span>
                                         </div>
-                                        <img className="relative w-12 h-12 rounded-full border-2 border-primary object-cover"
-                                            data-alt="close-up portrait of a confident male football manager avatar with professional aesthetic"
-                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtL4EOPikzkEpEmxvOViX2VUdJvb621aH3_C2y4EzNKdgrs6MCSXTm60mnmAgsxYBrSeCXhbyQVs4M85bWpEwragFQXpQbhJUAcoAvJSxFMzbpS4EB8l5lPfg6j2jn-KXDytNfCdmPiKrTe4RzGndcE6MlyP4P8ieOhOkpqLwb7SJ8zcUpkWeqKz17Y9XAVcTPvPxK2qlk4YxMh9qXYY-ZKYG-bRygFKEs8PW2bh9uinTwVqv6m_Q-xaue1iambLEY1VLLwVA-RmgV" />
-                                        <span
-                                            className="absolute -top-1 -right-1 bg-primary text-on-primary text-[8px] font-black px-1.5 py-0.5 rounded-full shadow-sm">MVP</span>
+                                        <div>
+                                            <div className={`font-bold text-lg ${row.isCurrentUser ? 'text-primary' : 'text-on-surface'}`}>
+                                                {row.isCurrentUser ? `You (${fullName(row.user)})` : fullName(row.user)}
+                                            </div>
+                                            <div className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
+                                                Manager
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div
-                                            className="font-bold text-lg text-on-surface group-hover:text-primary transition-colors">
-                                            Kofi Mensah</div>
-                                        <div
-                                            className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
-                                            Accra United FC</div>
+                                    <div className="col-span-2 text-right font-headline text-xl font-bold text-secondary">
+                                        {row.gameweekPoints ?? 0}
                                     </div>
-                                </div>
-                                <div className="col-span-2 text-right font-headline text-2xl font-bold text-secondary">82
-                                </div>
-                                <div className="col-span-3 text-right font-headline text-2xl font-black">1,452</div>
-                            </div>
-                            {/* Ranked 2 */}
-                            <div
-                                className="grid grid-cols-12 items-center px-8 py-6 bg-surface-container-low/40 border border-white/5 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group">
-                                <div
-                                    className="col-span-1 text-on-surface-variant/30 font-black font-headline text-2xl group-hover:text-white transition-colors">
-                                    02</div>
-                                <div className="col-span-6 flex items-center gap-5">
-                                    <img className="w-12 h-12 rounded-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all border border-white/10"
-                                        data-alt="portrait avatar of a female gamer with athletic gear and focused expression"
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO5R3YQJtuUEe5LmbP_CFzLmP0DohyDZMiVV4HRem5ULvCRRhgH4rgkAXb6K8vKrvJCcg81pCg8bdaOOkdoa0xYwUW06a3Lqw71g1pcrEFRkN3HolgNF6ifcpKiIaO0oa7GTWwwiRjEORxP0Kt_Gw0v1YATa1XECmK7iYuBlS4lD0XffkJDxPDSsOIWbU6zH179td2GE1i6Lq01KLeBcbkUXMWgDRCMA8BLqYo2WDhBo-pTT7ZEvGtOZ5o6CJbzIVNhzzTUBUjtizK" />
-                                    <div>
-                                        <div className="font-bold text-lg text-on-surface">Abena Serwaa</div>
-                                        <div
-                                            className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
-                                            Queen Stars</div>
+                                    <div className="col-span-3 text-right font-headline text-xl font-black">
+                                        {row.points ?? 0}
                                     </div>
                                 </div>
-                                <div
-                                    className="col-span-2 text-right font-headline text-xl font-bold text-on-surface-variant/80">
-                                    74</div>
-                                <div className="col-span-3 text-right font-headline text-xl font-bold">1,418</div>
-                            </div>
-                            {/* Ranked 3 */}
-                            <div
-                                className="grid grid-cols-12 items-center px-8 py-6 bg-surface-container-low/40 border border-white/5 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group">
-                                <div
-                                    className="col-span-1 text-on-surface-variant/30 font-black font-headline text-2xl group-hover:text-white transition-colors">
-                                    03</div>
-                                <div className="col-span-6 flex items-center gap-5">
-                                    <img className="w-12 h-12 rounded-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all border border-white/10"
-                                        data-alt="stylized avatar of a male football fan with a team jersey and excited expression"
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-RmD0bIXu2G_gwRlfhZJN33pLSAEh_q5k-Z7iXzOpCyGOAEPVYmXEDpB1TetbKlgotejY-3pa72wlEXCuV3_fVw4BcawgJApcmQt_MrK5wV820ZbgWQxNdU3d0pI4u8v-9Ep__dFkmBg--nF_3YTuNSSiWC6wpG4d9Ze_wVcX4cAUxN8gn8TPRQwySuHXtDrl1XHEj04dHN1GJi1ZBp-edaTbKCAcBQ8B6BeZu_utVn2j_JrVFY_2s2KGrkc5XouiEsePbEULzONi" />
-                                    <div>
-                                        <div className="font-bold text-lg text-on-surface">Yaw Boateng</div>
-                                        <div
-                                            className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
-                                            Kumasi Kings</div>
-                                    </div>
-                                </div>
-                                <div
-                                    className="col-span-2 text-right font-headline text-xl font-bold text-on-surface-variant/80">
-                                    71</div>
-                                <div className="col-span-3 text-right font-headline text-xl font-bold">1,405</div>
-                            </div>
-                            {/* Current User Rank (High-Performance Context Card) */}
-                            <div
-                                className="grid grid-cols-12 items-center px-8 py-6 bg-primary/5 border border-primary/20 rounded-xl relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
-                                <div className="col-span-1 text-primary/40 font-black font-headline text-2xl relative">14
-                                </div>
-                                <div className="col-span-6 flex items-center gap-5 relative">
-                                    <img className="w-12 h-12 rounded-full ring-2 ring-primary ring-offset-4 ring-offset-background object-cover"
-                                        data-alt="professional user profile placeholder avatar with soft lighting"
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa4Qxpd7ZL_gV_pG_ElgUPnbKHQcM9Rpmzdfwk8ND8K7LfJDBodpGX6hnd3k7KWkwUDXaBSeimBs0mjoQGFMolxl-Eevi-OG308MdS3gAkkCnQiCpSj_XoDy1zwvPO1k9Yz1BrBqcZSNgbaLZtnJlHxPEzxOICHhk8Fw9-os36rTB-g-DXWRkrgFDJEh27kKs8DX6duTJfnLeZ5O7zRLAiIkEZ_jm48J4cHpxqr1hIHxQ5vzsHHbw6QSxjn3PS41E1IYCqOiS5spR1" />
-                                    <div>
-                                        <div className="font-black text-lg text-primary italic uppercase tracking-tight">You
-                                            (Kwame)</div>
-                                        <div
-                                            className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
-                                            Black Star Tactics</div>
-                                    </div>
-                                </div>
-                                <div
-                                    className="col-span-2 text-right font-headline text-xl font-bold text-on-surface relative">
-                                    58</div>
-                                <div className="col-span-3 text-right font-headline text-xl font-black relative">1,288</div>
-                            </div>
-                            {/* Standard Row */}
-                            <div
-                                className="grid grid-cols-12 items-center px-8 py-6 bg-surface-container-low/20 border border-white/5 rounded-xl opacity-60 hover:opacity-100 transition-all cursor-pointer">
-                                <div className="col-span-1 text-on-surface-variant/30 font-black font-headline text-2xl">15
-                                </div>
-                                <div className="col-span-6 flex items-center gap-5">
-                                    <img className="w-12 h-12 rounded-full grayscale opacity-50 border border-white/5"
-                                        data-alt="minimalist avatar of a male gamer with sleek modern design"
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2a6I6cDZWCozxtU8nBjdIYQJo4M3d4fBm315q_3Ot1G43s8O7Ss3Mis6KcAe-93nWjfY4Z-XLWqasGfBcgya4fIJ9MstB5w6-aXqFjSyQmKZ1uPRpLs88OQLVcXltn5TD4JzOwHbgykXOpcyCn1XHKGmC-1e5foREtA9Nbiij3vpUkIJNDBq4yyseHq6otcrhpbLMPnsvtyi6qHoA3zI2EgAkmrZwhZXNkSoWVVIJbOPOHx8zfxXGbBfYpCLjHMW3HC8qpG9xOoUi" />
-                                    <div>
-                                        <div className="font-bold text-lg text-on-surface">Ekow Smith</div>
-                                        <div
-                                            className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
-                                            Coastal FC</div>
-                                    </div>
-                                </div>
-                                <div
-                                    className="col-span-2 text-right font-headline text-xl font-bold text-on-surface-variant/60">
-                                    54</div>
-                                <div className="col-span-3 text-right font-headline text-xl font-bold">1,275</div>
-                            </div>
-                        </div>
-                        <div className="mt-12 flex justify-center">
-                            <button
-                                className="flex items-center gap-3 px-10 py-4 bg-surface-container-highest/50 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-all border border-white/5">
-                                Load Full Leaderboard
-                                <span className="material-symbols-outlined text-sm">expand_more</span>
-                            </button>
+                            ))}
                         </div>
                     </div>
                     {/* Sidebar Stats & Insights */}
@@ -305,21 +280,21 @@ export default function PoolDetailsPage() {
                                     <div className="flex justify-between items-center text-xs">
                                         <span className="opacity-60 font-medium">Participants</span>
                                         <span className="font-black text-on-surface">
-                                            {maxParticipants === null ? 'Unlimited' : `1 / ${maxParticipants}`}
+                                            {maxParticipants === null ? `${currentParticipants} / Unlimited` : `${currentParticipants} / ${maxParticipants}`}
                                         </span>
                                     </div>
                                     <div className="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
-                                        <div className="bg-secondary h-full rounded-full" style={{width: '85%'}}></div>
+                                        <div className="bg-secondary h-full rounded-full" style={{width: `${participantFillPercent}%`}}></div>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-y border-white/5">
                                     <span className="text-xs opacity-60 font-medium">Avg. GW Score</span>
-                                    <span className="font-black text-secondary text-lg">62.4</span>
+                                    <span className="font-black text-secondary text-lg">{averageGameweekScore}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-xs opacity-60 font-medium">Status</span>
                                     <span
-                                        className="bg-secondary/10 text-secondary text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-secondary/20">Verified</span>
+                                        className="bg-secondary/10 text-secondary text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-secondary/20">{poolStatus}</span>
                                 </div>
                             </div>
                         </div>
@@ -398,7 +373,7 @@ export default function PoolDetailsPage() {
                 <span className="material-symbols-outlined text-2xl">swords</span>
                 <span className="text-[8px] font-black uppercase tracking-tighter mt-1">Duels</span>
             </Link>
-            <Link className="flex flex-col items-center justify-center text-primary" to="/pools-list">
+            <Link className="flex flex-col items-center justify-center text-primary" to="/pools">
                 <span className="material-symbols-outlined text-2xl">groups</span>
                 <span className="text-[8px] font-black uppercase tracking-tighter mt-1">Pools</span>
             </Link>
@@ -412,6 +387,59 @@ export default function PoolDetailsPage() {
             </Link>
         </nav>
     </div>
+    {isInviteModalOpen ? (
+      <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div className="bg-surface border border-primary/20 rounded-3xl w-full max-w-md shadow-[0_40px_80px_rgba(0,0,0,0.6)] relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#ffd37b] to-[#e9b544]" />
+          <button
+            className="absolute top-4 right-4 text-white/40 hover:text-primary transition-colors"
+            onClick={() => setIsInviteModalOpen(false)}
+            type="button"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
+          <div className="p-8">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
+              <span className="material-symbols-outlined text-primary text-3xl">vpn_key</span>
+            </div>
+            <h3 className="text-2xl font-black font-headline uppercase tracking-tighter text-white mb-2">Join Private Pool</h3>
+            <p className="text-on-surface-variant/60 text-sm font-medium mb-8">
+              Enter the invite code from the pool creator.
+            </p>
+            <div className="mb-8">
+              <label className="block text-[10px] text-primary tracking-[0.2em] font-bold uppercase mb-2" htmlFor="inviteCodeInput">
+                Access Code
+              </label>
+              <input
+                className="w-full bg-[#131313] border border-white/10 rounded-xl px-4 py-4 text-white font-headline text-lg tracking-widest uppercase focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-white/20"
+                id="inviteCodeInput"
+                onChange={(event) => setInviteCode(event.target.value)}
+                placeholder="ENTER CODE"
+                type="text"
+                value={inviteCode}
+              />
+            </div>
+            <div className="flex gap-4">
+              <button
+                className="flex-1 py-4 text-white/60 font-headline font-bold rounded-xl uppercase tracking-widest text-xs hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
+                onClick={() => setIsInviteModalOpen(false)}
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                className="flex-[2] py-4 bg-primary text-on-primary font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-xs transition-all shadow-[0_10px_20px_rgba(255,211,123,0.2)] disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={joinLoading || !inviteCode.trim()}
+                onClick={() => joinPoolByFlow(inviteCode)}
+                type="button"
+              >
+                {joinLoading ? 'Verifying...' : 'Confirm Join'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    ) : null}
     </div>
   );
 }

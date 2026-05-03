@@ -33,9 +33,15 @@ temp/
 # OS files
 .DS_Store
 Thumbs.db
+*.Zone.Identifier
+*:Zone.Identifier
 
 # Editor / IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# Build metadata / local tooling
+*.tsbuildinfo
+.qodo/

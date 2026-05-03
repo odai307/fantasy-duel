@@ -3,54 +3,65 @@ const {
   validateCreatePoolInput,
   validateListPoolsQuery,
   validatePoolIdParams,
+  validatePoolLeaderboardQuery,
+  validateJoinPoolInput,
+  validateJoinPoolByCodeInput,
 } = require('./poolValidation');
+const asyncHandler = require('../shared/middleware/asyncHandler');
+const { makeError } = require('../shared/errors');
 
-function sendError(res, error) {
-  const status = error.status || 500;
-  return res.status(status).json({
-    message: error.message || 'Internal server error',
-    ...(error.details ? { errors: error.details } : {}),
-  });
-}
+const createPool = asyncHandler(async (req, res) => {
+  const userId = req.user?.sub;
+  if (!userId) throw makeError(401, 'Unauthorized');
+  const validatedInput = validateCreatePoolInput(req.body);
+  const result = await poolService.createPool(validatedInput, userId);
+  return res.status(201).json(result);
+});
 
-async function createPool(req, res) {
-  try {
-    const userId = req.user?.sub;
+const listPools = asyncHandler(async (req, res) => {
+  const validatedQuery = validateListPoolsQuery(req.query);
+  const userId = req.user?.sub || null;
+  const result = await poolService.listPools(validatedQuery, userId);
+  return res.status(200).json(result);
+});
 
-    if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+const getPoolById = asyncHandler(async (req, res) => {
+  const userId = req.user?.sub || null;
+  const { id } = validatePoolIdParams(req.params);
+  const result = await poolService.getPoolById(id, userId);
+  return res.status(200).json(result);
+});
 
-    const validatedInput = validateCreatePoolInput(req.body);
-    const result = await poolService.createPool(validatedInput, userId);
-    return res.status(201).json(result);
-  } catch (error) {
-    return sendError(res, error);
-  }
-}
+const getPoolLeaderboard = asyncHandler(async (req, res) => {
+  const userId = req.user?.sub || null;
+  const { id } = validatePoolIdParams(req.params);
+  const query = validatePoolLeaderboardQuery(req.query);
+  const result = await poolService.getPoolLeaderboard(id, userId, query);
+  return res.status(200).json(result);
+});
 
-async function listPools(req, res) {
-  try {
-    const validatedQuery = validateListPoolsQuery(req.query);
-    const result = await poolService.listPools(validatedQuery);
-    return res.status(200).json(result);
-  } catch (error) {
-    return sendError(res, error);
-  }
-}
+const joinPool = asyncHandler(async (req, res) => {
+  const userId = req.user?.sub;
+  if (!userId) throw makeError(401, 'Unauthorized');
+  const { id } = validatePoolIdParams(req.params);
+  const input = validateJoinPoolInput(req.body);
+  const result = await poolService.joinPool(id, userId, input);
+  return res.status(200).json(result);
+});
 
-async function getPoolById(req, res) {
-  try {
-    const { id } = validatePoolIdParams(req.params);
-    const result = await poolService.getPoolById(id);
-    return res.status(200).json(result);
-  } catch (error) {
-    return sendError(res, error);
-  }
-}
+const joinPoolByCode = asyncHandler(async (req, res) => {
+  const userId = req.user?.sub;
+  if (!userId) throw makeError(401, 'Unauthorized');
+  const input = validateJoinPoolByCodeInput(req.body);
+  const result = await poolService.joinPoolByCode(userId, input);
+  return res.status(200).json(result);
+});
 
 module.exports = {
   createPool,
   listPools,
   getPoolById,
+  getPoolLeaderboard,
+  joinPool,
+  joinPoolByCode,
 };

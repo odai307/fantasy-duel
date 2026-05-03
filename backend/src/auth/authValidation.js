@@ -1,4 +1,5 @@
 const { z } = require('zod');
+const { makeError } = require('../shared/errors');
 
 const emailSchema = z.string().trim().toLowerCase().email('Invalid email address');
 
@@ -17,10 +18,7 @@ function parseOrThrow(schema, payload) {
   const result = schema.safeParse(payload);
 
   if (!result.success) {
-    const error = new Error('Validation failed');
-    error.status = 400;
-    error.details = result.error.flatten();
-    throw error;
+    throw makeError(400, 'Validation failed', 'VALIDATION_ERROR', result.error.flatten());
   }
 
   return result.data;

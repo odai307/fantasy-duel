@@ -3,12 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const prisma = require('../shared/config/db');
 const env = require('../shared/config/env');
-
-function makeError(status, message) {
-  const error = new Error(message);
-  error.status = status;
-  return error;
-}
+const { makeError } = require('../shared/errors');
 
 function toSafeUser(user) {
   return {

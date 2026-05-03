@@ -85,19 +85,27 @@ export function AuthProvider({ children }) {
 
   const register = useCallback(async (payload) => registerUser(payload), []);
 
+  const authStatus = useMemo(() => {
+    if (isInitializing) return 'initializing';
+    if (user) return 'authenticated';
+    if (token) return 'stale_token';
+    return 'anonymous';
+  }, [isInitializing, user, token]);
+
   const value = useMemo(
     () => ({
       token,
       user,
       userFullName: fullName(user),
-      isAuthenticated: Boolean(token),
+      authStatus,
+      isAuthenticated: authStatus === 'authenticated',
       isInitializing,
       login,
       register,
       logout,
       refreshMe,
     }),
-    [token, user, isInitializing, login, register, logout, refreshMe],
+    [token, user, authStatus, isInitializing, login, register, logout, refreshMe],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

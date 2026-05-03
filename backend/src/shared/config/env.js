@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const requiredVars = ['DATABASE_URL', 'JWT_SECRET'];
 
 for (const key of requiredVars) {

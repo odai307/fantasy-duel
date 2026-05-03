@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function LandingPage() {
   return (
     <div className="page-landing bg-background text-white font-sans selection:bg-primary selection:text-on-primary">
@@ -8,18 +10,18 @@ export default function LandingPage() {
             FantasyDuel GH
         </div>
 <div className="hidden md:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.15em]">
-<a className="text-primary" href="#">Home</a>
-<a className="text-text-muted hover:text-white transition-colors" href="#">Duels</a>
-<a className="text-text-muted hover:text-white transition-colors" href="#">Pools</a>
-<a className="text-text-muted hover:text-white transition-colors" href="#">Rankings</a>
+<Link className="text-primary" to="/landing">Home</Link>
+<Link className="text-text-muted hover:text-white transition-colors" to="/duels">Duels</Link>
+<Link className="text-text-muted hover:text-white transition-colors" to="/pools">Pools</Link>
+<Link className="text-text-muted hover:text-white transition-colors" to="/leaderboard">Rankings</Link>
 </div>
 <div className="flex items-center gap-6">
-<button className="text-white/60 hover:text-primary transition-colors">
+<Link className="text-white/60 hover:text-primary transition-colors" to="/wallet">
 <span className="material-symbols-outlined">account_balance_wallet</span>
-</button>
-<button className="hidden md:block gold-matte text-on-primary text-[11px] font-black px-8 py-3 rounded-sm uppercase tracking-widest">
+</Link>
+<Link className="hidden md:block gold-matte text-on-primary text-[11px] font-black px-8 py-3 rounded-sm uppercase tracking-widest" to="/auth">
                 Get Started
-            </button>
+            </Link>
 </div>
 </div>
 </nav>
@@ -46,12 +48,12 @@ export default function LandingPage() {
                 </p>
 </div>
 <div className="flex flex-col md:row items-center justify-center gap-6 pt-8">
-<button className="w-full md:w-auto gold-matte text-on-primary font-black text-xs px-16 py-5 rounded-sm uppercase tracking-[0.2em]">
+<Link className="w-full md:w-auto gold-matte text-on-primary font-black text-xs px-16 py-5 rounded-sm uppercase tracking-[0.2em] inline-flex justify-center" to="/auth">
                     Get Started
-                </button>
-<button className="w-full md:w-auto border border-white/10 text-white font-black text-xs px-16 py-5 rounded-sm uppercase tracking-[0.2em] hover:bg-white/5 transition-all">
+                </Link>
+<Link className="w-full md:w-auto border border-white/10 text-white font-black text-xs px-16 py-5 rounded-sm uppercase tracking-[0.2em] hover:bg-white/5 transition-all inline-flex justify-center" to="/pools">
                     View Pools
-                </button>
+                </Link>
 </div>
 </div>
 </section>
@@ -119,7 +121,7 @@ export default function LandingPage() {
 </div>
 </section>
 {/* How It Works */}
-<section className="bg-[#161616] py-40 border-y border-white/5">
+<section className="bg-[#161616] py-40 border-y border-white/5" id="how-it-works">
 <div className="max-w-7xl mx-auto px-12">
 <div className="text-center mb-32 space-y-6">
 <h2 className="font-black text-5xl md:text-7xl uppercase italic tracking-tighter">The Process</h2>
@@ -176,9 +178,9 @@ export default function LandingPage() {
                     Join Ghana's elite community of managers. No shortcuts. Just pure skill and strategy.
                 </p>
 <div className="pt-6">
-<button className="gold-matte text-on-primary font-black text-sm px-20 py-6 rounded-sm uppercase tracking-[0.25em]">
+<Link className="gold-matte text-on-primary font-black text-sm px-20 py-6 rounded-sm uppercase tracking-[0.25em] inline-flex justify-center" to="/auth">
                         Get Started Now
-                    </button>
+                    </Link>
 </div>
 <div className="flex items-center justify-center gap-10 opacity-30">
 <div className="flex items-center gap-2">
@@ -208,26 +210,26 @@ export default function LandingPage() {
 <div>
 <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8">Platform</h5>
 <ul className="space-y-4 text-xs text-text-muted">
-<li><a className="hover:text-primary transition-colors" href="#">How it Works</a></li>
-<li><a className="hover:text-primary transition-colors" href="#">Leaderboards</a></li>
-<li><a className="hover:text-primary transition-colors" href="#">Prize Pools</a></li>
+<li><a className="hover:text-primary transition-colors" href="#how-it-works">How it Works</a></li>
+<li><Link className="hover:text-primary transition-colors" to="/leaderboard">Leaderboards</Link></li>
+<li><Link className="hover:text-primary transition-colors" to="/pools">Prize Pools</Link></li>
 </ul>
 </div>
 <div>
 <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8">Legal</h5>
 <ul className="space-y-4 text-xs text-text-muted">
-<li><a className="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
-<li><a className="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
-<li><a className="hover:text-primary transition-colors" href="#">Responsible Gaming</a></li>
+<li><Link className="hover:text-primary transition-colors" to="/not-found">Terms of Service</Link></li>
+<li><Link className="hover:text-primary transition-colors" to="/not-found">Privacy Policy</Link></li>
+<li><Link className="hover:text-primary transition-colors" to="/not-found">Responsible Gaming</Link></li>
 </ul>
 </div>
 <div>
 <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8">Connect</h5>
 <div className="flex gap-4">
-<a className="w-10 h-10 border border-white/10 rounded-sm flex items-center justify-center hover:border-primary/50 transition-colors" href="#">
+<a className="w-10 h-10 border border-white/10 rounded-sm flex items-center justify-center hover:border-primary/50 transition-colors" href="mailto:support@fantasyduel.gh">
 <span className="material-symbols-outlined text-sm">alternate_email</span>
 </a>
-<a className="w-10 h-10 border border-white/10 rounded-sm flex items-center justify-center hover:border-primary/50 transition-colors" href="#">
+<a className="w-10 h-10 border border-white/10 rounded-sm flex items-center justify-center hover:border-primary/50 transition-colors" href="https://wa.me/233000000000" rel="noreferrer" target="_blank">
 <span className="material-symbols-outlined text-sm">chat_bubble</span>
 </a>
 </div>
@@ -244,22 +246,22 @@ export default function LandingPage() {
 </footer>
 {/* Mobile Navigation */}
 <nav className="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 bg-background/95 backdrop-blur-md border-t border-white/10 z-50 px-4">
-<a className="flex flex-col items-center gap-1 text-primary" href="#">
+<Link className="flex flex-col items-center gap-1 text-primary" to="/landing">
 <span className="material-symbols-outlined">home</span>
 <span className="text-[8px] font-black uppercase tracking-widest">Home</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-white/40" href="#">
+</Link>
+<Link className="flex flex-col items-center gap-1 text-white/40" to="/duels">
 <span className="material-symbols-outlined">swords</span>
 <span className="text-[8px] font-black uppercase tracking-widest">Duels</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-white/40" href="#">
+</Link>
+<Link className="flex flex-col items-center gap-1 text-white/40" to="/leaderboard">
 <span className="material-symbols-outlined">leaderboard</span>
 <span className="text-[8px] font-black uppercase tracking-widest">Elite</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-white/40" href="#">
+</Link>
+<Link className="flex flex-col items-center gap-1 text-white/40" to="/wallet">
 <span className="material-symbols-outlined">account_balance_wallet</span>
 <span className="text-[8px] font-black uppercase tracking-widest">Wallet</span>
-</a>
+</Link>
 </nav>
     </div>
   );

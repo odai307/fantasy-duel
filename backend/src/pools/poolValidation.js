@@ -1,4 +1,5 @@
 const { z } = require('zod');
+const { makeError } = require('../shared/errors');
 
 const poolVisibilitySchema = z.enum(['PUBLIC', 'PRIVATE']);
 const listFilterSchema = z.enum(['all', 'high_stakes', 'free_entry']);
@@ -10,15 +11,7 @@ const createPoolSchema = z.object({
   entryFee: z.coerce.number().min(0, 'Entry fee cannot be negative'),
   maxParticipants: z.coerce.number().int().min(2).max(10000).optional().nullable(),
   visibility: poolVisibilitySchema.default('PUBLIC'),
-  inviteCode: z.string().trim().min(4, 'Invite code must be at least 4 characters').max(24).optional().nullable(),
-}).superRefine((input, ctx) => {
-  if (input.visibility === 'PRIVATE' && !input.inviteCode) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Invite code is required for private pools',
-      path: ['inviteCode'],
-    });
-  }
+  inviteCode: z.string().trim().min(4).max(24).optional().nullable(),
 });
 
 const listPoolsQuerySchema = z.object({
@@ -28,18 +21,28 @@ const listPoolsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).optional().default(30),
 });
 
+const poolLeaderboardQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).optional().default(1),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(50),
+});
+
 const poolIdParamsSchema = z.object({
   id: z.string().uuid('Invalid pool id'),
+});
+
+const joinPoolSchema = z.object({
+  inviteCode: z.string().trim().min(4).max(24).optional().nullable(),
+});
+
+const joinPoolByCodeSchema = z.object({
+  inviteCode: z.string().trim().min(4, 'Invite code is required').max(24),
 });
 
 function parseOrThrow(schema, payload) {
   const result = schema.safeParse(payload);
 
   if (!result.success) {
-    const error = new Error('Validation failed');
-    error.status = 400;
-    error.details = result.error.flatten();
-    throw error;
+    throw makeError(400, 'Validation failed', 'VALIDATION_ERROR', result.error.flatten());
   }
 
   return result.data;
@@ -57,8 +60,23 @@ function validatePoolIdParams(payload) {
   return parseOrThrow(poolIdParamsSchema, payload);
 }
 
+function validatePoolLeaderboardQuery(payload) {
+  return parseOrThrow(poolLeaderboardQuerySchema, payload);
+}
+
+function validateJoinPoolInput(payload) {
+  return parseOrThrow(joinPoolSchema, payload || {});
+}
+
+function validateJoinPoolByCodeInput(payload) {
+  return parseOrThrow(joinPoolByCodeSchema, payload || {});
+}
+
 module.exports = {
   validateCreatePoolInput,
   validateListPoolsQuery,
   validatePoolIdParams,
+  validatePoolLeaderboardQuery,
+  validateJoinPoolInput,
+  validateJoinPoolByCodeInput,
 };

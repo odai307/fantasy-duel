@@ -2,17 +2,19 @@ import { getAuthToken } from './authUtils';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
-function buildHeaders(headers, body, auth) {
+function buildHeaders(headers, body, auth, optionalAuth) {
   const nextHeaders = { ...headers };
 
   if (body && !(body instanceof FormData) && !nextHeaders['Content-Type']) {
     nextHeaders['Content-Type'] = 'application/json';
   }
 
-  if (auth) {
+  if (auth || optionalAuth) {
     const token = getAuthToken();
     if (token) {
       nextHeaders.Authorization = `Bearer ${token}`;
+    } else if (auth) {
+      // Keep strict auth behavior for callers that require auth.
     }
   }
 
@@ -29,10 +31,10 @@ function parseJsonSafely(text) {
 }
 
 export async function apiRequest(path, options = {}) {
-  const { method = 'GET', body, headers = {}, auth = false, signal } = options;
+  const { method = 'GET', body, headers = {}, auth = false, optionalAuth = false, signal } = options;
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
-    headers: buildHeaders(headers, body, auth),
+    headers: buildHeaders(headers, body, auth, optionalAuth),
     body: body && !(body instanceof FormData) ? JSON.stringify(body) : body,
     signal,
   });

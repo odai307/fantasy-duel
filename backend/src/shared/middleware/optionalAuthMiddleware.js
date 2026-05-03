@@ -1,28 +1,28 @@
 const jwt = require('jsonwebtoken');
 
 const env = require('../config/env');
-const { makeError } = require('../errors');
 
-function authMiddleware(req, res, next) {
+function optionalAuthMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return next(makeError(401, 'Unauthorized'));
+    return next();
   }
 
   const token = authHeader.split(' ')[1];
 
   if (!token) {
-    return next(makeError(401, 'Unauthorized'));
+    return next();
   }
 
   try {
     const payload = jwt.verify(token, env.jwtSecret);
     req.user = payload;
-    return next();
   } catch (error) {
-    return next(makeError(401, 'Invalid or expired token', 'INVALID_TOKEN'));
+    // Ignore invalid/expired token here so public listing still works.
   }
+
+  return next();
 }
 
-module.exports = authMiddleware;
+module.exports = optionalAuthMiddleware;

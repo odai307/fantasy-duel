@@ -2,8 +2,8 @@ import { Link, NavLink } from 'react-router-dom';
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Home', icon: 'home' },
-  { to: '/join-duel', label: 'Duels', icon: 'sports_kabaddi' },
-  { to: '/pools-list', label: 'Pools', icon: 'sports_score' },
+  { to: '/duels', label: 'Duels', icon: 'sports_kabaddi' },
+  { to: '/pools', label: 'Pools', icon: 'sports_score' },
   { to: '/leaderboard', label: 'Leaderboard', icon: 'emoji_events' },
   { to: '/wallet', label: 'Wallet', icon: 'account_balance_wallet' },
 ];

@@ -18,18 +18,51 @@ enum PoolStatus {
   CLOSED
 }
 
+enum DuelStatus {
+  OPEN
+  LOCKED
+  CLOSED
+  CANCELLED
+}
+
 model User {
-  id            String   @id @default(uuid())
-  firstName     String   @map("first_name")
-  lastName      String   @map("last_name")
-  email         String   @unique
-  passwordHash  String   @map("password_hash")
-  fplTeamId     Int?     @map("fpl_team_id")
-  walletBalance Decimal  @default(0.00) @db.Decimal(10, 2) @map("wallet_balance")
-  createdAt     DateTime @default(now()) @map("created_at")
-  pools         Pool[]
+  id               String            @id @default(uuid())
+  firstName        String            @map("first_name")
+  lastName         String            @map("last_name")
+  email            String            @unique
+  passwordHash     String            @map("password_hash")
+  fplTeamId        Int?              @map("fpl_team_id")
+  walletBalance    Decimal           @default(0.00) @db.Decimal(10, 2) @map("wallet_balance")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  pools            Pool[]
+  poolParticipations PoolParticipant[]
+  createdDuels     Duel[]            @relation("DuelCreator")
+  opponentDuels    Duel[]            @relation("DuelOpponent")
 
   @@map("users")
+}
+
+model Duel {
+  id           String     @id @default(uuid())
+  inviteCode   String     @unique @map("invite_code")
+  status       DuelStatus @default(OPEN)
+  gameweek     Int
+  entryFee     Decimal    @default(0.00) @db.Decimal(10, 2) @map("entry_fee")
+  createdById  String     @map("created_by_id")
+  opponentId   String?    @map("opponent_id")
+  createdBy    User       @relation("DuelCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  opponent     User?      @relation("DuelOpponent", fields: [opponentId], references: [id], onDelete: SetNull)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  lockedAt     DateTime?  @map("locked_at")
+  closedAt     DateTime?  @map("closed_at")
+  cancelledAt  DateTime?  @map("cancelled_at")
+
+  @@index([createdById])
+  @@index([opponentId])
+  @@index([status, createdAt])
+  @@index([gameweek])
+  @@map("duels")
 }
 
 model Pool {
@@ -40,10 +73,11 @@ model Pool {
   entryFee        Decimal        @default(0.00) @db.Decimal(10, 2) @map("entry_fee")
   maxParticipants Int?           @map("max_participants")
   visibility      PoolVisibility @default(PUBLIC)
-  inviteCode      String?        @unique @map("invite_code")
+  inviteCode      String         @unique @map("invite_code")
   status          PoolStatus     @default(OPEN)
   createdById     String         @map("created_by_id")
   createdBy       User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  participants    PoolParticipant[]
   createdAt       DateTime       @default(now()) @map("created_at")
   updatedAt       DateTime       @updatedAt @map("updated_at")
 
@@ -52,4 +86,22 @@ model Pool {
   @@index([gameweek])
   @@unique([createdById, gameweek])
   @@map("pools")
+}
+
+model PoolParticipant {
+  id             String   @id @default(uuid())
+  poolId         String   @map("pool_id")
+  userId         String   @map("user_id")
+  points         Int      @default(0)
+  gameweekPoints Int      @default(0) @map("gameweek_points")
+  joinedAt       DateTime @default(now()) @map("joined_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  pool           Pool     @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([poolId, userId])
+  @@index([poolId])
+  @@index([userId])
+  @@index([poolId, points])
+  @@map("pool_participants")
 }

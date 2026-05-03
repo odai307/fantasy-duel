@@ -1,15 +1,20 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./auth/authRoutes');
 const poolRoutes = require('./pools/poolRoutes');
+const duelRoutes = require('./duels/duelRoutes');
+const leaderboardRoutes = require('./leaderboard/leaderboardRoutes');
+const { errorHandler, notFoundHandler } = require('./shared/middleware/errorHandler');
+const requestContext = require('./shared/middleware/requestContext');
+const requestLogger = require('./shared/middleware/requestLogger');
+const env = require('./shared/config/env');
 
 const app = express();
-const port = process.env.PORT || 3000;
-const frontendUrl = process.env.FRONTEND_URL || '*';
 
-app.use(cors({ origin: frontendUrl === '*' ? true : frontendUrl }));
+app.use(cors({ origin: env.frontendUrl === '*' ? true : env.frontendUrl }));
+app.use(requestContext);
+app.use(requestLogger);
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -26,7 +31,11 @@ app.get('/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/pools', poolRoutes);
+app.use('/api/duels', duelRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Backend running on port ${port}`);
+app.listen(env.port, () => {
+  console.log(`Backend running on port ${env.port}`);
 });

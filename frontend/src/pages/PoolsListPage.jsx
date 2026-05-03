@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { listPools } from '../poolApi';
+import { useAuth } from '../AuthContext';
+import { joinPoolByCode, listPools } from '../poolApi';
 
 function formatMoney(value) {
   return `GHS ${Number(value || 0).toFixed(2)}`;
@@ -21,10 +22,16 @@ function getFilterButtonClass(isActive) {
 
 export default function PoolsListPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [filter, setFilter] = useState('all');
   const [pools, setPools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isPrivateModalOpen, setIsPrivateModalOpen] = useState(false);
+  const [privatePoolCode, setPrivatePoolCode] = useState('');
+  const [joinCodeError, setJoinCodeError] = useState('');
+  const [joinCodeSuccess, setJoinCodeSuccess] = useState('');
+  const [isJoiningByCode, setIsJoiningByCode] = useState(false);
 
   useEffect(() => {
     async function loadPools() {
@@ -49,31 +56,82 @@ export default function PoolsListPage() {
     [pools],
   );
 
+  const openPrivatePoolModal = () => {
+    setIsPrivateModalOpen(true);
+    setJoinCodeError('');
+    setJoinCodeSuccess('');
+  };
+
+  const closePrivatePoolModal = () => {
+    setIsPrivateModalOpen(false);
+    setPrivatePoolCode('');
+    setJoinCodeError('');
+    setJoinCodeSuccess('');
+  };
+
+  const handleJoinPrivatePool = async () => {
+    const code = privatePoolCode.trim().toUpperCase();
+    setJoinCodeError('');
+    setJoinCodeSuccess('');
+
+    if (!isAuthenticated) {
+      navigate('/auth', { state: { from: '/pools' } });
+      return;
+    }
+
+    if (!code) {
+      setJoinCodeError('Please enter an invite code.');
+      return;
+    }
+
+    setIsJoiningByCode(true);
+    try {
+      const data = await joinPoolByCode(code);
+      setJoinCodeSuccess(data?.message || 'Pool joined successfully.');
+      const joinedPoolId = data?.poolId || data?.participant?.poolId;
+
+      if (joinedPoolId) {
+        navigate(`/pools/${joinedPoolId}`);
+        return;
+      }
+      closePrivatePoolModal();
+    } catch (joinError) {
+      setJoinCodeError(joinError.message || 'Could not join private pool.');
+    } finally {
+      setIsJoiningByCode(false);
+    }
+  };
+
   return (
     <div className="page-pools-list bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
       <div className="flex min-h-screen">
         <Sidebar />
         <main className="flex-1 lg:ml-64 min-w-0 bg-background pb-20 lg:pb-8">
-          <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-surface dark:bg-[#131313]/60 backdrop-blur-xl flex justify-between items-center px-6 h-16 shadow-[0_24px_24px_rgba(0,0,0,0.06)] lg:static lg:bg-transparent lg:shadow-none lg:backdrop-blur-none">
-            <div className="lg:hidden">
-              <span className="text-2xl font-black italic text-[#ffd37b] font-headline uppercase tracking-tighter">FantasyDuel GH</span>
-            </div>
-            <div className="hidden lg:flex flex-col">
-              <h2 className="text-2xl font-black text-on-surface font-headline uppercase tracking-tighter">Global Pools</h2>
-              <div className="flex items-center gap-2 text-xs font-bold text-primary/60 tracking-widest uppercase">
-                <span>Lobby</span>
-                <span className="material-symbols-outlined text-[10px]">chevron_right</span>
-                <span>Open Competitions</span>
-              </div>
-            </div>
+          <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-background/80 backdrop-blur-xl flex justify-between items-center px-8 h-20 border-b border-white/5">
             <div className="flex items-center gap-4">
-              <button className="p-2 rounded-full hover:bg-surface-container-highest transition-colors text-[#ffd37b]" type="button">
-                <span className="material-symbols-outlined">account_balance_wallet</span>
+              <span className="lg:hidden text-xl font-black italic text-primary font-headline uppercase tracking-tighter">
+                FantasyDuel GH
+              </span>
+              <h2 className="hidden lg:block text-on-surface/80 font-headline font-bold uppercase tracking-widest text-xs">
+                Open Pools Lobby
+              </h2>
+            </div>
+            <div className="flex items-center gap-6">
+              <button className="relative text-white/60 hover:text-white transition-colors" type="button">
+                <span className="material-symbols-outlined">notifications</span>
+                <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border-2 border-background" />
               </button>
+              <div className="w-10 h-10 rounded-full border border-primary/20 p-0.5">
+                <img
+                  alt="User profile"
+                  className="w-full h-full rounded-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUvGlkAIRkRess_4d4eZw7I5MCq_e0Vz3wnWVymFN_621zQtX27zFblc1yClv8D-1HLo-Xa2YNrZD2fqDnLBvF4Ht5MAsX4p_-KhWbRADbTVt22gqgKTd8-1eKV6-Xfow3251WTErppVLQ9tJ1VUBUBP2TdhCBVqXZBcO6_85r-ldmaZPEMIL2GpsmRS27HxmyzEpaCltH8GcRugeWrRJbO56TlDi659YJDZUUTLuCM-7Ng0F0bZAi70YU0sR2_drCa-6AoAK39Sha"
+                />
+              </div>
             </div>
           </header>
 
-          <div className="max-w-7xl mx-auto px-4 lg:px-8 pt-20 lg:pt-8">
+          <div className="max-w-7xl mx-auto px-4 lg:px-8 pt-28 lg:pt-28">
             <section className="mb-12 relative rounded-3xl overflow-hidden aspect-[21/9] lg:aspect-[25/7] flex flex-col justify-end p-10">
               <div className="absolute inset-0 z-0">
                 <img
@@ -96,12 +154,21 @@ export default function PoolsListPage() {
                   </h3>
                   <p className="text-on-surface-variant/80 max-w-lg font-medium leading-relaxed">Join high-stakes pools and compete against thousands of managers.</p>
                 </div>
-                <Link
-                  className="obsidian-gold-btn font-headline font-bold px-12 py-5 rounded-2xl text-lg uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.4)] inline-flex items-center justify-center"
-                  to="/create-pool"
-                >
-                  Create Pool
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button
+                    className="obsidian-gold-btn font-headline font-bold px-8 py-5 rounded-2xl text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+                    onClick={openPrivatePoolModal}
+                    type="button"
+                  >
+                    Join Private Pool
+                  </button>
+                  <Link
+                    className="bg-primary text-on-primary font-headline font-bold px-10 py-4 rounded-2xl text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(255,211,123,0.2)] inline-flex items-center justify-center"
+                    to="/pools/create"
+                  >
+                    Create Pool
+                  </Link>
+                </div>
               </div>
             </section>
 
@@ -126,13 +193,14 @@ export default function PoolsListPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {pools.map((pool) => {
-                const maxLabel = pool.maxParticipants == null ? 'Unlimited' : `1 / ${pool.maxParticipants}`;
+                const currentCount = Number(pool.participantCount || 0);
+                const maxLabel = pool.maxParticipants == null ? `${currentCount} / Unlimited` : `${currentCount} / ${pool.maxParticipants}`;
 
                 return (
                   <div
                     className="group bg-surface-container-low card-border rounded-2xl transition-all duration-500 hover:border-primary/40 hover:-translate-y-1 cursor-pointer"
                     key={pool.id}
-                    onClick={() => navigate(`/pool-details/${pool.id}`)}
+                    onClick={() => navigate(`/pools/${pool.id}`)}
                   >
                     <div className="p-8 h-full flex flex-col">
                       <div className="flex justify-between items-start mb-8">
@@ -158,8 +226,8 @@ export default function PoolsListPage() {
 
                       <div className="mt-auto">
                         <button
-                          className="w-full py-4 obsidian-gold-btn font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-xs transition-all"
-                          onClick={() => navigate(`/pool-details/${pool.id}`)}
+                          className="w-full py-4 obsidian-gold-btn font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-sm transition-all"
+                          onClick={() => navigate(`/pools/${pool.id}`)}
                           type="button"
                         >
                           View Pool
@@ -173,6 +241,62 @@ export default function PoolsListPage() {
           </div>
         </main>
       </div>
+
+      {isPrivateModalOpen ? (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-surface border border-primary/20 rounded-3xl w-full max-w-md shadow-[0_40px_80px_rgba(0,0,0,0.6)] relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#ffd37b] to-[#e9b544]" />
+            <button
+              className="absolute top-4 right-4 text-white/40 hover:text-primary transition-colors"
+              onClick={closePrivatePoolModal}
+              type="button"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+            <div className="p-8">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-primary text-3xl">vpn_key</span>
+              </div>
+              <h3 className="text-2xl font-black font-headline uppercase tracking-tighter text-white mb-2">Join Private Pool</h3>
+              <p className="text-on-surface-variant/60 text-sm font-medium mb-8">
+                Enter the invite code from the pool creator.
+              </p>
+              <div className="mb-8">
+                <label className="block text-[10px] text-primary tracking-[0.2em] font-bold uppercase mb-2" htmlFor="poolCode">
+                  Access Code
+                </label>
+                <input
+                  className="w-full bg-[#131313] border border-white/10 rounded-xl px-4 py-4 text-white font-headline text-lg tracking-widest uppercase focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-white/20"
+                  id="poolCode"
+                  onChange={(event) => setPrivatePoolCode(event.target.value)}
+                  placeholder="ENTER CODE"
+                  type="text"
+                  value={privatePoolCode}
+                />
+                {joinCodeError ? <p className="mt-3 text-xs text-error">{joinCodeError}</p> : null}
+                {joinCodeSuccess ? <p className="mt-3 text-xs text-secondary">{joinCodeSuccess}</p> : null}
+              </div>
+              <div className="flex gap-4">
+                <button
+                  className="flex-1 py-4 text-white/60 font-headline font-bold rounded-xl uppercase tracking-widest text-xs hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
+                  onClick={closePrivatePoolModal}
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button
+                  className="flex-[2] py-4 bg-primary text-on-primary font-headline font-bold rounded-xl uppercase tracking-[0.2em] text-xs transition-all shadow-[0_10px_20px_rgba(255,211,123,0.2)] disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={isJoiningByCode}
+                  onClick={handleJoinPrivatePool}
+                  type="button"
+                >
+                  {isJoiningByCode ? 'Verifying...' : 'Verify Code'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

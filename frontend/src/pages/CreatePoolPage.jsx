@@ -19,7 +19,6 @@ export default function CreatePoolPage() {
 
   const [poolName, setPoolName] = useState('');
   const [visibility, setVisibility] = useState('PUBLIC');
-  const [inviteCode, setInviteCode] = useState('');
   const [gameweek, setGameweek] = useState('gw10');
   const [maxParticipants, setMaxParticipants] = useState(10);
   const [noMaxParticipants, setNoMaxParticipants] = useState(false);
@@ -29,7 +28,7 @@ export default function CreatePoolPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const creatorName = userFullName || '';
   const creatorLoading = isInitializing;
-  const creatorError = !isAuthenticated
+  const creatorError = !isInitializing && !isAuthenticated
     ? 'Login to auto-fill creator name from your account.'
     : '';
 
@@ -60,10 +59,9 @@ export default function CreatePoolPage() {
         entryFee: entryFeeValue,
         maxParticipants: noMaxParticipants ? null : participantsValue,
         visibility,
-        inviteCode: visibility === 'PRIVATE' ? inviteCode.trim() : null,
       });
 
-      navigate(`/pool-details/${data.pool.id}`);
+      navigate(`/pools/${data.pool.id}`);
     } catch (error) {
       setFormError(error.message || 'Failed to create pool');
     } finally {
@@ -74,7 +72,7 @@ export default function CreatePoolPage() {
   return (
     <div className="page-create-pool bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
       <div className="flex min-h-screen">
-        <Sidebar ctaLabel="Back To Pools" ctaTo="/pools-list" />
+        <Sidebar ctaLabel="Back To Pools" ctaTo="/pools" />
 
         <main className="flex-1 lg:ml-64 min-w-0 bg-background pb-12">
           <header className="fixed top-0 right-0 left-0 lg:left-64 z-40 bg-[#0e0e0e]/60 backdrop-blur-md border-b border-[#4D4635]/15 shadow-2xl shadow-black/20 flex justify-between items-center px-8 h-16">
@@ -95,7 +93,7 @@ export default function CreatePoolPage() {
             <div className="mb-8">
               <Link
                 className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors duration-200 mb-6 group w-fit"
-                to="/pools-list"
+                to="/pools"
               >
                 <span className="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-1">arrow_back</span>
                 <span className="text-sm font-label font-semibold tracking-wide uppercase">Back to Pools</span>
@@ -205,25 +203,9 @@ export default function CreatePoolPage() {
                           <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
                         </div>
                       </div>
-
-                      {visibility === 'PRIVATE' ? (
-                        <div>
-                          <label className="block font-label text-xs text-on-surface-variant mb-2" htmlFor="inviteCode">
-                            INVITE CODE
-                          </label>
-                          <div className="bg-surface-container-lowest rounded-DEFAULT p-1 focus-within:border-b focus-within:border-primary transition-all">
-                            <input
-                              className="w-full bg-transparent border-none text-on-surface text-base focus:ring-0 px-3 py-2"
-                              id="inviteCode"
-                              onChange={(event) => setInviteCode(event.target.value.toUpperCase())}
-                              placeholder="e.g., GOLD24"
-                              required
-                              type="text"
-                              value={inviteCode}
-                            />
-                          </div>
-                        </div>
-                      ) : <div />}
+                      <div className="bg-surface-container-lowest rounded-DEFAULT px-4 py-3 text-on-surface-variant text-sm border border-outline-variant/20">
+                        Invite code is auto-generated after creation.
+                      </div>
                     </div>
 
                     {formError ? (
@@ -326,7 +308,7 @@ export default function CreatePoolPage() {
                 <div className="flex justify-end gap-4 pt-4 border-t border-outline-variant/15 mt-8">
                   <Link
                     className="px-6 py-3 rounded-DEFAULT border border-outline-variant/15 text-primary font-semibold text-sm hover:bg-surface-container-highest transition-colors"
-                    to="/pools-list"
+                    to="/pools"
                   >
                     Cancel
                   </Link>
