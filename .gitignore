@@ -45,3 +45,8 @@ Thumbs.db
 # Build metadata / local tooling
 *.tsbuildinfo
 .qodo/
+
+
+.env.example
+ARCHITECTURE_AUDIT.md
+ARCHITECTURE_FIX_TRACKER.md
