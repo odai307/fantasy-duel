@@ -12,7 +12,7 @@ export default function Sidebar({
   breakpoint = 'lg',
   topOffsetClass = 'top-0',
   ctaLabel = 'Create Duel',
-  ctaTo = '/create-duel',
+  ctaTo = '/duels/create',
 }) {
   return (
     <aside

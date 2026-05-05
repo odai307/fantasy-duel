@@ -34,12 +34,12 @@ export default function DuelsPage() {
   return (
     <div className="page-join-duel bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
       <div className="flex min-h-screen">
-        <Sidebar ctaLabel="Create Duel" ctaTo="/create-duel" />
+        <Sidebar ctaLabel="Create Duel" ctaTo="/duels/create" />
 
         <main className="flex-1 lg:ml-64 min-w-0 bg-background pb-20 lg:pb-8">
           <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-background/80 backdrop-blur-xl flex justify-between items-center px-8 h-20 border-b border-white/5">
             <h2 className="text-on-surface/80 font-headline font-bold uppercase tracking-widest text-xs">Duels Lobby</h2>
-            <Link className="bg-primary text-on-primary font-headline font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-widest" to="/create-duel">
+            <Link className="bg-primary text-on-primary font-headline font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-widest" to="/duels/create">
               Create Duel
             </Link>
           </header>

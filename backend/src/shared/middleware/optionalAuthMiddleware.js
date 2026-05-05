@@ -4,6 +4,8 @@ const env = require('../config/env');
 
 function optionalAuthMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
+  req.auth = { status: 'anonymous' };
+  res.setHeader('x-auth-status', 'anonymous');
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return next();
@@ -18,11 +20,19 @@ function optionalAuthMiddleware(req, res, next) {
   try {
     const payload = jwt.verify(token, env.jwtSecret);
     req.user = payload;
+    req.auth = { status: 'authenticated', user: payload };
+    res.setHeader('x-auth-status', 'authenticated');
+    return next();
   } catch (error) {
-    // Ignore invalid/expired token here so public listing still works.
+    req.auth = {
+      status: 'invalid',
+      code: 'INVALID_TOKEN',
+      message: error.message,
+    };
+    res.setHeader('x-auth-status', 'invalid');
+    res.setHeader('x-auth-error-code', 'INVALID_TOKEN');
+    return next();
   }
-
-  return next();
 }
 
 module.exports = optionalAuthMiddleware;

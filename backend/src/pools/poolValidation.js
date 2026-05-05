@@ -11,7 +11,6 @@ const createPoolSchema = z.object({
   entryFee: z.coerce.number().min(0, 'Entry fee cannot be negative'),
   maxParticipants: z.coerce.number().int().min(2).max(10000).optional().nullable(),
   visibility: poolVisibilitySchema.default('PUBLIC'),
-  inviteCode: z.string().trim().min(4).max(24).optional().nullable(),
 });
 
 const listPoolsQuerySchema = z.object({

@@ -40,7 +40,7 @@ export default function JoinDuelPage() {
   return (
     <div className="page-join-duel bg-background text-on-background font-body">
       <div className="flex min-h-screen">
-        <Sidebar ctaLabel="Create Duel" ctaTo="/create-duel" />
+        <Sidebar ctaLabel="Create Duel" ctaTo="/duels/create" />
         <main className="flex-1 lg:ml-64 p-6 lg:p-10">
           <div className="max-w-xl">
             <Link className="text-primary text-sm" to="/dashboard">Back to Dashboard</Link>

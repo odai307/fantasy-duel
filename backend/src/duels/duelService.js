@@ -2,24 +2,7 @@ const { Prisma } = require('@prisma/client');
 
 const prisma = require('../shared/config/db');
 const { makeError } = require('../shared/errors');
-
-const INVITE_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-const INVITE_CODE_LENGTH = 6;
-const MAX_INVITE_CODE_RETRIES = 6;
-
-function normalizeInviteCode(inviteCode) {
-  if (!inviteCode) return null;
-  return inviteCode.trim().replace(/\s+/g, '').toUpperCase();
-}
-
-function randomInviteCode(length = INVITE_CODE_LENGTH) {
-  let code = '';
-  for (let i = 0; i < length; i += 1) {
-    const index = Math.floor(Math.random() * INVITE_CODE_ALPHABET.length);
-    code += INVITE_CODE_ALPHABET[index];
-  }
-  return code;
-}
+const { normalizeInviteCode, randomInviteCode, MAX_INVITE_CODE_RETRIES } = require('../shared/inviteCodeUtils');
 
 function toSafeDuel(duel, viewerUserId = null) {
   const isCreator = viewerUserId && duel.createdById === viewerUserId;
@@ -80,10 +63,8 @@ function assertDuelAccess(duel, userId) {
 }
 
 async function createDuel(input, userId) {
-  const preferredCode = normalizeInviteCode(input.inviteCode);
-
   for (let attempt = 0; attempt < MAX_INVITE_CODE_RETRIES; attempt += 1) {
-    const inviteCode = preferredCode || randomInviteCode();
+    const inviteCode = randomInviteCode();
 
     try {
       const duel = await prisma.duel.create({
@@ -103,9 +84,6 @@ async function createDuel(input, userId) {
       return { duel: toSafeDuel(duel, userId) };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        if (preferredCode) {
-          throw makeError(409, 'Invite code already exists');
-        }
         continue;
       }
 

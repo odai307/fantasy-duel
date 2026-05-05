@@ -280,11 +280,15 @@ export default function PoolDetailsPage() {
                                     <div className="flex justify-between items-center text-xs">
                                         <span className="opacity-60 font-medium">Participants</span>
                                         <span className="font-black text-on-surface">
-                                            {maxParticipants === null ? `${currentParticipants} / Unlimited` : `${currentParticipants} / ${maxParticipants}`}
+                                            {currentParticipants === null
+                                              ? 'Loading...'
+                                              : maxParticipants === null
+                                                ? `${currentParticipants} / Unlimited`
+                                                : `${currentParticipants} / ${maxParticipants}`}
                                         </span>
                                     </div>
                                     <div className="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
-                                        <div className="bg-secondary h-full rounded-full" style={{width: `${participantFillPercent}%`}}></div>
+                                        <div className="bg-secondary h-full rounded-full" style={{width: `${participantFillPercent || 0}%`}}></div>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-y border-white/5">
@@ -369,7 +373,7 @@ export default function PoolDetailsPage() {
                 <span className="material-symbols-outlined text-2xl">home</span>
                 <span className="text-[8px] font-black uppercase tracking-tighter mt-1">Home</span>
             </Link>
-            <Link className="flex flex-col items-center justify-center text-white/40" to="/create-duel">
+            <Link className="flex flex-col items-center justify-center text-white/40" to="/duels/create">
                 <span className="material-symbols-outlined text-2xl">swords</span>
                 <span className="text-[8px] font-black uppercase tracking-tighter mt-1">Duels</span>
             </Link>

@@ -8,11 +8,10 @@ const {
   validateJoinPoolByCodeInput,
 } = require('./poolValidation');
 const asyncHandler = require('../shared/middleware/asyncHandler');
-const { makeError } = require('../shared/errors');
+const { requireAuthenticatedUser } = require('../shared/authHelper');
 
 const createPool = asyncHandler(async (req, res) => {
-  const userId = req.user?.sub;
-  if (!userId) throw makeError(401, 'Unauthorized');
+  const userId = requireAuthenticatedUser(req);
   const validatedInput = validateCreatePoolInput(req.body);
   const result = await poolService.createPool(validatedInput, userId);
   return res.status(201).json(result);
@@ -41,8 +40,7 @@ const getPoolLeaderboard = asyncHandler(async (req, res) => {
 });
 
 const joinPool = asyncHandler(async (req, res) => {
-  const userId = req.user?.sub;
-  if (!userId) throw makeError(401, 'Unauthorized');
+  const userId = requireAuthenticatedUser(req);
   const { id } = validatePoolIdParams(req.params);
   const input = validateJoinPoolInput(req.body);
   const result = await poolService.joinPool(id, userId, input);
@@ -50,8 +48,7 @@ const joinPool = asyncHandler(async (req, res) => {
 });
 
 const joinPoolByCode = asyncHandler(async (req, res) => {
-  const userId = req.user?.sub;
-  if (!userId) throw makeError(401, 'Unauthorized');
+  const userId = requireAuthenticatedUser(req);
   const input = validateJoinPoolByCodeInput(req.body);
   const result = await poolService.joinPoolByCode(userId, input);
   return res.status(200).json(result);

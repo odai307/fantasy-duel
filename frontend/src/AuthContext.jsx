@@ -71,6 +71,25 @@ export function AuthProvider({ children }) {
     };
   }, [logout, token]);
 
+  useEffect(() => {
+    function handleStorageChange(event) {
+      if (event.key === 'fantasyduel_token' && !event.newValue) {
+        logout();
+      }
+    }
+
+    function handleTokenCleared() {
+      logout();
+    }
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('authTokenCleared', handleTokenCleared);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authTokenCleared', handleTokenCleared);
+    };
+  }, [logout]);
+
   const login = useCallback(async ({ email, password }) => {
     const data = await loginUser({ email, password });
     if (!data?.token) {

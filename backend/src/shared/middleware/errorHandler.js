@@ -14,20 +14,28 @@ function errorHandler(error, req, res, next) {
       method: req.method,
       path: req.originalUrl,
       message: appError.message,
+      stack: appError.stack,
     });
   }
 
-  return res.status(status).json({
+  const responsePayload = {
     requestId,
+    status,
     message: appError.message,
-    ...(appError.details ? { errors: appError.details } : {}),
     error: {
       requestId,
+      status,
       code,
       message: appError.message,
       ...(appError.details ? { details: appError.details } : {}),
     },
-  });
+  };
+
+  if (appError.details) {
+    responsePayload.errors = appError.details;
+  }
+
+  return res.status(status).json(responsePayload);
 }
 
 function notFoundHandler(req, res) {
@@ -37,15 +45,19 @@ function notFoundHandler(req, res) {
     message: 'Route not found',
   });
 
-  return res.status(404).json({
+  const responsePayload = {
     requestId: req.requestId || null,
+    status: error.status,
     message: error.message,
     error: {
       requestId: req.requestId || null,
+      status: error.status,
       code: error.code,
       message: error.message,
     },
-  });
+  };
+
+  return res.status(404).json(responsePayload);
 }
 
 module.exports = {

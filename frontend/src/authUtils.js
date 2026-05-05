@@ -31,6 +31,8 @@ export function clearAuthToken() {
   for (const key of ALL_TOKEN_KEYS) {
     localStorage.removeItem(key);
   }
+
+  window.dispatchEvent(new CustomEvent('authTokenCleared'));
 }
 
 export function isAuthenticated() {

@@ -1,4 +1,4 @@
-import { getAuthToken } from './authUtils';
+import { clearAuthToken, getAuthToken } from './authUtils';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
@@ -41,6 +41,12 @@ export async function apiRequest(path, options = {}) {
 
   const text = await response.text();
   const data = parseJsonSafely(text);
+  const authStatus = response.headers.get('x-auth-status');
+  const token = getAuthToken();
+
+  if (authStatus === 'invalid' && token) {
+    clearAuthToken();
+  }
 
   if (!response.ok) {
     const error = new Error(data?.message || `Request failed (${response.status})`);

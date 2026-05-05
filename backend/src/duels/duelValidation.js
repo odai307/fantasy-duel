@@ -4,7 +4,6 @@ const { makeError } = require('../shared/errors');
 const createDuelSchema = z.object({
   gameweek: z.coerce.number().int().min(1, 'Gameweek must be at least 1'),
   entryFee: z.coerce.number().min(0, 'Entry fee cannot be negative').default(0),
-  inviteCode: z.string().trim().min(4).max(24).optional().nullable(),
 });
 
 const joinByCodeSchema = z.object({

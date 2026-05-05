@@ -70,17 +70,15 @@ export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
   const poolParticipantCount = Number(pool?.participantCount);
   const currentParticipants = Number.isFinite(poolParticipantCount)
     ? poolParticipantCount
-    : Number.isFinite(leaderboardTotal)
-      ? leaderboardTotal
-      : leaderboard.length;
+    : null; // Don't guess - show loading/error if count unavailable
   const averageGameweekScore = leaderboard.length
     ? (leaderboard.reduce((sum, row) => sum + Number(row.gameweekPoints || 0), 0) / leaderboard.length).toFixed(1)
     : '0.0';
-  const participantFillPercent = maxParticipants
+  const participantFillPercent = maxParticipants && currentParticipants !== null
     ? Math.min(100, Math.round((currentParticipants / maxParticipants) * 100))
-    : 100;
+    : null;
   const isJoined = Boolean(viewerUserId) && leaderboard.some((row) => row.user.id === viewerUserId);
-  const isPoolFull = maxParticipants !== null && currentParticipants >= maxParticipants;
+  const isPoolFull = maxParticipants !== null && currentParticipants !== null && currentParticipants >= maxParticipants;
   const isCreator = Boolean(viewerUserId) && viewerUserId === pool?.createdBy?.id;
   const isJoinClosed = poolStatus !== 'OPEN';
 
