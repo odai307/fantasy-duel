@@ -63,6 +63,16 @@ function assertDuelAccess(duel, userId) {
 }
 
 async function createDuel(input, userId) {
+  // Check if user has FPL team connected
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { fplTeamId: true },
+  });
+
+  if (!user?.fplTeamId) {
+    throw makeError(403, 'You must connect your Fantasy Premier League team before creating duels. Please set up your FPL team in your profile.');
+  }
+
   for (let attempt = 0; attempt < MAX_INVITE_CODE_RETRIES; attempt += 1) {
     const inviteCode = randomInviteCode();
 
@@ -95,6 +105,16 @@ async function createDuel(input, userId) {
 }
 
 async function joinDuelByCode(userId, { inviteCode }) {
+  // Check if user has FPL team connected
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { fplTeamId: true },
+  });
+
+  if (!user?.fplTeamId) {
+    throw makeError(403, 'You must connect your Fantasy Premier League team before joining duels. Please set up your FPL team in your profile.');
+  }
+
   const normalizedCode = normalizeInviteCode(inviteCode);
 
   if (!normalizedCode) {

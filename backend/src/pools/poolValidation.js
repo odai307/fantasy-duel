@@ -2,7 +2,8 @@ const { z } = require('zod');
 const { makeError } = require('../shared/errors');
 
 const poolVisibilitySchema = z.enum(['PUBLIC', 'PRIVATE']);
-const listFilterSchema = z.enum(['all', 'high_stakes', 'free_entry']);
+const listFilterSchema = z.enum(['all', 'free_entry', 'my_gameweek', 'open_spots', 'joined_by_me']);
+const poolSortSchema = z.enum(['newest', 'entry_fee_asc', 'entry_fee_desc', 'participants_desc', 'gameweek_asc']);
 
 const createPoolSchema = z.object({
   name: z.string().trim().min(1, 'Pool name is required').max(80, 'Pool name is too long'),
@@ -16,8 +17,19 @@ const createPoolSchema = z.object({
 const listPoolsQuerySchema = z.object({
   filter: listFilterSchema.optional().default('all'),
   gameweek: z.coerce.number().int().min(1).optional(),
+  minEntryFee: z.coerce.number().min(0).optional(),
+  maxEntryFee: z.coerce.number().min(0).optional(),
+  sortBy: poolSortSchema.optional().default('newest'),
   page: z.coerce.number().int().min(1).optional().default(1),
   limit: z.coerce.number().int().min(1).max(100).optional().default(30),
+}).superRefine((data, context) => {
+  if (data.minEntryFee !== undefined && data.maxEntryFee !== undefined && data.minEntryFee > data.maxEntryFee) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'minEntryFee cannot be greater than maxEntryFee',
+      path: ['minEntryFee'],
+    });
+  }
 });
 
 const poolLeaderboardQuerySchema = z.object({

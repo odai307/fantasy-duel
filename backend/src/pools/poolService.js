@@ -3,11 +3,80 @@ const { Prisma } = require('@prisma/client');
 const prisma = require('../shared/config/db');
 const { makeError } = require('../shared/errors');
 const { normalizeInviteCode, randomInviteCode, MAX_INVITE_CODE_RETRIES } = require('../shared/inviteCodeUtils');
+const { getOrSet } = require('../shared/cache');
+const {
+  getTeamScore,
+  getTeamInfoForUser,
+  getTeamOfficialPoints,
+  getCurrentGameweek,
+  assertGameweekOpen
+} = require('../fpl/fplService');
+const { buildScorePatch } = require('../fpl/scoreSyncUtils');
 
-const HIGH_STAKES_MIN_ENTRY_FEE = 100;
+async function refreshPoolParticipantScores(pool) {
+  if (!pool?.id || !pool?.gameweek) {
+    return;
+  }
+
+  const participants = await prisma.poolParticipant.findMany({
+    where: { poolId: pool.id },
+    select: {
+      id: true,
+      gameweekPoints: true,
+      userId: true,
+      user: {
+        select: {
+          fplTeamId: true,
+        },
+      },
+    },
+  });
+
+  for (const participant of participants) {
+    const teamId = participant.user?.fplTeamId;
+    if (!teamId) {
+      continue;
+    }
+
+    try {
+      const teamInfo = await getTeamInfoForUser(teamId);
+      let nextGameweekPoints = Number(teamInfo?.eventPoints || 0);
+
+      // If pool GW differs from the manager's current GW, fall back to event-specific score.
+      if (Number(teamInfo?.currentEvent) !== Number(pool.gameweek)) {
+        const scoreData = await getTeamScore(teamId, Number(pool.gameweek));
+        nextGameweekPoints = Number(scoreData?.gameweekPoints || 0);
+      }
+
+      const patch = buildScorePatch(participant.gameweekPoints, nextGameweekPoints);
+
+      await prisma.poolParticipant.update({
+        where: { id: participant.id },
+        data: {
+          gameweekPoints: patch.gameweekPoints,
+          points: {
+            increment: patch.delta,
+          },
+          updatedAt: new Date(),
+        },
+      });
+    } catch (error) {
+      // Best-effort refresh: keep leaderboard available even if one external FPL lookup fails.
+      console.warn('[pool-score-refresh] failed to refresh participant score', {
+        poolId: pool.id,
+        participantId: participant.id,
+        userId: participant.userId,
+        error: error.message,
+      });
+    }
+  }
+}
 
 function toSafePool(pool, { viewerUserId = null, exposeInviteCodeToCreator = false } = {}) {
   const canSeeInviteCode = exposeInviteCodeToCreator && viewerUserId && pool.createdById === viewerUserId;
+  const isJoined = Boolean(viewerUserId) && Array.isArray(pool.participants)
+    ? pool.participants.some((participant) => participant.userId === viewerUserId)
+    : false;
 
   return {
     id: pool.id,
@@ -29,6 +98,7 @@ function toSafePool(pool, { viewerUserId = null, exposeInviteCodeToCreator = fal
         }
       : null,
     participantCount: pool._count?.participants ?? undefined,
+    isJoined,
   };
 }
 
@@ -82,6 +152,18 @@ async function assertPoolAccess(pool, userId) {
 }
 
 async function createPool(input, userId) {
+  await assertGameweekOpen(input.gameweek, 'create or join pools for this gameweek');
+
+  // Check if user has FPL team connected
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { fplTeamId: true },
+  });
+
+  if (!user?.fplTeamId) {
+    throw makeError(403, 'You must connect your Fantasy Premier League team before creating pools. Please set up your FPL team in your profile.');
+  }
+
   const existingPool = await prisma.pool.findUnique({
     where: {
       createdById_gameweek: {
@@ -164,7 +246,19 @@ async function createPool(input, userId) {
   }
 }
 
-async function listPools({ filter, gameweek, page, limit }, userId = null) {
+async function listPools({ filter, gameweek, minEntryFee, maxEntryFee, sortBy, page, limit }, userId = null) {
+  if (filter === 'joined_by_me' && !userId) {
+    return {
+      pools: [],
+      pagination: {
+        page,
+        limit,
+        total: 0,
+        totalPages: 0,
+      },
+    };
+  }
+
   const where = {
     status: 'OPEN',
   };
@@ -175,11 +269,26 @@ async function listPools({ filter, gameweek, page, limit }, userId = null) {
 
   if (filter === 'free_entry') {
     where.entryFee = 0;
-  } else if (filter === 'high_stakes') {
-    where.entryFee = { gte: HIGH_STAKES_MIN_ENTRY_FEE };
+  } else if (filter === 'my_gameweek') {
+    const currentGameweek = await getCurrentGameweek();
+    if (!currentGameweek) {
+      throw makeError(500, 'Unable to determine current gameweek');
+    }
+    where.gameweek = Number(currentGameweek);
+  } else if (filter === 'joined_by_me') {
+    where.participants = {
+      some: { userId },
+    };
   }
 
-  if (userId) {
+  if (filter !== 'free_entry' && (minEntryFee !== undefined || maxEntryFee !== undefined)) {
+    where.entryFee = {
+      ...(minEntryFee !== undefined ? { gte: minEntryFee } : {}),
+      ...(maxEntryFee !== undefined ? { lte: maxEntryFee } : {}),
+    };
+  }
+
+  if (filter !== 'joined_by_me' && userId) {
     where.OR = [
       { visibility: 'PUBLIC' },
       {
@@ -188,14 +297,24 @@ async function listPools({ filter, gameweek, page, limit }, userId = null) {
         },
       },
     ];
-  } else {
+  } else if (filter !== 'joined_by_me') {
     where.visibility = 'PUBLIC';
   }
 
   const skip = (page - 1) * limit;
+  const isOpenSpotsFilter = filter === 'open_spots';
+  const orderBy = (() => {
+    if (sortBy === 'entry_fee_asc') return [{ entryFee: 'asc' }, { createdAt: 'desc' }];
+    if (sortBy === 'entry_fee_desc') return [{ entryFee: 'desc' }, { createdAt: 'desc' }];
+    if (sortBy === 'gameweek_asc') return [{ gameweek: 'asc' }, { createdAt: 'desc' }];
+    return [{ createdAt: 'desc' }];
+  })();
 
-  const [pools, total] = await Promise.all([
-    prisma.pool.findMany({
+  let pools;
+  let total;
+
+  if (isOpenSpotsFilter) {
+    const allPools = await prisma.pool.findMany({
       where,
       include: {
         createdBy: {
@@ -211,20 +330,64 @@ async function listPools({ filter, gameweek, page, limit }, userId = null) {
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
-      skip,
-      take: limit,
-    }),
-    prisma.pool.count({ where }),
-  ]);
+      orderBy,
+    });
+
+    const openSpotsPools = allPools.filter((pool) => (
+      pool.maxParticipants === null
+        ? true
+        : Number(pool._count?.participants || 0) < Number(pool.maxParticipants)
+    ));
+
+    if (sortBy === 'participants_desc') {
+      openSpotsPools.sort((a, b) => Number(b._count?.participants || 0) - Number(a._count?.participants || 0));
+    }
+
+    total = openSpotsPools.length;
+    pools = openSpotsPools.slice(skip, skip + limit);
+  } else {
+    [pools, total] = await Promise.all([
+    prisma.pool.findMany({
+      where,
+      include: {
+        participants: userId
+          ? {
+              where: { userId },
+              select: { userId: true },
+            }
+          : false,
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            },
+          },
+          _count: {
+            select: {
+              participants: true,
+            },
+          },
+        },
+        orderBy,
+        skip,
+        take: limit,
+      }),
+      prisma.pool.count({ where }),
+    ]);
+
+    if (sortBy === 'participants_desc') {
+      pools.sort((a, b) => Number(b._count?.participants || 0) - Number(a._count?.participants || 0));
+    }
+  }
 
   return {
-    pools: pools.map(toSafePool),
+    pools: pools.map((pool) => toSafePool(pool, { viewerUserId: userId })),
     pagination: {
       page,
       limit,
       total,
-      totalPages: Math.ceil(total / limit),
+      totalPages: total === 0 ? 0 : Math.ceil(total / limit),
     },
   };
 }
@@ -263,62 +426,122 @@ async function getPoolById(poolId, userId) {
 }
 
 async function getPoolLeaderboard(poolId, userId, { page, limit }) {
-  const pool = await findPoolOrThrow(poolId);
-  await assertPoolAccess(pool, userId);
+  const cacheKey = `pool:leaderboard:${poolId}:${userId || 'anon'}:${page}:${limit}`;
+  return getOrSet(cacheKey, 30 * 1000, async () => {
+    const pool = await findPoolOrThrow(poolId);
+    await assertPoolAccess(pool, userId);
+    await refreshPoolParticipantScores(pool);
+    const currentGameweek = await getCurrentGameweek();
 
-  const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-  const [participants, total] = await Promise.all([
-    prisma.poolParticipant.findMany({
-      where: { poolId },
-      include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
+    const [participants, total] = await Promise.all([
+      prisma.poolParticipant.findMany({
+        where: { poolId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              fplManagerName: true,
+              fplTeamName: true,
+              fplTeamId: true,
+            },
           },
         },
+        orderBy: [
+          { points: 'desc' },
+          { gameweekPoints: 'desc' },
+          { joinedAt: 'asc' },
+        ],
+        skip,
+        take: limit,
+      }),
+      prisma.poolParticipant.count({
+        where: { poolId },
+      }),
+    ]);
+
+    const enrichedEntries = await Promise.all(participants.map(async (participant) => {
+    let gameweekPoints = Number(participant.gameweekPoints || 0);
+    let totalPoints = Number(participant.points || 0);
+
+    const fplTeamId = participant.user?.fplTeamId;
+    if (fplTeamId && currentGameweek) {
+      try {
+        const officialPoints = await getTeamOfficialPoints(fplTeamId, currentGameweek);
+        gameweekPoints = Number(officialPoints.gameweekPoints || 0);
+        totalPoints = Number(officialPoints.totalPoints || 0);
+      } catch (error) {
+        console.warn('[pool-leaderboard] failed to fetch official FPL points', {
+          poolId,
+          participantId: participant.id,
+          userId: participant.userId,
+          fplTeamId,
+          error: error.message,
+        });
+      }
+    }
+
+    return {
+      points: totalPoints,
+      totalPoints,
+      gameweekPoints,
+      isCurrentUser: participant.userId === userId,
+      user: {
+        id: participant.user.id,
+        firstName: participant.user.firstName,
+        lastName: participant.user.lastName,
+        fplTeamId: participant.user.fplTeamId,
+        fplManagerName: participant.user.fplManagerName,
+        fplTeamName: participant.user.fplTeamName,
       },
-      orderBy: [
-        { points: 'desc' },
-        { gameweekPoints: 'desc' },
-        { joinedAt: 'asc' },
-      ],
-      skip,
-      take: limit,
-    }),
-    prisma.poolParticipant.count({
-      where: { poolId },
-    }),
-  ]);
+    };
+    }));
 
-  const leaderboard = participants.map((participant, index) => ({
-    rank: skip + index + 1,
-    points: participant.points,
-    gameweekPoints: participant.gameweekPoints,
-    isCurrentUser: participant.userId === userId,
-    user: {
-      id: participant.user.id,
-      firstName: participant.user.firstName,
-      lastName: participant.user.lastName,
-    },
-  }));
+  enrichedEntries.sort((a, b) => {
+    if (b.gameweekPoints !== a.gameweekPoints) {
+      return b.gameweekPoints - a.gameweekPoints;
+    }
+    if (b.totalPoints !== a.totalPoints) {
+      return b.totalPoints - a.totalPoints;
+    }
+    return String(a.user?.fplManagerName || '').localeCompare(String(b.user?.fplManagerName || ''));
+  });
 
-  return {
-    poolId: pool.id,
-    leaderboard,
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-    },
-  };
+    const leaderboard = enrichedEntries.map((entry, index) => ({
+      ...entry,
+      rank: skip + index + 1,
+    }));
+
+    return {
+      poolId: pool.id,
+      currentGameweek,
+      leaderboard,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  });
 }
 
 async function joinPool(poolId, userId, { inviteCode }) {
+  // Check if user has FPL team connected
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { fplTeamId: true },
+  });
+
+  if (!user?.fplTeamId) {
+    throw makeError(403, 'You must connect your Fantasy Premier League team before joining pools. Please set up your FPL team in your profile.');
+  }
+
   const pool = await findPoolOrThrow(poolId);
+  await assertGameweekOpen(pool.gameweek, 'create or join pools for this gameweek');
 
   if (pool.status !== 'OPEN') {
     throw makeError(409, 'Pool is not open for new participants');

@@ -5,6 +5,7 @@ const authRoutes = require('./auth/authRoutes');
 const poolRoutes = require('./pools/poolRoutes');
 const duelRoutes = require('./duels/duelRoutes');
 const leaderboardRoutes = require('./leaderboard/leaderboardRoutes');
+const fplRoutes = require('./fpl/fplRoutes');
 const { errorHandler, notFoundHandler } = require('./shared/middleware/errorHandler');
 const requestContext = require('./shared/middleware/requestContext');
 const requestLogger = require('./shared/middleware/requestLogger');
@@ -33,6 +34,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/pools', poolRoutes);
 app.use('/api/duels', duelRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/fpl', fplRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 

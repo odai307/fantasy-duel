@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/validate-fpl', authMiddleware, authController.validateFpl);
+router.post('/setup-fpl', authMiddleware, authController.setupFpl);
 router.get('/me', authMiddleware, authController.me);
 
 module.exports = router;

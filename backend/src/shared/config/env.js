@@ -16,6 +16,7 @@ const env = {
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  allowFplSyncAll: process.env.ALLOW_FPL_SYNC_ALL === 'true',
   paystackSecretKey: process.env.PAYSTACK_SECRET_KEY || '',
   paystackWebhookSecret: process.env.PAYSTACK_WEBHOOK_SECRET || ''
 };
