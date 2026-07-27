@@ -4,14 +4,25 @@ import {
   validatePoolByIdResponse,
   validatePoolLeaderboardResponse,
   validatePoolListResponse,
-} from './apiValidators';
+} from '../utils/apiValidators';
 
-export function listPools({ filter = 'all', page = 1, limit = 30 } = {}) {
-  const query = new URLSearchParams({
+export function listPools({ filter = 'all', minEntryFee, maxEntryFee, sortBy = 'newest', page = 1, limit = 30 } = {}) {
+  const queryParams = new URLSearchParams({
     filter,
+    sortBy,
     page: String(page),
     limit: String(limit),
-  }).toString();
+  });
+
+  if (minEntryFee !== undefined && minEntryFee !== null && minEntryFee !== '') {
+    queryParams.set('minEntryFee', String(minEntryFee));
+  }
+
+  if (maxEntryFee !== undefined && maxEntryFee !== null && maxEntryFee !== '') {
+    queryParams.set('maxEntryFee', String(maxEntryFee));
+  }
+
+  const query = queryParams.toString();
 
   return apiRequest(`/api/pools?${query}`, {
     optionalAuth: true,

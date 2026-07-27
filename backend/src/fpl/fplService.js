@@ -187,7 +187,9 @@ async function getTeamLineup(teamId, eventId = null) {
       .filter((pick) => !pick.isStarter)
       .sort((a, b) => a.pickPosition - b.pickPosition);
 
-    const gameweekPoints = picks.reduce((sum, pick) => sum + Number(pick.points || 0), 0);
+    // Use FPL's official entry history points as source of truth for GW total.
+    // Local per-pick sums can differ (for example with bench/processing nuances).
+    const gameweekPoints = Number(picksData?.entryHistory?.points || 0);
 
     return {
       teamId: safeTeamId,

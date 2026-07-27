@@ -3,6 +3,13 @@ const { Prisma } = require('@prisma/client');
 const prisma = require('../shared/config/db');
 const { makeError } = require('../shared/errors');
 const { normalizeInviteCode, randomInviteCode, MAX_INVITE_CODE_RETRIES } = require('../shared/inviteCodeUtils');
+const { assertGameweekOpen, getGameweekDeadline, getTeamOfficialPoints } = require('../fpl/fplService');
+
+function toResultFromScores(createdByScore, opponentScore) {
+  if (createdByScore > opponentScore) return 'CREATOR_WIN';
+  if (opponentScore > createdByScore) return 'OPPONENT_WIN';
+  return 'DRAW';
+}
 
 function toSafeDuel(duel, viewerUserId = null) {
   const isCreator = viewerUserId && duel.createdById === viewerUserId;
@@ -12,11 +19,16 @@ function toSafeDuel(duel, viewerUserId = null) {
     id: duel.id,
     inviteCode: isCreator ? duel.inviteCode : null,
     status: duel.status,
+    result: duel.result,
     gameweek: duel.gameweek,
     entryFee: duel.entryFee,
     createdAt: duel.createdAt,
     updatedAt: duel.updatedAt,
     lockedAt: duel.lockedAt,
+    closedAt: duel.closedAt,
+    cancelledAt: duel.cancelledAt,
+    createdByScore: duel.createdByScore,
+    opponentScore: duel.opponentScore,
     createdBy: duel.createdBy
       ? {
           id: duel.createdBy.id,
@@ -63,6 +75,8 @@ function assertDuelAccess(duel, userId) {
 }
 
 async function createDuel(input, userId) {
+  await assertGameweekOpen(input.gameweek, 'create duels for this gameweek');
+
   // Check if user has FPL team connected
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -133,6 +147,8 @@ async function joinDuelByCode(userId, { inviteCode }) {
     throw makeError(404, 'Duel not found for this code');
   }
 
+  await assertGameweekOpen(duel.gameweek, 'join duels for this gameweek');
+
   if (duel.createdById === userId) {
     throw makeError(409, 'You cannot join your own duel as opponent');
   }
@@ -185,11 +201,85 @@ async function joinDuelByCode(userId, { inviteCode }) {
     throw makeError(500, 'Failed to finalize duel join');
   }
 
-  // TODO(wallet): enforce atomic wallet debit for paid duel entries before finalizing the join.
   return {
     joined: true,
     message: 'Successfully joined duel',
     duel: toSafeDuel(updated, userId),
+  };
+}
+
+async function settleDuel(id, userId) {
+  const duel = await findDuelByIdOrThrow(id);
+  assertDuelAccess(duel, userId);
+
+  if (duel.status === 'CANCELLED') {
+    throw makeError(409, 'Cancelled duel cannot be settled');
+  }
+
+  if (duel.status === 'CLOSED') {
+    return {
+      settled: false,
+      message: 'Duel already settled',
+      duel: toSafeDuel(duel, userId),
+    };
+  }
+
+  if (duel.status !== 'LOCKED' || !duel.opponentId) {
+    throw makeError(409, 'Duel must be locked with an opponent before settlement');
+  }
+
+  const deadline = await getGameweekDeadline(duel.gameweek);
+  if (new Date() < deadline) {
+    throw makeError(
+      409,
+      `Gameweek ${duel.gameweek} is still open. Duel can be settled after deadline (${deadline.toISOString()}).`,
+      'GAMEWEEK_STILL_OPEN',
+    );
+  }
+
+  const [creator, opponent] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: duel.createdById },
+      select: { fplTeamId: true },
+    }),
+    prisma.user.findUnique({
+      where: { id: duel.opponentId },
+      select: { fplTeamId: true },
+    }),
+  ]);
+
+  if (!creator?.fplTeamId || !opponent?.fplTeamId) {
+    throw makeError(409, 'Both duel participants must have linked FPL teams to settle this duel');
+  }
+
+  const [creatorPoints, opponentPoints] = await Promise.all([
+    getTeamOfficialPoints(creator.fplTeamId, duel.gameweek),
+    getTeamOfficialPoints(opponent.fplTeamId, duel.gameweek),
+  ]);
+
+  const createdByScore = Number(creatorPoints?.gameweekPoints || 0);
+  const opponentScore = Number(opponentPoints?.gameweekPoints || 0);
+  const result = toResultFromScores(createdByScore, opponentScore);
+
+  const closed = await prisma.duel.update({
+    where: { id: duel.id },
+    data: {
+      status: 'CLOSED',
+      result,
+      createdByScore,
+      opponentScore,
+      closedAt: new Date(),
+    },
+    include: {
+      createdBy: { select: { id: true, firstName: true, lastName: true } },
+      opponent: { select: { id: true, firstName: true, lastName: true } },
+    },
+  });
+
+  return {
+    settled: true,
+    message: 'Duel settled successfully',
+    duel: toSafeDuel(closed, userId),
   };
 }
 
@@ -241,6 +331,7 @@ async function listDuels(userId, { status, page, limit }) {
 module.exports = {
   createDuel,
   joinDuelByCode,
+  settleDuel,
   getDuelById,
   listDuels,
 };

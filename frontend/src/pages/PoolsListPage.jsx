@@ -1,29 +1,28 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { useAuth } from '../AuthContext';
-import { joinPoolByCode, listPools } from '../poolApi';
+import { useAuth } from '../context/AuthContext';
+import { joinPoolByCode, listPools } from '../api/poolApi';
 
 function formatMoney(value) {
   return `GHS ${Number(value || 0).toFixed(2)}`;
 }
 
 function getFilterLabel(filter) {
-  if (filter === 'high_stakes') return 'High Stakes';
   if (filter === 'free_entry') return 'Free Entry';
+  if (filter === 'my_gameweek') return 'My Gameweek';
+  if (filter === 'open_spots') return 'Open Spots';
+  if (filter === 'joined_by_me') return 'Joined by Me';
   return 'All Pools';
-}
-
-function getFilterButtonClass(isActive) {
-  return isActive
-    ? 'px-8 py-2.5 bg-primary text-on-primary font-bold rounded-lg text-xs uppercase tracking-widest transition-all shadow-lg'
-    : 'px-8 py-2.5 text-on-surface-variant hover:text-white font-bold rounded-lg text-xs uppercase tracking-widest transition-all';
 }
 
 export default function PoolsListPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [filter, setFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
+  const [minEntryFee, setMinEntryFee] = useState('');
+  const [maxEntryFee, setMaxEntryFee] = useState('');
   const [pools, setPools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -39,7 +38,14 @@ export default function PoolsListPage() {
       setError('');
 
       try {
-        const data = await listPools({ filter, page: 1, limit: 30 });
+        const data = await listPools({
+          filter,
+          sortBy,
+          minEntryFee: minEntryFee === '' ? undefined : Number(minEntryFee),
+          maxEntryFee: maxEntryFee === '' ? undefined : Number(maxEntryFee),
+          page: 1,
+          limit: 30,
+        });
         setPools(data?.pools || []);
       } catch (loadError) {
         setError(loadError.message || 'Failed to load pools');
@@ -49,7 +55,7 @@ export default function PoolsListPage() {
     }
 
     loadPools();
-  }, [filter]);
+  }, [filter, sortBy, minEntryFee, maxEntryFee]);
 
   const totalPrize = useMemo(
     () => pools.reduce((sum, pool) => sum + Number(pool.entryFee || 0) * Number(pool.maxParticipants || 0), 0),
@@ -173,10 +179,59 @@ export default function PoolsListPage() {
             </section>
 
             <div className="flex flex-wrap items-center justify-between gap-6 mb-10 pb-6 border-b border-white/5">
-              <div className="flex p-1 bg-surface-container rounded-xl gap-1">
-                <button className={getFilterButtonClass(filter === 'all')} onClick={() => setFilter('all')} type="button">All Pools</button>
-                <button className={getFilterButtonClass(filter === 'high_stakes')} onClick={() => setFilter('high_stakes')} type="button">High Stakes</button>
-                <button className={getFilterButtonClass(filter === 'free_entry')} onClick={() => setFilter('free_entry')} type="button">Free Entry</button>
+              <div className="flex flex-wrap items-end gap-3">
+                <label className="flex flex-col gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/70">
+                  Filter
+                  <select
+                    className="min-w-[180px] bg-surface-container rounded-lg border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-on-surface"
+                    onChange={(event) => setFilter(event.target.value)}
+                    value={filter}
+                  >
+                    <option value="all">All Pools</option>
+                    <option value="free_entry">Free Entry</option>
+                    <option value="my_gameweek">My Gameweek</option>
+                    <option value="open_spots">Open Spots</option>
+                    <option value="joined_by_me">Joined by Me</option>
+                  </select>
+                </label>
+                <label className="flex flex-col gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/70">
+                  Sort By
+                  <select
+                    className="min-w-[220px] bg-surface-container rounded-lg border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-on-surface"
+                    onChange={(event) => setSortBy(event.target.value)}
+                    value={sortBy}
+                  >
+                    <option value="newest">Newest</option>
+                    <option value="entry_fee_asc">Entry Fee: Low to High</option>
+                    <option value="entry_fee_desc">Entry Fee: High to Low</option>
+                    <option value="participants_desc">Participants: Most</option>
+                    <option value="gameweek_asc">Gameweek: Soonest</option>
+                  </select>
+                </label>
+
+                <label className="flex flex-col gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/70">
+                  Min Fee
+                  <input
+                    className="w-[120px] bg-surface-container rounded-lg border border-white/10 px-3 py-2 text-sm text-on-surface"
+                    min="0"
+                    onChange={(event) => setMinEntryFee(event.target.value)}
+                    placeholder="0"
+                    type="number"
+                    value={minEntryFee}
+                  />
+                </label>
+
+                <label className="flex flex-col gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/70">
+                  Max Fee
+                  <input
+                    className="w-[120px] bg-surface-container rounded-lg border border-white/10 px-3 py-2 text-sm text-on-surface"
+                    min="0"
+                    onChange={(event) => setMaxEntryFee(event.target.value)}
+                    placeholder="Any"
+                    type="number"
+                    value={maxEntryFee}
+                  />
+                </label>
               </div>
               <div className="flex items-center gap-8 text-on-surface-variant/60 font-semibold text-xs tracking-widest uppercase">
                 <span className="flex items-center gap-3">Active Pools <span className="text-primary font-black text-base">{pools.length}</span></span>
@@ -208,8 +263,15 @@ export default function PoolsListPage() {
                           <span className="text-[10px] font-bold text-primary tracking-[0.2em] uppercase mb-1.5 opacity-80">Gameweek {pool.gameweek}</span>
                           <h4 className="text-2xl font-black font-headline uppercase leading-tight group-hover:text-primary transition-colors tracking-tight">{pool.name}</h4>
                         </div>
-                        <div className="bg-secondary/10 text-secondary text-[9px] font-black px-2 py-1 rounded border border-secondary/20 uppercase tracking-widest">
-                          {pool.visibility}
+                        <div className="flex items-center gap-2">
+                          {pool.isJoined ? (
+                            <div className="bg-primary/15 text-primary text-[9px] font-black px-2 py-1 rounded border border-primary/30 uppercase tracking-widest">
+                              Joined
+                            </div>
+                          ) : null}
+                          <div className="bg-secondary/10 text-secondary text-[9px] font-black px-2 py-1 rounded border border-secondary/20 uppercase tracking-widest">
+                            {pool.visibility}
+                          </div>
                         </div>
                       </div>
 

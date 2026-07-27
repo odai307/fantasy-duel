@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { useAuth } from '../AuthContext';
-import { createPool } from '../poolApi';
+import { useAuth } from '../context/AuthContext';
+import { createPool } from '../api/poolApi';
+import { getOpenGameweeks } from '../api/fplApi';
 
 function formatMoney(amount) {
   const value = Number(amount) || 0;
@@ -10,7 +11,7 @@ function formatMoney(amount) {
 }
 
 function gameweekLabelFromValue(gameweek) {
-  return gameweek.replace('gw', 'GW ');
+  return `GW ${Number(gameweek)}`;
 }
 
 export default function CreatePoolPage() {
@@ -19,7 +20,10 @@ export default function CreatePoolPage() {
 
   const [poolName, setPoolName] = useState('');
   const [visibility, setVisibility] = useState('PUBLIC');
-  const [gameweek, setGameweek] = useState('gw10');
+  const [gameweek, setGameweek] = useState(0);
+  const [openGameweeks, setOpenGameweeks] = useState([]);
+  const [gameweekLoading, setGameweekLoading] = useState(true);
+  const [gameweekError, setGameweekError] = useState('');
   const [maxParticipants, setMaxParticipants] = useState(10);
   const [noMaxParticipants, setNoMaxParticipants] = useState(false);
   const [entryFee, setEntryFee] = useState(50);
@@ -35,6 +39,39 @@ export default function CreatePoolPage() {
   const participantsValue = Math.min(20, Math.max(2, Number(maxParticipants) || 2));
   const entryFeeValue = Math.max(0, Number(entryFee) || 0);
   const estimatedPrizePot = noMaxParticipants ? null : entryFeeValue * participantsValue;
+  const availableGameweeks = useMemo(() => {
+    return openGameweeks.filter((gw) => gw.isOpen).map((gw) => Number(gw.id));
+  }, [openGameweeks]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadOpenGameweeks() {
+      setGameweekLoading(true);
+      setGameweekError('');
+      try {
+        const gameweeks = await getOpenGameweeks();
+        if (!active) return;
+        setOpenGameweeks(gameweeks);
+        const firstOpen = gameweeks.find((gw) => gw.isOpen);
+        if (firstOpen) {
+          setGameweek(Number(firstOpen.id));
+        }
+      } catch (error) {
+        if (!active) return;
+        setGameweekError(error.message || 'Could not load current gameweek');
+      } finally {
+        if (active) {
+          setGameweekLoading(false);
+        }
+      }
+    }
+
+    loadOpenGameweeks();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const previewName = poolName.trim() || 'Untitled Pool';
   const previewDescription = description.trim() || 'No description yet.';
@@ -48,14 +85,12 @@ export default function CreatePoolPage() {
       return;
     }
 
-    const parsedGameweek = Number(gameweek.replace('gw', ''));
-
     setIsSubmitting(true);
     try {
       const data = await createPool({
         name: previewName,
         description: previewDescription,
-        gameweek: parsedGameweek,
+        gameweek: Number(gameweek),
         entryFee: entryFeeValue,
         maxParticipants: noMaxParticipants ? null : participantsValue,
         visibility,
@@ -193,15 +228,23 @@ export default function CreatePoolPage() {
                           <select
                             className="w-full bg-transparent border-none text-on-surface text-base focus:ring-0 px-3 py-2 appearance-none"
                             id="gameweek"
-                            onChange={(event) => setGameweek(event.target.value)}
+                            disabled={gameweekLoading || availableGameweeks.length === 0}
+                            onChange={(event) => setGameweek(Number(event.target.value))}
                             value={gameweek}
                           >
-                            <option className="bg-surface-container-highest text-on-surface" value="gw10">Gameweek 10 (Upcoming)</option>
-                            <option className="bg-surface-container-highest text-on-surface" value="gw11">Gameweek 11</option>
-                            <option className="bg-surface-container-highest text-on-surface" value="gw12">Gameweek 12</option>
+                            {openGameweeks.filter((gw) => gw.isOpen).map((gw) => (
+                              <option className="bg-surface-container-highest text-on-surface" key={gw.id} value={gw.id}>
+                                Gameweek {gw.id}{gw.isCurrent ? ' (Current)' : gw.isNext ? ' (Next)' : ''}
+                              </option>
+                            ))}
                           </select>
                           <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
                         </div>
+                        {gameweekLoading ? <p className="text-xs text-on-surface-variant mt-1">Loading gameweeks...</p> : null}
+                        {gameweekError ? <p className="text-xs text-error mt-1">{gameweekError}</p> : null}
+                        {!gameweekLoading && !gameweekError && availableGameweeks.length === 0 ? (
+                          <p className="text-xs text-error mt-1">No open gameweeks available right now. Deadlines may have passed.</p>
+                        ) : null}
                       </div>
                       <div className="bg-surface-container-lowest rounded-DEFAULT px-4 py-3 text-on-surface-variant text-sm border border-outline-variant/20">
                         Invite code is auto-generated after creation.
@@ -314,7 +357,7 @@ export default function CreatePoolPage() {
                   </Link>
                   <button
                     className="px-8 py-3 rounded-DEFAULT bg-primary-gradient text-on-primary font-bold text-sm hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={creatorLoading || !creatorName.trim() || isSubmitting}
+                    disabled={creatorLoading || !creatorName.trim() || isSubmitting || gameweekLoading || availableGameweeks.length === 0}
                     type="submit"
                   >
                     {isSubmitting ? 'Creating Pool...' : 'Create Pool'}

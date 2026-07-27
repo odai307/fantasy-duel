@@ -28,6 +28,11 @@ function ensureOptionalString(value, context) {
   return ensureString(value, context);
 }
 
+function ensureOptionalNumber(value, context) {
+  if (value === null || value === undefined) return value;
+  return ensureNumber(value, context);
+}
+
 function ensureNumber(value, context) {
   if (!Number.isFinite(Number(value))) {
     throw contractError(`${context} must be a finite number`);
@@ -56,6 +61,10 @@ function ensureUserSummary(value, context = 'user') {
   ensureString(user.id, `${context}.id`);
   ensureOptionalString(user.firstName, `${context}.firstName`);
   ensureOptionalString(user.lastName, `${context}.lastName`);
+  ensureOptionalString(user.email, `${context}.email`);
+  ensureOptionalNumber(user.fplTeamId, `${context}.fplTeamId`);
+  ensureOptionalString(user.fplManagerName, `${context}.fplManagerName`);
+  ensureOptionalString(user.fplTeamName, `${context}.fplTeamName`);
   return user;
 }
 
@@ -82,6 +91,11 @@ function ensureDuel(value, context = 'duel') {
   ensureNumber(duel.gameweek, `${context}.gameweek`);
   ensureNumber(duel.entryFee, `${context}.entryFee`);
   ensureOptionalString(duel.status, `${context}.status`);
+  ensureOptionalString(duel.result, `${context}.result`);
+  ensureOptionalNumber(duel.createdByScore, `${context}.createdByScore`);
+  ensureOptionalNumber(duel.opponentScore, `${context}.opponentScore`);
+  ensureOptionalString(duel.closedAt, `${context}.closedAt`);
+  ensureOptionalString(duel.cancelledAt, `${context}.cancelledAt`);
   if (duel.createdBy !== null && duel.createdBy !== undefined) {
     ensureUserSummary(duel.createdBy, `${context}.createdBy`);
   }

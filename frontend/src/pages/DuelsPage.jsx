@@ -90,7 +90,7 @@ export default function DuelsPage() {
               <div className="text-xs uppercase tracking-widest text-on-surface-variant flex items-center gap-4">
                 <span>Duels: <span className="text-primary font-black">{duels.length}</span></span>
                 <span className="w-px h-4 bg-outline-variant/40" />
-                <span>Staked: <span className="text-secondary font-black">{formatMoney(totalStaked)}</span></span>
+                <span>Total Entry: <span className="text-secondary font-black">{formatMoney(totalStaked)}</span></span>
               </div>
             </div>
 
@@ -118,8 +118,8 @@ export default function DuelsPage() {
                       <p className="font-black text-on-surface">{formatMoney(duel.entryFee)}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">Prize Pot</p>
-                      <p className="font-black text-primary">{formatMoney(Number(duel.entryFee || 0) * 2)}</p>
+                      <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">Result</p>
+                      <p className="font-black text-primary">{duel.result || 'PENDING'}</p>
                     </div>
                   </div>
 

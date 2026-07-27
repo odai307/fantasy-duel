@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getPoolById, getPoolLeaderboard, joinPool } from '../poolApi';
+import { getPoolById, getPoolLeaderboard, joinPool } from '../api/poolApi';
+import { getCurrentGameweek } from '../api/fplApi';
 
 export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
   const [pool, setPool] = useState(initialPool || null);
@@ -9,6 +10,7 @@ export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
   const [leaderboardTotal, setLeaderboardTotal] = useState(0);
   const [leaderboardLoading, setLeaderboardLoading] = useState(Boolean(poolId));
   const [leaderboardError, setLeaderboardError] = useState('');
+  const [currentGameweek, setCurrentGameweek] = useState(null);
   const [joinLoading, setJoinLoading] = useState(false);
   const [joinError, setJoinError] = useState('');
   const [joinSuccess, setJoinSuccess] = useState('');
@@ -61,9 +63,32 @@ export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
     loadLeaderboard();
   }, [loadLeaderboard, poolId]);
 
+  useEffect(() => {
+    let active = true;
+
+    async function loadCurrentGameweek() {
+      try {
+        const gw = await getCurrentGameweek();
+        if (active) {
+          setCurrentGameweek(Number(gw));
+        }
+      } catch {
+        if (active) {
+          setCurrentGameweek(null);
+        }
+      }
+    }
+
+    loadCurrentGameweek();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const entryFee = Number(pool?.entryFee ?? 250);
   const maxParticipants = pool?.maxParticipants === null ? null : pool?.maxParticipants ?? 150;
   const gameweekLabel = pool?.gameweekLabel ?? `GW ${pool?.gameweek || 24}`;
+  const gameweekScoreLabel = currentGameweek ? `gw${currentGameweek}` : `gw${pool?.gameweek || ''}`;
   const poolName = pool?.name ?? 'Elite Strikers Hub';
   const visibility = pool?.visibility ?? 'PUBLIC';
   const poolStatus = pool?.status ?? 'OPEN';
@@ -134,6 +159,7 @@ export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
     entryFee,
     maxParticipants,
     gameweekLabel,
+    gameweekScoreLabel,
     poolName,
     visibility,
     poolStatus,

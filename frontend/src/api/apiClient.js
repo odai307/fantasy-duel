@@ -1,4 +1,4 @@
-import { clearAuthToken, getAuthToken } from './authUtils';
+import { clearAuthToken, getAuthToken } from '../utils/authUtils';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
@@ -52,6 +52,13 @@ export async function apiRequest(path, options = {}) {
     const error = new Error(data?.message || `Request failed (${response.status})`);
     error.status = response.status;
     error.data = data;
+
+    // Check for FPL requirement error
+    if (error.status === 403 && error.message?.includes('Fantasy Premier League team')) {
+      // Trigger FPL setup modal
+      window.dispatchEvent(new CustomEvent('show-fpl-modal'));
+    }
+
     throw error;
   }
 

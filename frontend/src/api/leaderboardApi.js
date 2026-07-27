@@ -1,5 +1,5 @@
 import { apiRequest } from './apiClient';
-import { validateLeaderboardResponse } from './apiValidators';
+import { validateLeaderboardResponse } from '../utils/apiValidators';
 
 export function getLeaderboard({ period = 'all_time', page = 1, limit = 30 } = {}) {
   const query = new URLSearchParams({

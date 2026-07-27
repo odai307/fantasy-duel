@@ -25,6 +25,13 @@ enum DuelStatus {
   CANCELLED
 }
 
+enum DuelResult {
+  PENDING
+  CREATOR_WIN
+  OPPONENT_WIN
+  DRAW
+}
+
 model User {
   id                 String            @id @default(uuid())
   firstName          String            @map("first_name")
@@ -45,20 +52,23 @@ model User {
 }
 
 model Duel {
-  id          String     @id @default(uuid())
-  inviteCode  String     @unique @map("invite_code")
-  status      DuelStatus @default(OPEN)
-  gameweek    Int
-  entryFee    Decimal    @default(0.00) @map("entry_fee") @db.Decimal(10, 2)
-  createdById String     @map("created_by_id")
-  opponentId  String?    @map("opponent_id")
-  createdBy   User       @relation("DuelCreator", fields: [createdById], references: [id], onDelete: Cascade)
-  opponent    User?      @relation("DuelOpponent", fields: [opponentId], references: [id], onDelete: SetNull)
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  lockedAt    DateTime?  @map("locked_at")
-  closedAt    DateTime?  @map("closed_at")
-  cancelledAt DateTime?  @map("cancelled_at")
+  id             String     @id @default(uuid())
+  inviteCode     String     @unique @map("invite_code")
+  status         DuelStatus @default(OPEN)
+  result         DuelResult @default(PENDING)
+  gameweek       Int
+  entryFee       Decimal    @default(0.00) @map("entry_fee") @db.Decimal(10, 2)
+  createdById    String     @map("created_by_id")
+  opponentId     String?    @map("opponent_id")
+  createdByScore Int?       @map("created_by_score")
+  opponentScore  Int?       @map("opponent_score")
+  createdBy      User       @relation("DuelCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  opponent       User?      @relation("DuelOpponent", fields: [opponentId], references: [id], onDelete: SetNull)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+  lockedAt       DateTime?  @map("locked_at")
+  closedAt       DateTime?  @map("closed_at")
+  cancelledAt    DateTime?  @map("cancelled_at")
 
   @@index([createdById])
   @@index([opponentId])

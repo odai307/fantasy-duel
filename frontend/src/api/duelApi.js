@@ -3,7 +3,7 @@ import {
   validateDuelByIdResponse,
   validateDuelListResponse,
   validateJoinResult,
-} from './apiValidators';
+} from '../utils/apiValidators';
 
 export function createDuel(payload) {
   return apiRequest('/api/duels', {
@@ -26,6 +26,13 @@ export function joinDuelByCode(inviteCode) {
 
 export function getDuelById(id) {
   return apiRequest(`/api/duels/${id}`, {
+    auth: true,
+  }).then(validateDuelByIdResponse);
+}
+
+export function settleDuel(id) {
+  return apiRequest(`/api/duels/${id}/settle`, {
+    method: 'POST',
     auth: true,
   }).then(validateDuelByIdResponse);
 }

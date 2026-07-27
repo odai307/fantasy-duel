@@ -431,7 +431,7 @@ async function getPoolLeaderboard(poolId, userId, { page, limit }) {
     const pool = await findPoolOrThrow(poolId);
     await assertPoolAccess(pool, userId);
     await refreshPoolParticipantScores(pool);
-    const currentGameweek = await getCurrentGameweek();
+    const scoringGameweek = Number(pool.gameweek);
 
     const skip = (page - 1) * limit;
 
@@ -468,9 +468,9 @@ async function getPoolLeaderboard(poolId, userId, { page, limit }) {
     let totalPoints = Number(participant.points || 0);
 
     const fplTeamId = participant.user?.fplTeamId;
-    if (fplTeamId && currentGameweek) {
+    if (fplTeamId && scoringGameweek) {
       try {
-        const officialPoints = await getTeamOfficialPoints(fplTeamId, currentGameweek);
+        const officialPoints = await getTeamOfficialPoints(fplTeamId, scoringGameweek);
         gameweekPoints = Number(officialPoints.gameweekPoints || 0);
         totalPoints = Number(officialPoints.totalPoints || 0);
       } catch (error) {
@@ -517,7 +517,7 @@ async function getPoolLeaderboard(poolId, userId, { page, limit }) {
 
     return {
       poolId: pool.id,
-      currentGameweek,
+      currentGameweek: scoringGameweek,
       leaderboard,
       pagination: {
         page,

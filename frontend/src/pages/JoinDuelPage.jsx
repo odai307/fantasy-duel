@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { joinDuelByCode } from '../duelApi';
+import { joinDuelByCode } from '../api/duelApi';
 
 export default function JoinDuelPage() {
   const navigate = useNavigate();

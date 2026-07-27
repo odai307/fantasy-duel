@@ -3,7 +3,7 @@ const router = express.Router();
 const asyncHandler = require('../shared/middleware/asyncHandler');
 const { requireAuthenticatedUser } = require('../shared/authHelper');
 const { getTeamScore, getCurrentGameweek, getTeamInfoForUser, getTeamLineup } = require('../fpl/fplService');
-const { getBootstrapData } = require('../fpl/fplApi');
+const { getBootstrapData, getFixtures } = require('../fpl/fplApi');
 const prisma = require('../shared/config/db');
 const { makeError } = require('../shared/errors');
 const authMiddleware = require('../shared/middleware/authMiddleware');
@@ -55,6 +55,75 @@ const getOpenGameweeksRoute = asyncHandler(async (req, res) => {
   res.json({
     now: now.toISOString(),
     gameweeks,
+  });
+});
+
+const getUpcomingFixturesRoute = asyncHandler(async (req, res) => {
+  const bootstrap = await getBootstrapData();
+  const now = new Date();
+  const limit = Math.min(20, Math.max(1, Number(req.query.limit || 6)));
+  const requestedEventId = req.query.eventId ? Number(req.query.eventId) : null;
+
+  const events = (bootstrap.events || []).map((event) => ({
+    id: Number(event.id),
+    name: event.name || `Gameweek ${event.id}`,
+    isCurrent: Boolean(event.is_current),
+    isNext: Boolean(event.is_next),
+    deadlineTime: event.deadline_time ? new Date(event.deadline_time) : null,
+  }));
+
+  const targetEvent = requestedEventId
+    ? events.find((event) => event.id === requestedEventId)
+    : events.find((event) => event.isNext)
+      || events.find((event) => event.deadlineTime && now < event.deadlineTime)
+      || events.find((event) => event.isCurrent)
+      || null;
+
+  if (!targetEvent?.id) {
+    throw makeError(500, 'Unable to determine target gameweek for upcoming fixtures');
+  }
+
+  const teamsById = new Map((bootstrap.teams || []).map((team) => [
+    Number(team.id),
+    {
+      id: Number(team.id),
+      name: team.name || '',
+      shortName: team.short_name || '',
+      code: Number(team.code || 0),
+    },
+  ]));
+
+  const fixtures = await getFixtures(targetEvent.id);
+  const normalized = fixtures
+    .sort((a, b) => new Date(a.kickoff_time || 0) - new Date(b.kickoff_time || 0))
+    .map((fixture) => {
+      const homeTeam = teamsById.get(Number(fixture.team_h));
+      const awayTeam = teamsById.get(Number(fixture.team_a));
+      return {
+        id: Number(fixture.id),
+        eventId: Number(fixture.event),
+        kickoffTime: fixture.kickoff_time ? new Date(fixture.kickoff_time).toISOString() : null,
+        started: Boolean(fixture.started),
+        finished: Boolean(fixture.finished),
+        homeTeam,
+        awayTeam,
+      };
+    });
+
+  const live = normalized
+    .filter((fixture) => fixture.started && !fixture.finished)
+    .slice(0, limit);
+
+  const upcoming = normalized
+    .filter((fixture) => !fixture.started && !fixture.finished)
+    .slice(0, limit);
+
+  res.json({
+    eventId: targetEvent.id,
+    eventName: targetEvent.name,
+    live,
+    upcoming,
+    fixtures: upcoming,
   });
 });
 
@@ -196,6 +265,7 @@ const syncAllFplScores = asyncHandler(async (req, res) => {
 router.get('/team-info', authMiddleware, getCurrentUserFplTeamInfo);
 router.get('/current-gameweek', getCurrentGameweekRoute);
 router.get('/open-gameweeks', getOpenGameweeksRoute);
+router.get('/fixtures/upcoming', getUpcomingFixturesRoute);
 router.get('/entry/:teamId/lineup', getEntryLineupRoute);
 router.get('/team-score', authMiddleware, getMyTeamScore);
 router.post('/sync-my-scores', authMiddleware, syncMyFplScores);

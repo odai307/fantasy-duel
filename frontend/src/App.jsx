@@ -9,10 +9,11 @@ import PoolDetailsPage from './pages/PoolDetailsPage';
 import PoolsListPage from './pages/PoolsListPage';
 import CreatePoolPage from './pages/CreatePoolPage';
 import LeaderboardPage from './pages/LeaderboardPage';
+import LineupPage from './pages/LineupPage';
 import WalletPage from './pages/WalletPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
-import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 
 /**
  * Legacy redirects for backward compatibility.
@@ -45,6 +46,7 @@ export default function App() {
       <Route path="/landing" element={<LandingPage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/leaderboard" element={<LeaderboardPage />} />
+      <Route path="/lineup" element={<LineupPage />} />
       <Route path="/pools" element={<PoolsListPage />} />
 
       {/* Protected Pages */}
@@ -79,4 +81,3 @@ export default function App() {
     </Routes>
   );
 }
-

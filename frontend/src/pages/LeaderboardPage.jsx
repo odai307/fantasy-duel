@@ -1,19 +1,52 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { getLeaderboard } from '../leaderboardApi';
+import { getLeaderboard } from '../api/leaderboardApi';
+import { getCurrentGameweek } from '../api/fplApi';
 
-function fullName(user) {
-  return [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Unknown';
+function managerName(user) {
+  if (user?.fplManagerName) {
+    return user.fplManagerName;
+  }
+
+  const name = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim();
+  if (name) {
+    return name;
+  }
+
+  const emailHandle = user?.email?.split('@')?.[0]?.trim();
+  if (emailHandle) {
+    return emailHandle;
+  }
+
+  return user?.id ? `Manager ${user.id.slice(0, 6)}` : 'Unknown Manager';
+}
+
+function teamName(user) {
+  const team = user?.fplTeamName?.trim();
+  if (team) {
+    return team;
+  }
+
+  if (user?.fplTeamId) {
+    return `FPL Team #${user.fplTeamId}`;
+  }
+
+  return 'No team linked';
 }
 
 function initials(user) {
-  const first = user?.firstName?.[0] || '';
-  const last = user?.lastName?.[0] || '';
-  return `${first}${last}`.toUpperCase() || '?';
+  const source = managerName(user);
+  const parts = source?.trim().split(' ').filter(Boolean) || [];
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
 export default function LeaderboardPage() {
+  const navigate = useNavigate();
   const [period, setPeriod] = useState('all_time');
+  const [currentGameweek, setCurrentGameweek] = useState(null);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,7 +71,36 @@ export default function LeaderboardPage() {
     load();
   }, [period]);
 
+  useEffect(() => {
+    let active = true;
+    async function loadCurrentGameweek() {
+      try {
+        const gw = await getCurrentGameweek();
+        if (active) {
+          setCurrentGameweek(Number(gw));
+        }
+      } catch {
+        if (active) {
+          setCurrentGameweek(null);
+        }
+      }
+    }
+
+    loadCurrentGameweek();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const topThree = useMemo(() => rows.slice(0, 3), [rows]);
+  const gameweekHeaderLabel = currentGameweek ? `gw${currentGameweek}` : 'gw';
+  const openLineup = (user) => {
+    if (!user?.fplTeamId) {
+      return;
+    }
+    const eventId = currentGameweek || '';
+    navigate(`/lineup?teamId=${user.fplTeamId}${eventId ? `&eventId=${eventId}` : ''}`);
+  };
 
   return (
     <div className="page-leaderboard bg-background text-on-surface selection:bg-primary selection:text-on-primary">
@@ -87,7 +149,13 @@ export default function LeaderboardPage() {
           {!loading && !error && topThree.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
               {topThree.map((row) => (
-                <div className="obsidian-gradient rounded-2xl p-6 border border-outline-variant/20" key={row.user.id}>
+                <div
+                  className={`obsidian-gradient rounded-2xl p-6 border border-outline-variant/20 ${row.user?.fplTeamId ? 'cursor-pointer hover:border-primary/40' : ''}`}
+                  key={row.user.id}
+                  onClick={() => openLineup(row.user)}
+                  role={row.user?.fplTeamId ? 'button' : undefined}
+                  tabIndex={row.user?.fplTeamId ? 0 : undefined}
+                >
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-2xl font-headline font-black text-primary">#{String(row.rank).padStart(2, '0')}</span>
                     <span className="text-xs uppercase tracking-widest text-on-surface-variant">{period === 'this_week' ? 'Weekly' : 'Overall'}</span>
@@ -97,13 +165,13 @@ export default function LeaderboardPage() {
                       {initials(row.user)}
                     </div>
                     <div>
-                      <h3 className="font-headline text-xl font-black text-on-surface">{fullName(row.user)}</h3>
-                      <p className="text-xs text-on-surface-variant uppercase tracking-widest">Duels: {row.duelsPlayed} • Pools: {row.poolsJoined}</p>
+                      <h3 className="font-headline text-xl font-black text-on-surface">{managerName(row.user)}</h3>
+                      <p className="text-xs text-on-surface-variant uppercase tracking-widest">{teamName(row.user)}</p>
                     </div>
                   </div>
                   <div className="mt-4 text-sm text-on-surface-variant">
+                    <p>{gameweekHeaderLabel}: <span className="text-secondary font-black">{row.gameweekPoints}</span></p>
                     <p>Total Points: <span className="text-primary font-black">{row.totalPoints}</span></p>
-                    <p>GW Points: <span className="text-secondary font-black">{row.gameweekPoints}</span></p>
                   </div>
                 </div>
               ))}
@@ -117,34 +185,34 @@ export default function LeaderboardPage() {
                   <tr className="bg-white/5 border-b border-outline-variant/30">
                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">Rank</th>
                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">Manager</th>
+                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant text-right">{gameweekHeaderLabel}</th>
                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant text-right">Total Points</th>
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant text-right">GW Points</th>
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant text-right">Duels Played</th>
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant text-right">Pools Joined</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/10">
                   {!loading && !error && rows.length === 0 ? (
                     <tr>
-                      <td className="px-8 py-8 text-on-surface-variant" colSpan={6}>No leaderboard entries yet.</td>
+                      <td className="px-8 py-8 text-on-surface-variant" colSpan={4}>No leaderboard entries yet.</td>
                     </tr>
                   ) : null}
                   {rows.map((row) => (
-                    <tr className="group hover:bg-white/[0.03] transition-all" key={row.user.id}>
+                    <tr
+                      className={`group transition-all ${row.user?.fplTeamId ? 'cursor-pointer hover:bg-white/[0.03]' : ''}`}
+                      key={row.user.id}
+                      onClick={() => openLineup(row.user)}
+                    >
                       <td className="px-8 py-6 text-xl font-headline font-black text-on-surface-variant/60">{String(row.rank).padStart(2, '0')}</td>
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
                           <div className="w-11 h-11 rounded-lg bg-surface-container-highest border border-outline-variant/20 flex items-center justify-center font-black text-primary">{initials(row.user)}</div>
                           <div>
-                            <p className="font-black text-on-surface">{fullName(row.user)}</p>
-                            <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">Manager</p>
+                            <p className="font-black text-on-surface">{managerName(row.user)}</p>
+                            <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">{teamName(row.user)}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-6 text-right font-black text-primary">{row.totalPoints}</td>
                       <td className="px-8 py-6 text-right font-black text-secondary">{row.gameweekPoints}</td>
-                      <td className="px-8 py-6 text-right font-black text-on-surface">{row.duelsPlayed}</td>
-                      <td className="px-8 py-6 text-right font-black text-on-surface">{row.poolsJoined}</td>
+                      <td className="px-8 py-6 text-right font-black text-primary">{row.totalPoints}</td>
                     </tr>
                   ))}
                 </tbody>

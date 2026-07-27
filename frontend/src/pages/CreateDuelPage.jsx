@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { createDuel } from '../duelApi';
+import { createDuel } from '../api/duelApi';
+import { getOpenGameweeks } from '../api/fplApi';
 
 const QUICK_ADD = [50, 100, 200];
-const GAMEWEEKS = [24, 25, 26, 27];
 
 function formatMoney(value) {
   return `GHS ${Number(value || 0).toFixed(2)}`;
@@ -12,12 +12,49 @@ function formatMoney(value) {
 
 export default function CreateDuelPage() {
   const navigate = useNavigate();
-  const [gameweek, setGameweek] = useState(24);
+  const [gameweek, setGameweek] = useState(0);
+  const [openGameweeks, setOpenGameweeks] = useState([]);
+  const [gameweekLoading, setGameweekLoading] = useState(true);
+  const [gameweekError, setGameweekError] = useState('');
   const [entryFee, setEntryFee] = useState(100);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const prizePot = useMemo(() => Number(entryFee || 0) * 2, [entryFee]);
+  const availableGameweeks = useMemo(
+    () => openGameweeks.filter((gw) => gw.isOpen).map((gw) => Number(gw.id)),
+    [openGameweeks],
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadOpenGameweeks() {
+      setGameweekLoading(true);
+      setGameweekError('');
+      try {
+        const gameweeks = await getOpenGameweeks();
+        if (!active) return;
+        setOpenGameweeks(gameweeks);
+        const firstOpen = gameweeks.find((gw) => gw.isOpen);
+        if (firstOpen) {
+          setGameweek(Number(firstOpen.id));
+        }
+      } catch (loadError) {
+        if (!active) return;
+        setGameweekError(loadError.message || 'Could not load gameweeks');
+      } finally {
+        if (active) {
+          setGameweekLoading(false);
+        }
+      }
+    }
+
+    loadOpenGameweeks();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -25,6 +62,10 @@ export default function CreateDuelPage() {
     setLoading(true);
 
     try {
+      if (!Number.isInteger(Number(gameweek)) || Number(gameweek) <= 0) {
+        throw new Error('No open gameweek available for duel creation');
+      }
+
       const data = await createDuel({
         gameweek: Number(gameweek),
         entryFee: Number(entryFee),
@@ -62,17 +103,25 @@ export default function CreateDuelPage() {
                   <div>
                     <label className="block text-xs uppercase tracking-widest text-on-surface-variant mb-2">Select Gameweek</label>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {GAMEWEEKS.map((gw) => (
+                      {availableGameweeks.map((gw) => {
+                        const gwMeta = openGameweeks.find((item) => Number(item.id) === gw);
+                        return (
                         <button
                           className={`rounded-lg py-3 text-sm font-black font-headline transition-all ${gameweek === gw ? 'bg-primary text-on-primary' : 'bg-surface-container-highest text-on-surface-variant hover:text-on-surface'}`}
                           key={gw}
                           onClick={() => setGameweek(gw)}
                           type="button"
                         >
-                          GW {gw}
+                          GW {gw}{gwMeta?.isCurrent ? ' (Current)' : gwMeta?.isNext ? ' (Next)' : ''}
                         </button>
-                      ))}
+                        );
+                      })}
                     </div>
+                    {gameweekLoading ? <p className="text-xs text-on-surface-variant mt-2">Loading gameweeks...</p> : null}
+                    {gameweekError ? <p className="text-xs text-error mt-2">{gameweekError}</p> : null}
+                    {!gameweekLoading && !gameweekError && availableGameweeks.length === 0 ? (
+                      <p className="text-xs text-error mt-2">No open gameweeks available right now.</p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -106,7 +155,7 @@ export default function CreateDuelPage() {
 
                   <button
                     className="w-full py-4 rounded-lg bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-black uppercase tracking-widest disabled:opacity-60"
-                    disabled={loading}
+                    disabled={loading || gameweekLoading || availableGameweeks.length === 0}
                     type="submit"
                   >
                     {loading ? 'Generating Duel...' : 'Generate Duel Link'}
@@ -117,11 +166,11 @@ export default function CreateDuelPage() {
                       <p className="font-black text-on-surface">{formatMoney(entryFee)}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest text-primary">Prize Pool</p>
+                      <p className="text-[10px] uppercase tracking-widest text-primary">2-Player Total</p>
                       <p className="font-black text-primary">{formatMoney(prizePot)}</p>
                     </div>
                   </div>
-                  <p className="text-xs text-on-surface-variant text-center">Wallet charge is deferred for now and will be added in the wallet phase.</p>
+                  <p className="text-xs text-on-surface-variant text-center">Entry fee is informational only in this phase. Wallet settlement is not enabled yet.</p>
                 </form>
               </section>
             </div>

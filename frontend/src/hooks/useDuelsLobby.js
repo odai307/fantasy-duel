@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { joinDuelByCode, listDuels } from '../duelApi';
+import { joinDuelByCode, listDuels } from '../api/duelApi';
 
 export function useDuelsLobby({ navigate }) {
   const [status, setStatus] = useState('all');

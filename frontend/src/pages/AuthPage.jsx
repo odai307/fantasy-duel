@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -10,8 +10,8 @@ export default function AuthPage() {
 
   const [authMode, setAuthMode] = useState('register');
   const [registerForm, setRegisterForm] = useState({
-    fullName: '',
-    fplTeamId: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     acceptedTerms: false,
@@ -39,14 +39,7 @@ export default function AuthPage() {
     setLoginForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  function parseName(fullName) {
-    const clean = fullName.trim().replace(/\s+/g, ' ');
-    const [firstName, ...rest] = clean.split(' ');
-    return {
-      firstName: firstName || '',
-      lastName: rest.join(' ').trim(),
-    };
-  }
+
 
   async function handleRegisterSubmit(event) {
     event.preventDefault();
@@ -58,25 +51,24 @@ export default function AuthPage() {
       return;
     }
 
-    const { firstName, lastName } = parseName(registerForm.fullName);
-    if (!firstName || !lastName) {
-      setErrorMessage('Please enter your full name (first and last name).');
+    if (!registerForm.firstName.trim() || !registerForm.lastName.trim()) {
+      setErrorMessage('Please enter both your first and last name.');
       return;
     }
 
     setIsSubmitting(true);
     try {
       await register({
-        firstName,
-        lastName,
+        firstName: registerForm.firstName.trim(),
+        lastName: registerForm.lastName.trim(),
         email: registerForm.email.trim().toLowerCase(),
         password: registerForm.password,
       });
 
       setStatusMessage('Registration successful. Please log in.');
       setRegisterForm({
-        fullName: '',
-        fplTeamId: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         acceptedTerms: false,
@@ -212,30 +204,30 @@ export default function AuthPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="space-y-2">
                             <label
-                                className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">Full
+                                className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">First
                                 Name</label>
                             <div className="relative group">
                                 <span
                                     className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">person</span>
                                 <input
                                     className="w-full pl-12 bg-surface-container-highest/50 border border-outline-variant/20 rounded-lg text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none input-focus-gold py-3.5 text-sm transition-all"
-                                    onChange={(event) => handleRegisterChange('fullName', event.target.value)}
-                                    placeholder="Kwame Mensah" type="text"
-                                    value={registerForm.fullName} />
+                                    onChange={(event) => handleRegisterChange('firstName', event.target.value)}
+                                    placeholder="Kwame" type="text"
+                                    value={registerForm.firstName} />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <label
-                                className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">FPL
-                                Team ID</label>
+                                className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/70">Last
+                                Name</label>
                             <div className="relative group">
                                 <span
-                                    className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">sports_soccer</span>
+                                    className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">person</span>
                                 <input
                                     className="w-full pl-12 bg-surface-container-highest/50 border border-outline-variant/20 rounded-lg text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none input-focus-gold py-3.5 text-sm transition-all"
-                                    onChange={(event) => handleRegisterChange('fplTeamId', event.target.value)}
-                                    placeholder="827391" type="text"
-                                    value={registerForm.fplTeamId} />
+                                    onChange={(event) => handleRegisterChange('lastName', event.target.value)}
+                                    placeholder="Mensah" type="text"
+                                    value={registerForm.lastName} />
                             </div>
                         </div>
                     </div>

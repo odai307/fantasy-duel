@@ -96,10 +96,17 @@ async function getTeamPicks(teamId, eventId) {
   };
 }
 
+async function getFixtures(eventId = null) {
+  const endpoint = eventId ? `/fixtures/?event=${Number(eventId)}` : '/fixtures/';
+  const data = await fetchFplData(endpoint);
+  return Array.isArray(data) ? data : [];
+}
+
 module.exports = {
   getTeamInfo,
   getBootstrapData,
   getEventLive,
   getTeamPicks,
+  getFixtures,
   FplApiError,
 };

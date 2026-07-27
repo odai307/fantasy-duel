@@ -1,14 +1,25 @@
 import { useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { usePoolDetails } from '../hooks/usePoolDetails';
 
 function fullName(user) {
-  return [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Unknown User';
+  const name = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim();
+  return name || user?.fplManagerName || 'Unknown User';
+}
+
+function fplTeamName(user) {
+  const team = user?.fplTeamName?.trim();
+  if (team) {
+    return team;
+  }
+
+  return 'No team linked';
 }
 
 export default function PoolDetailsPage() {
+  const navigate = useNavigate();
   const { poolId } = useParams();
   const location = useLocation();
   const { user } = useAuth();
@@ -31,6 +42,7 @@ export default function PoolDetailsPage() {
     entryFee,
     maxParticipants,
     gameweekLabel,
+    gameweekScoreLabel,
     poolName,
     visibility,
     poolStatus,
@@ -210,7 +222,7 @@ export default function PoolDetailsPage() {
                             className="grid grid-cols-12 px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50 border-b border-outline-variant/10">
                             <div className="col-span-1">Pos</div>
                             <div className="col-span-6">Manager &amp; Team</div>
-                            <div className="col-span-2 text-right">GW Points</div>
+                            <div className="col-span-2 text-right">{gameweekScoreLabel}</div>
                             <div className="col-span-3 text-right">Total Points</div>
                         </div>
                         {/* Participants List */}
@@ -239,6 +251,16 @@ export default function PoolDetailsPage() {
                                           : 'bg-surface-container-low/40 border-white/5'
                                     }`}
                                     key={row.user.id}
+                                    onClick={() => {
+                                      if (!row.user?.fplTeamId) return;
+                                      const poolGameweek = Number(pool?.gameweek);
+                                      const eventIdQuery = Number.isInteger(poolGameweek) && poolGameweek > 0
+                                        ? `&eventId=${poolGameweek}`
+                                        : '';
+                                      navigate(`/lineup?teamId=${row.user.fplTeamId}${eventIdQuery}`);
+                                    }}
+                                    role={row.user?.fplTeamId ? 'button' : undefined}
+                                    tabIndex={row.user?.fplTeamId ? 0 : undefined}
                                 >
                                     <div className={`col-span-1 font-black font-headline text-2xl ${row.rank === 1 ? 'text-primary' : 'text-on-surface-variant/60'}`}>
                                         {String(row.rank).padStart(2, '0')}
@@ -252,15 +274,15 @@ export default function PoolDetailsPage() {
                                                 {row.isCurrentUser ? `You (${fullName(row.user)})` : fullName(row.user)}
                                             </div>
                                             <div className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest font-medium">
-                                                Manager
+                                                {fplTeamName(row.user)}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="col-span-2 text-right font-headline text-xl font-bold text-secondary">
                                         {row.gameweekPoints ?? 0}
                                     </div>
-                                    <div className="col-span-3 text-right font-headline text-xl font-black">
-                                        {row.points ?? 0}
+                                    <div className="col-span-3 text-right font-headline text-xl font-black text-primary">
+                                        {row.totalPoints ?? row.points ?? 0}
                                     </div>
                                 </div>
                             ))}
@@ -294,6 +316,10 @@ export default function PoolDetailsPage() {
                                 <div className="flex justify-between items-center py-4 border-y border-white/5">
                                     <span className="text-xs opacity-60 font-medium">Avg. GW Score</span>
                                     <span className="font-black text-secondary text-lg">{averageGameweekScore}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-xs opacity-60 font-medium">Gameweek</span>
+                                    <span className="font-black text-on-surface text-lg">{gameweekLabel}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-xs opacity-60 font-medium">Status</span>
