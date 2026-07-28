@@ -169,19 +169,6 @@ async function createPool(input, userId) {
     throw makeError(400, `Insufficient wallet balance. You have GHS ${currentBalance.toFixed(2)} available, but entry fee is GHS ${fee.toFixed(2)}. Please deposit funds to continue.`);
   }
 
-  const existingPool = await prisma.pool.findUnique({
-    where: {
-      createdById_gameweek: {
-        createdById: userId,
-        gameweek: input.gameweek,
-      },
-    },
-  });
-
-  if (existingPool) {
-    throw makeError(409, 'You already created a pool for this gameweek');
-  }
-
   try {
     for (let attempt = 0; attempt < MAX_INVITE_CODE_RETRIES; attempt += 1) {
       const inviteCode = randomInviteCode();

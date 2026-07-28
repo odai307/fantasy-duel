@@ -125,7 +125,6 @@ model Pool {
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
 
-  @@unique([createdById, gameweek])
   @@index([createdById])
   @@index([visibility, status])
   @@index([gameweek])
