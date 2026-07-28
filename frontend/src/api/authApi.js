@@ -36,3 +36,11 @@ export function fetchCurrentUser() {
     auth: true,
   }).then((data) => validateAuthResponse(data, 'me'));
 }
+
+export function updateUserProfile(payload) {
+  return apiRequest('/api/auth/profile', {
+    method: 'PUT',
+    body: payload,
+    auth: true,
+  });
+}

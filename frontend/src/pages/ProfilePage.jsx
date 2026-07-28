@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { listDuels } from '../api/duelApi';
 import { listPools } from '../api/poolApi';
 import { getCurrentGameweek, getMyTeamScore, syncMyFplScores } from '../api/fplApi';
+import { updateUserProfile } from '../api/authApi';
 
 function fullName(user) {
   return [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Unknown Manager';
@@ -29,8 +30,10 @@ function resultTone(result) {
 }
 
 export default function ProfilePage() {
-  const { user } = useAuth();
-  const accountName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Unknown Manager';
+  const { user, refreshUser } = useAuth();
+  const accountName = fullName(user);
+  const firstName = user?.firstName || 'Not set';
+  const lastName = user?.lastName || 'Not set';
   const email = user?.email || 'No email provided';
   const fplTeamId = user?.fplTeamId ? `#${user.fplTeamId}` : 'Not set';
   const fplTeamName = user?.fplTeamName || 'Not set';
@@ -45,6 +48,13 @@ export default function ProfilePage() {
   const [myGwScore, setMyGwScore] = useState(0);
   const [duels, setDuels] = useState([]);
   const [joinedPoolsCount, setJoinedPoolsCount] = useState(0);
+
+  // Edit Name Modal State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editFirstName, setEditFirstName] = useState('');
+  const [editLastName, setEditLastName] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -122,24 +132,55 @@ export default function ProfilePage() {
     }
   };
 
+  const openEditModal = () => {
+    setEditFirstName(user?.firstName || '');
+    setEditLastName(user?.lastName || '');
+    setEditError('');
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    setEditLoading(true);
+    setEditError('');
+
+    if (!editFirstName.trim() || !editLastName.trim()) {
+      setEditError('First name and Last name are required');
+      setEditLoading(false);
+      return;
+    }
+
+    try {
+      await updateUserProfile({
+        firstName: editFirstName.trim(),
+        lastName: editLastName.trim(),
+      });
+      await refreshUser();
+      setIsEditModalOpen(false);
+    } catch (err) {
+      setEditError(err.message || 'Failed to update profile');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   return (
     <div className="page-profile bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
       <div className="flex min-h-screen">
         <Sidebar />
 
         <main className="flex-grow lg:ml-64 min-h-screen pb-20 lg:pb-8">
-          <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-[#0e0e0e]/80 backdrop-blur-xl flex justify-between items-center px-8 h-16 w-full border-b border-white/5">
+          <header className="fixed top-0 right-0 left-0 lg:left-64 z-40 bg-[#0e0e0e]/80 backdrop-blur-xl flex justify-between items-center px-8 h-16 w-full border-b border-white/5">
             <div className="flex items-center gap-6">
               <h2 className="font-headline font-black italic text-2xl text-primary uppercase tracking-tighter">My Account</h2>
               <div className="hidden md:flex items-center gap-6">
                 <span className="text-primary font-bold border-b-2 border-primary pb-1 font-headline uppercase text-xs tracking-[0.2em]">Overview</span>
-                <span className="text-on-surface-variant font-headline uppercase text-xs tracking-[0.2em]">Performance</span>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 bg-surface-container-highest px-4 py-1.5 rounded-full border border-outline-variant/10">
                 <span className="text-primary font-bold font-headline tracking-tight text-sm">{Number(user?.walletBalance || 0).toFixed(2)} GHS</span>
-                <span className="material-symbols-outlined text-primary text-xs" style={{ fontVariationSettings: '\'FILL\' 1' }}>account_balance_wallet</span>
+                <span className="material-symbols-outlined text-primary text-xs">account_balance_wallet</span>
               </div>
               <Link className="text-on-surface-variant hover:text-primary text-sm" to="/wallet">Wallet</Link>
             </div>
@@ -160,7 +201,16 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div className="text-center md:text-left flex-grow relative z-10">
-                  <h1 className="text-3xl font-black font-headline tracking-tight text-white uppercase">{accountName}</h1>
+                  <div className="flex items-center justify-center md:justify-start gap-3">
+                    <h1 className="text-3xl font-black font-headline tracking-tight text-white uppercase">{accountName}</h1>
+                    <button
+                      onClick={openEditModal}
+                      className="p-1.5 rounded-lg bg-surface-container-high border border-outline-variant/20 text-primary hover:bg-primary/10 transition-colors"
+                      title="Edit Name"
+                    >
+                      <span className="material-symbols-outlined text-sm">edit</span>
+                    </button>
+                  </div>
                   <p className="text-white/40 font-medium flex items-center justify-center md:justify-start gap-2 mt-2 mb-4 text-sm">
                     <span className="material-symbols-outlined text-xs">mail</span>
                     {email}
@@ -190,27 +240,28 @@ export default function ProfilePage() {
               </div>
             </div>
 
+            {/* Split First Name and Last Name Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="obsidian-card p-6 rounded-2xl border border-outline-variant/20">
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">First Name</p>
+                <p className="text-lg font-black font-headline text-white tracking-tight">{firstName}</p>
+              </div>
+              <div className="obsidian-card p-6 rounded-2xl border border-outline-variant/20">
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">Last Name</p>
+                <p className="text-lg font-black font-headline text-white tracking-tight">{lastName}</p>
+              </div>
               <div className="obsidian-card p-6 rounded-2xl border border-outline-variant/20">
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">FPL Team</p>
                 <p className="text-lg font-black font-headline text-white tracking-tight">{fplTeamName}</p>
                 <p className="text-xs text-white/60 mt-1">{fplTeamId}</p>
               </div>
               <div className="obsidian-card p-6 rounded-2xl border border-outline-variant/20">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">FPL Manager</p>
-                <p className="text-lg font-black font-headline text-white tracking-tight">{fplManagerName}</p>
-              </div>
-              <div className="obsidian-card p-6 rounded-2xl border border-outline-variant/20">
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">Total Duels</p>
                 <p className="text-2xl font-black font-headline text-white tracking-tight">{totalDuels}</p>
               </div>
-              <div className="obsidian-card p-6 rounded-2xl border border-outline-variant/20">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">Win Rate</p>
-                <p className="text-2xl font-black font-headline text-secondary tracking-tight">{winRate}%</p>
-                <p className="text-[10px] text-white/40 mt-1">{wins}W / {closedDuels.length} closed</p>
-              </div>
             </div>
 
+            {/* Recent Duels */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-8">
               <div className="lg:col-span-2">
                 <div className="flex items-center justify-between mb-6">
@@ -251,33 +302,67 @@ export default function ProfilePage() {
                   })}
                 </div>
               </div>
-
-              <div className="space-y-8">
-                <section>
-                  <h2 className="font-headline font-black text-lg mb-6 tracking-wider flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary text-xl">workspace_premium</span>
-                    ACCOUNT SNAPSHOT
-                  </h2>
-                  <div className="obsidian-card rounded-2xl border border-white/5 p-5 space-y-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/60 uppercase tracking-widest">Joined Pools</span>
-                      <span className="text-white font-black">{joinedPoolsCount}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/60 uppercase tracking-widest">FPL Linked</span>
-                      <span className={`font-black ${user?.fplTeamId ? 'text-secondary' : 'text-error'}`}>{user?.fplTeamId ? 'Yes' : 'No'}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/60 uppercase tracking-widest">Current GW</span>
-                      <span className="text-white font-black">{currentGw || '-'}</span>
-                    </div>
-                  </div>
-                </section>
-              </div>
             </div>
+
           </div>
         </main>
       </div>
+
+      {/* Edit Name Modal */}
+      {isEditModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-md bg-surface-container-low border border-outline-variant/20 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-on-surface">Edit Profile Name</h3>
+              <button onClick={() => setIsEditModalOpen(false)} className="text-on-surface-variant hover:text-on-surface p-1 rounded-full">
+                <span className="material-symbols-outlined text-xl">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="space-y-4">
+              {editError ? (
+                <div className="p-3.5 rounded-xl bg-error/10 border border-error/20 text-error text-xs">
+                  {editError}
+                </div>
+              ) : null}
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  value={editFirstName}
+                  onChange={(e) => setEditFirstName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors font-bold"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  value={editLastName}
+                  onChange={(e) => setEditLastName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors font-bold"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={editLoading}
+                className="w-full py-4 rounded-xl bg-primary text-on-primary font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 mt-2"
+              >
+                {editLoading ? 'Saving...' : 'Save Name Changes'}
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

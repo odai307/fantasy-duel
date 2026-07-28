@@ -35,10 +35,18 @@ const setupFpl = asyncHandler(async (req, res) => {
   return res.status(200).json(result);
 });
 
+const updateProfile = asyncHandler(async (req, res) => {
+  const userId = requireAuthenticatedUser(req);
+  const { firstName, lastName } = req.body;
+  const result = await authService.updateProfile(userId, { firstName, lastName });
+  return res.status(200).json(result);
+});
+
 module.exports = {
   register,
   login,
   me,
   validateFpl,
-  setupFpl
+  setupFpl,
+  updateProfile,
 };

@@ -80,20 +80,40 @@ async function getBootstrapData() {
 }
 
 async function getEventLive(eventId) {
-  const data = await fetchFplData(`/event/${eventId}/live/`);
-  return {
-    elements: data.elements, // Player performances in this GW
-  };
+  try {
+    const data = await fetchFplData(`/event/${eventId}/live/`);
+    return {
+      elements: data.elements || [],
+    };
+  } catch (error) {
+    if (error instanceof FplApiError && error.status === 404) {
+      return { elements: [] };
+    }
+    throw error;
+  }
 }
 
 async function getTeamPicks(teamId, eventId) {
-  const data = await fetchFplData(`/entry/${teamId}/event/${eventId}/picks/`);
-  return {
-    activeChip: data.active_chip,
-    automaticSubs: data.automatic_subs,
-    entryHistory: data.entry_history,
-    picks: data.picks, // Selected players
-  };
+  try {
+    const data = await fetchFplData(`/entry/${teamId}/event/${eventId}/picks/`);
+    return {
+      activeChip: data.active_chip,
+      automaticSubs: data.automatic_subs,
+      entryHistory: data.entry_history,
+      picks: data.picks || [],
+    };
+  } catch (error) {
+    if (error instanceof FplApiError && error.status === 404) {
+      return {
+        activeChip: null,
+        automaticSubs: [],
+        entryHistory: {},
+        picks: [],
+        isLocked: false,
+      };
+    }
+    throw error;
+  }
 }
 
 async function getFixtures(eventId = null) {

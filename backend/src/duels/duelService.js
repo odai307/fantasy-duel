@@ -77,32 +77,56 @@ function assertDuelAccess(duel, userId) {
 async function createDuel(input, userId) {
   await assertGameweekOpen(input.gameweek, 'create duels for this gameweek');
 
-  // Check if user has FPL team connected
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { fplTeamId: true },
+    select: { fplTeamId: true, walletBalance: true },
   });
 
   if (!user?.fplTeamId) {
     throw makeError(403, 'You must connect your Fantasy Premier League team before creating duels. Please set up your FPL team in your profile.');
   }
 
+  const fee = Number(input.entryFee || 0);
+  const currentBalance = Number(user.walletBalance || 0);
+  if (fee > 0 && currentBalance < fee) {
+    throw makeError(400, `Insufficient wallet balance. You have GHS ${currentBalance.toFixed(2)} available, but entry fee is GHS ${fee.toFixed(2)}. Please deposit funds to continue.`);
+  }
+
   for (let attempt = 0; attempt < MAX_INVITE_CODE_RETRIES; attempt += 1) {
     const inviteCode = randomInviteCode();
 
     try {
-      const duel = await prisma.duel.create({
-        data: {
-          gameweek: input.gameweek,
-          entryFee: input.entryFee,
-          inviteCode,
-          createdById: userId,
-          status: 'OPEN',
-        },
-        include: {
-          createdBy: { select: { id: true, firstName: true, lastName: true } },
-          opponent: { select: { id: true, firstName: true, lastName: true } },
-        },
+      const duel = await prisma.$transaction(async (tx) => {
+        if (fee > 0) {
+          await tx.user.update({
+            where: { id: userId },
+            data: { walletBalance: { decrement: fee } },
+          });
+          await tx.transaction.create({
+            data: {
+              userId,
+              amount: fee,
+              type: 'ENTRY_FEE',
+              status: 'SUCCESS',
+              reference: `fd_fee_duel_create_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+              description: `Duel Entry Fee (GW ${input.gameweek})`,
+            },
+          });
+        }
+
+        return tx.duel.create({
+          data: {
+            gameweek: input.gameweek,
+            entryFee: input.entryFee,
+            inviteCode,
+            createdById: userId,
+            status: 'OPEN',
+          },
+          include: {
+            createdBy: { select: { id: true, firstName: true, lastName: true } },
+            opponent: { select: { id: true, firstName: true, lastName: true } },
+          },
+        });
       });
 
       return { duel: toSafeDuel(duel, userId) };
@@ -122,7 +146,7 @@ async function joinDuelByCode(userId, { inviteCode }) {
   // Check if user has FPL team connected
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { fplTeamId: true },
+    select: { fplTeamId: true, walletBalance: true },
   });
 
   if (!user?.fplTeamId) {
@@ -169,8 +193,31 @@ async function joinDuelByCode(userId, { inviteCode }) {
     throw makeError(409, 'Duel already has an opponent');
   }
 
+  const fee = Number(duel.entryFee || 0);
+  const currentBalance = Number(user.walletBalance || 0);
+  if (fee > 0 && currentBalance < fee) {
+    throw makeError(400, `Insufficient wallet balance. You have GHS ${currentBalance.toFixed(2)} available, but entry fee is GHS ${fee.toFixed(2)}. Please deposit funds to continue.`);
+  }
+
   const now = new Date();
   const updated = await prisma.$transaction(async (tx) => {
+    if (fee > 0) {
+      await tx.user.update({
+        where: { id: userId },
+        data: { walletBalance: { decrement: fee } },
+      });
+      await tx.transaction.create({
+        data: {
+          userId,
+          amount: fee,
+          type: 'ENTRY_FEE',
+          status: 'SUCCESS',
+          reference: `fd_fee_duel_join_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+          description: `Duel Entry Fee (GW ${duel.gameweek})`,
+        },
+      });
+    }
+
     const updateResult = await tx.duel.updateMany({
       where: {
         id: duel.id,
@@ -328,10 +375,62 @@ async function listDuels(userId, { status, page, limit }) {
   };
 }
 
+async function cancelDuel(id, userId) {
+  const duel = await findDuelByIdOrThrow(id);
+
+  if (duel.createdById !== userId) {
+    throw makeError(403, 'Only the creator can cancel this duel');
+  }
+
+  if (duel.status !== 'OPEN' || duel.opponentId) {
+    throw makeError(409, 'Only open duels without an opponent can be cancelled');
+  }
+
+  const fee = Number(duel.entryFee || 0);
+
+  const cancelledDuel = await prisma.$transaction(async (tx) => {
+    if (fee > 0) {
+      await tx.user.update({
+        where: { id: userId },
+        data: { walletBalance: { increment: fee } },
+      });
+      await tx.transaction.create({
+        data: {
+          userId,
+          amount: fee,
+          type: 'PRIZE_PAYOUT',
+          status: 'SUCCESS',
+          reference: `fd_refund_duel_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+          description: `Refund: Cancelled Duel (GW ${duel.gameweek})`,
+        },
+      });
+    }
+
+    return tx.duel.update({
+      where: { id: duel.id },
+      data: {
+        status: 'CANCELLED',
+        cancelledAt: new Date(),
+      },
+      include: {
+        createdBy: { select: { id: true, firstName: true, lastName: true } },
+        opponent: { select: { id: true, firstName: true, lastName: true } },
+      },
+    });
+  });
+
+  return {
+    cancelled: true,
+    message: fee > 0 ? `Duel cancelled. GHS ${fee.toFixed(2)} entry fee refunded to your wallet!` : 'Duel cancelled successfully.',
+    duel: toSafeDuel(cancelledDuel, userId),
+  };
+}
+
 module.exports = {
   createDuel,
   joinDuelByCode,
   settleDuel,
+  cancelDuel,
   getDuelById,
   listDuels,
 };

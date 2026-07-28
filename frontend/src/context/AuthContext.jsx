@@ -132,6 +132,7 @@ export function AuthProvider({ children }) {
       register,
       logout,
       refreshMe,
+      refreshUser: refreshMe,
       handleFplRequirementError,
     }),
     [token, user, authStatus, isInitializing, login, register, logout, refreshMe, handleFplRequirementError],

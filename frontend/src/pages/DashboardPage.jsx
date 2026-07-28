@@ -145,10 +145,14 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               <h2 className="font-headline uppercase tracking-tighter text-primary font-black italic text-2xl">Dashboard</h2>
             </div>
-            <div className="hidden md:flex gap-8 items-center">
-              <span className="text-primary font-bold border-b-2 border-primary pb-1 font-headline uppercase text-xs tracking-[0.2em]">Overview</span>
-              <span className="text-on-surface-variant font-headline uppercase text-xs tracking-[0.2em]">Insights</span>
-              <span className="text-on-surface-variant font-headline uppercase text-xs tracking-[0.2em]">History</span>
+            <div className="flex items-center gap-4">
+              <Link to="/profile" className="text-on-surface-variant hover:text-primary font-headline uppercase text-xs tracking-[0.2em] transition-colors flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">person</span>
+                <span>Profile</span>
+              </Link>
+              <Link to="/wallet" className="text-primary font-bold border border-primary/20 bg-primary/10 px-3 py-1 rounded-full text-xs tracking-tight">
+                {Number(user?.walletBalance || 0).toFixed(2)} GHS
+              </Link>
             </div>
           </header>
 

@@ -168,10 +168,29 @@ async function validateFplTeam(fplTeamId) {
   };
 }
 
+async function updateProfile(userId, { firstName, lastName }) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw makeError(404, 'User not found');
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      ...(firstName ? { firstName: firstName.trim() } : {}),
+      ...(lastName ? { lastName: lastName.trim() } : {}),
+    },
+  });
+
+  return {
+    message: 'Profile updated successfully',
+    user: toSafeUser(updatedUser),
+  };
+}
+
 module.exports = {
   register,
   login,
   getMe,
   validateFplTeam,
-  setupFpl
+  setupFpl,
+  updateProfile,
 };

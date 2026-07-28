@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getPoolById, getPoolLeaderboard, joinPool } from '../api/poolApi';
 import { getCurrentGameweek } from '../api/fplApi';
 
-export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
+export function usePoolDetails({ poolId, initialPool, viewerUserId, onJoinSuccess }) {
   const [pool, setPool] = useState(initialPool || null);
   const [loading, setLoading] = useState(Boolean(poolId));
   const [error, setError] = useState('');
@@ -119,6 +119,9 @@ export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
         : {};
       const data = await joinPool(poolId, payload);
       setJoinSuccess(data?.message || 'Successfully joined pool.');
+      if (onJoinSuccess) {
+        await onJoinSuccess();
+      }
       await Promise.all([loadLeaderboard(), loadPool()]);
       setIsInviteModalOpen(false);
       setInviteCode('');
@@ -127,7 +130,7 @@ export function usePoolDetails({ poolId, initialPool, viewerUserId }) {
     } finally {
       setJoinLoading(false);
     }
-  }, [loadLeaderboard, loadPool, poolId, visibility]);
+  }, [loadLeaderboard, loadPool, poolId, visibility, onJoinSuccess]);
 
   const handleJoinClick = useCallback(() => {
     if (isJoined || isPoolFull || joinLoading || isJoinClosed) return;

@@ -1,35 +1,52 @@
-const { createClient } = require('redis');
+let createClient;
+try {
+  ({ createClient } = require('redis'));
+} catch {
+  createClient = null;
+}
+
 const env = require('./config/env');
 
 const store = new Map();
 const inflight = new Map();
 let redisClient = null;
 let redisReady = false;
+let redisConnectFailed = false;
 
 async function getRedisClient() {
+  if (!createClient || redisConnectFailed) {
+    return null;
+  }
   if (redisClient) {
     return redisClient;
   }
 
-  redisClient = createClient({
-    url: env.redisUrl,
-  });
-
-  redisClient.on('error', (error) => {
-    redisReady = false;
-    console.error('[cache] redis error; falling back to in-memory cache', {
-      message: error?.message || String(error),
+  try {
+    redisClient = createClient({
+      url: env.redisUrl,
+      socket: {
+        reconnectStrategy: false,
+      },
     });
-  });
 
-  redisClient.on('ready', () => {
+    redisClient.on('error', (error) => {
+      redisReady = false;
+      redisConnectFailed = true;
+    });
+
+    redisClient.on('ready', () => {
+      redisReady = true;
+      console.log('[cache] redis connected');
+    });
+
+    await redisClient.connect();
     redisReady = true;
-    console.log('[cache] redis connected');
-  });
-
-  await redisClient.connect();
-  redisReady = true;
-  return redisClient;
+    return redisClient;
+  } catch (error) {
+    redisConnectFailed = true;
+    redisReady = false;
+    return null;
+  }
 }
 
 function nowMs() {

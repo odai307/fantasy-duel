@@ -29,6 +29,13 @@ const settleDuel = asyncHandler(async (req, res) => {
   return res.status(200).json(result);
 });
 
+const cancelDuel = asyncHandler(async (req, res) => {
+  const userId = requireAuthenticatedUser(req);
+  const { id } = validateDuelIdParams(req.params);
+  const result = await duelService.cancelDuel(id, userId);
+  return res.status(200).json(result);
+});
+
 const getDuelById = asyncHandler(async (req, res) => {
   const userId = requireAuthenticatedUser(req);
   const { id } = validateDuelIdParams(req.params);
@@ -47,6 +54,7 @@ module.exports = {
   createDuel,
   joinDuelByCode,
   settleDuel,
+  cancelDuel,
   getDuelById,
   listDuels,
 };

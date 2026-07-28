@@ -16,7 +16,7 @@ function gameweekLabelFromValue(gameweek) {
 
 export default function CreatePoolPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, isInitializing, userFullName } = useAuth();
+  const { isAuthenticated, isInitializing, userFullName, refreshUser } = useAuth();
 
   const [poolName, setPoolName] = useState('');
   const [visibility, setVisibility] = useState('PUBLIC');
@@ -95,6 +95,10 @@ export default function CreatePoolPage() {
         maxParticipants: noMaxParticipants ? null : participantsValue,
         visibility,
       });
+
+      if (refreshUser) {
+        await refreshUser();
+      }
 
       navigate(`/pools/${data.pool.id}`);
     } catch (error) {

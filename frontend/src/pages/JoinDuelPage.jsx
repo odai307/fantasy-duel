@@ -3,8 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { joinDuelByCode } from '../api/duelApi';
 
+import { useAuth } from '../context/AuthContext';
+
 export default function JoinDuelPage() {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
   const [inviteCode, setInviteCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -26,6 +29,9 @@ export default function JoinDuelPage() {
     try {
       const data = await joinDuelByCode(code);
       setSuccess(data?.message || 'Joined duel.');
+      if (refreshUser) {
+        await refreshUser();
+      }
       const duelId = data?.duel?.id;
       if (duelId) {
         navigate(`/duels/${duelId}`);

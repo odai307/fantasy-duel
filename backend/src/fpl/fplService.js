@@ -86,10 +86,25 @@ async function getTeamScore(teamId, eventId) {
 async function getCurrentGameweek() {
   try {
     const bootstrap = await getBootstrapData();
-    const currentEvent = bootstrap.events.find(event => event.is_current);
-    return currentEvent ? currentEvent.id : null;
+    const events = bootstrap.events || [];
+
+    // 1. If a gameweek is currently live/active
+    const currentEvent = events.find((event) => event && event.is_current);
+    if (currentEvent) return Number(currentEvent.id);
+
+    // 2. Pre-season / between gameweeks: get upcoming gameweek
+    const nextEvent = events.find((event) => event && event.is_next);
+    if (nextEvent) return Number(nextEvent.id);
+
+    // 3. Post-season: get latest completed gameweek
+    const finishedEvent = events.filter((event) => event && event.finished).pop();
+    if (finishedEvent) return Number(finishedEvent.id);
+
+    // 4. Safety fallback
+    return 1;
   } catch (error) {
-    throw makeError(500, 'Failed to fetch current gameweek', 'FPL_GAMEWEEK_ERROR', error.message);
+    console.error('Failed to fetch current gameweek from FPL API:', error?.message);
+    return 1;
   }
 }
 

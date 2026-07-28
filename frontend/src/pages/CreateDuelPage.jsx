@@ -10,8 +10,11 @@ function formatMoney(value) {
   return `GHS ${Number(value || 0).toFixed(2)}`;
 }
 
+import { useAuth } from '../context/AuthContext';
+
 export default function CreateDuelPage() {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
   const [gameweek, setGameweek] = useState(0);
   const [openGameweeks, setOpenGameweeks] = useState([]);
   const [gameweekLoading, setGameweekLoading] = useState(true);
@@ -70,6 +73,10 @@ export default function CreateDuelPage() {
         gameweek: Number(gameweek),
         entryFee: Number(entryFee),
       });
+
+      if (refreshUser) {
+        await refreshUser();
+      }
 
       navigate(`/duels/${data?.duel?.id}`);
     } catch (submitError) {

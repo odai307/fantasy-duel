@@ -98,33 +98,45 @@ export default function LineupPage() {
 
             {!loading && !error && lineup ? (
               <>
-                <div className="relative w-full rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 md:p-8 shadow-2xl bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),transparent_60%)]">
-                  <div className="flex flex-col gap-8">
-                    <div className="flex justify-center">
-                      {startersByPosition.GKP.map((pick) => <PlayerDot key={`gkp-${pick.elementId}`} pick={pick} />)}
-                    </div>
-                    <div className="flex justify-center gap-4 md:gap-10 flex-wrap">
-                      {startersByPosition.DEF.map((pick) => <PlayerDot key={`def-${pick.elementId}`} pick={pick} />)}
-                    </div>
-                    <div className="flex justify-center gap-4 md:gap-8 flex-wrap">
-                      {startersByPosition.MID.map((pick) => <PlayerDot key={`mid-${pick.elementId}`} pick={pick} />)}
-                    </div>
-                    <div className="flex justify-center gap-6 md:gap-14 flex-wrap">
-                      {startersByPosition.FWD.map((pick) => <PlayerDot key={`fwd-${pick.elementId}`} pick={pick} />)}
-                    </div>
+                {(lineup.starters || []).length === 0 ? (
+                  <div className="rounded-xl border border-primary/30 bg-primary/10 p-8 text-center space-y-3">
+                    <span className="material-symbols-outlined text-4xl text-primary">lock_clock</span>
+                    <h3 className="text-lg font-bold text-on-surface">Gameweek {lineup.eventId} Lineup Locked Until Deadline</h3>
+                    <p className="text-sm text-on-surface-variant max-w-md mx-auto">
+                      Official Premier League manager squad picks for Gameweek {lineup.eventId} will lock and display here automatically after the August 21 deadline passes!
+                    </p>
                   </div>
-                </div>
-
-                <div className="rounded-xl border border-outline-variant/15 bg-surface-container-low p-4">
-                  <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Bench</h3>
-                  <div className="flex gap-4 overflow-x-auto pb-1">
-                    {(lineup.bench || []).map((pick) => (
-                      <div key={`bench-${pick.elementId}`} className="min-w-[90px]">
-                        <PlayerDot bench pick={pick} />
+                ) : (
+                  <>
+                    <div className="relative w-full rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-4 md:p-8 shadow-2xl bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),transparent_60%)]">
+                      <div className="flex flex-col gap-8">
+                        <div className="flex justify-center">
+                          {startersByPosition.GKP.map((pick) => <PlayerDot key={`gkp-${pick.elementId}`} pick={pick} />)}
+                        </div>
+                        <div className="flex justify-center gap-4 md:gap-10 flex-wrap">
+                          {startersByPosition.DEF.map((pick) => <PlayerDot key={`def-${pick.elementId}`} pick={pick} />)}
+                        </div>
+                        <div className="flex justify-center gap-4 md:gap-8 flex-wrap">
+                          {startersByPosition.MID.map((pick) => <PlayerDot key={`mid-${pick.elementId}`} pick={pick} />)}
+                        </div>
+                        <div className="flex justify-center gap-6 md:gap-14 flex-wrap">
+                          {startersByPosition.FWD.map((pick) => <PlayerDot key={`fwd-${pick.elementId}`} pick={pick} />)}
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                    </div>
+
+                    <div className="rounded-xl border border-outline-variant/15 bg-surface-container-low p-4">
+                      <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Bench</h3>
+                      <div className="flex gap-4 overflow-x-auto pb-1">
+                        {(lineup.bench || []).map((pick) => (
+                          <div key={`bench-${pick.elementId}`} className="min-w-[90px]">
+                            <PlayerDot bench pick={pick} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
               </>
             ) : null}
           </div>

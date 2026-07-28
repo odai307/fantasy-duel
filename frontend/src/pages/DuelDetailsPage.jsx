@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { getDuelById, settleDuel } from '../api/duelApi';
+import { getDuelById, settleDuel, cancelDuel } from '../api/duelApi';
+import { useAuth } from '../context/AuthContext';
 
 function fullName(user) {
   return [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Pending';
@@ -21,10 +22,13 @@ function resultLabel(result) {
 export default function DuelDetailsPage() {
   const { duelId } = useParams();
   const resolvedId = duelId;
+  const { refreshUser } = useAuth();
+
   const [duel, setDuel] = useState(null);
   const [loading, setLoading] = useState(Boolean(resolvedId));
   const [error, setError] = useState('');
   const [settling, setSettling] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const [settleMessage, setSettleMessage] = useState('');
 
   useEffect(() => {
@@ -70,6 +74,26 @@ export default function DuelDetailsPage() {
     }
   }
 
+  async function handleCancel() {
+    if (!resolvedId) return;
+    setCancelling(true);
+    setSettleMessage('');
+    setError('');
+
+    try {
+      const data = await cancelDuel(resolvedId);
+      setDuel(data?.duel || null);
+      setSettleMessage(data?.message || 'Duel cancelled.');
+      if (refreshUser) {
+        await refreshUser();
+      }
+    } catch (cancelError) {
+      setError(cancelError.message || 'Failed to cancel duel');
+    } finally {
+      setCancelling(false);
+    }
+  }
+
   return (
     <div className="page-duel-details bg-background text-on-background font-body min-h-screen selection:bg-primary selection:text-on-primary">
       <div className="flex min-h-screen">
@@ -94,38 +118,38 @@ export default function DuelDetailsPage() {
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                   <div>
                     <h1 className="font-headline text-3xl md:text-4xl font-black tracking-tight">Matchup Details</h1>
-                    <p className="text-on-surface-variant mt-1">Gameweek {duel.gameweek} • {duel.status} • {resultLabel(duel.result)}</p>
+                    <p className="text-on-surface-variant mt-1">Gameweek {duel.gameweek} • Status: <span className="font-bold text-primary">{duel.status}</span> • {resultLabel(duel.result)}</p>
                   </div>
                   <div className="px-4 py-2 rounded-md bg-surface-container-lowest border border-outline-variant/20 text-xs uppercase tracking-widest">
                     Head-To-Head Entry: <span className="text-primary font-black">{formatMoney(duel.entryFee)}</span>
                   </div>
                 </div>
-                {settleMessage ? <p className="text-secondary mb-4 text-sm">{settleMessage}</p> : null}
+                {settleMessage ? <p className="text-secondary mb-4 text-sm font-bold bg-secondary/10 p-3 rounded-lg border border-secondary/20">{settleMessage}</p> : null}
 
                 <section className="bg-surface-container-high rounded-xl p-1 border border-outline-variant/15 mb-8 overflow-hidden">
                   <div className="bg-surface-container rounded-lg p-6 md:p-8 relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-surface-container-high/30 via-transparent to-surface-container-lowest/60 pointer-events-none" />
-                  <div className="grid grid-cols-1 lg:grid-cols-11 gap-6 items-center">
-                    <div className="lg:col-span-5 bg-surface-container-low rounded-xl p-6 border border-primary/20 relative z-10">
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-primary mb-2">Creator</p>
-                      <h3 className="font-headline text-2xl font-black">{fullName(duel.createdBy)}</h3>
-                      <p className="text-on-surface-variant text-sm mt-2 mb-4">Entry: {formatMoney(duel.entryFee)}</p>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-1">GW Score</p>
-                      <p className="font-display font-black text-6xl leading-none text-primary">{creatorScore}</p>
-                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-11 gap-6 items-center">
+                      <div className="lg:col-span-5 bg-surface-container-low rounded-xl p-6 border border-primary/20 relative z-10">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-primary mb-2">Creator</p>
+                        <h3 className="font-headline text-2xl font-black">{fullName(duel.createdBy)}</h3>
+                        <p className="text-on-surface-variant text-sm mt-2 mb-4">Entry: {formatMoney(duel.entryFee)}</p>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-1">GW Score</p>
+                        <p className="font-display font-black text-6xl leading-none text-primary">{creatorScore}</p>
+                      </div>
 
-                    <div className="lg:col-span-1 flex justify-center relative z-10">
-                      <div className="w-12 h-12 rounded-full bg-surface-container-lowest border border-outline-variant/20 flex items-center justify-center font-headline font-black text-on-surface-variant">VS</div>
-                    </div>
+                      <div className="lg:col-span-1 flex justify-center relative z-10">
+                        <div className="w-12 h-12 rounded-full bg-surface-container-lowest border border-outline-variant/20 flex items-center justify-center font-headline font-black text-on-surface-variant">VS</div>
+                      </div>
 
-                    <div className="lg:col-span-5 bg-surface-container-low rounded-xl p-6 border border-outline-variant/20 relative z-10">
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-2">Opponent</p>
-                      <h3 className="font-headline text-2xl font-black">{fullName(duel.opponent)}</h3>
-                      <p className="text-on-surface-variant text-sm mt-2 mb-4">Status: {duel.opponent ? 'Joined' : 'Awaiting join'}</p>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-1">GW Score</p>
-                      <p className="font-display font-black text-6xl leading-none text-on-surface-variant">{opponentScore}</p>
+                      <div className="lg:col-span-5 bg-surface-container-low rounded-xl p-6 border border-outline-variant/20 relative z-10">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-2">Opponent</p>
+                        <h3 className="font-headline text-2xl font-black">{fullName(duel.opponent)}</h3>
+                        <p className="text-on-surface-variant text-sm mt-2 mb-4">Status: {duel.opponent ? 'Joined' : 'Awaiting join'}</p>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-1">GW Score</p>
+                        <p className="font-display font-black text-6xl leading-none text-on-surface-variant">{opponentScore}</p>
+                      </div>
                     </div>
-                  </div>
                   </div>
                 </section>
 
@@ -140,29 +164,51 @@ export default function DuelDetailsPage() {
                       {duel.closedAt ? (
                         <p><span className="text-on-surface-variant">Closed:</span> {new Date(duel.closedAt).toLocaleString()}</p>
                       ) : null}
+                      {duel.cancelledAt ? (
+                        <p><span className="text-error font-bold">Cancelled:</span> {new Date(duel.cancelledAt).toLocaleString()}</p>
+                      ) : null}
                     </div>
                   </div>
 
-                  <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
-                    <h4 className="font-headline font-bold mb-4">Invite</h4>
-                    {duel.inviteCode ? (
-                      <div className="rounded-lg bg-primary/10 border border-primary/30 px-4 py-3">
-                        <p className="text-xs text-on-surface-variant uppercase tracking-widest">Your invite code</p>
-                        <p className="text-2xl font-black tracking-wider text-primary">{duel.inviteCode}</p>
-                      </div>
-                    ) : (
-                      <p className="text-on-surface-variant text-sm">Invite code hidden. Only the duel creator can view it.</p>
-                    )}
-                    {duel.status === 'LOCKED' ? (
-                      <button
-                        className="mt-4 w-full py-3 rounded-lg bg-primary text-on-primary text-xs font-black uppercase tracking-widest disabled:opacity-60"
-                        disabled={settling}
-                        onClick={handleSettle}
-                        type="button"
-                      >
-                        {settling ? 'Settling...' : 'Settle Duel'}
-                      </button>
-                    ) : null}
+                  <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10 flex flex-col justify-between">
+                    <div>
+                      <h4 className="font-headline font-bold mb-4">Invite & Controls</h4>
+                      {duel.inviteCode ? (
+                        <div className="rounded-lg bg-primary/10 border border-primary/30 px-4 py-3">
+                          <p className="text-xs text-on-surface-variant uppercase tracking-widest">Your invite code</p>
+                          <p className="text-2xl font-black tracking-wider text-primary">{duel.inviteCode}</p>
+                        </div>
+                      ) : (
+                        <p className="text-on-surface-variant text-sm">Invite code hidden. Only the duel creator can view it.</p>
+                      )}
+                    </div>
+
+                    <div className="mt-6 space-y-3">
+                      {/* Settle Button */}
+                      {duel.status === 'LOCKED' ? (
+                        <button
+                          className="w-full py-3 rounded-lg bg-primary text-on-primary text-xs font-black uppercase tracking-widest disabled:opacity-60"
+                          disabled={settling}
+                          onClick={handleSettle}
+                          type="button"
+                        >
+                          {settling ? 'Settling...' : 'Settle Duel'}
+                        </button>
+                      ) : null}
+
+                      {/* Cancel Duel & Refund Button */}
+                      {duel.isCreator && duel.status === 'OPEN' ? (
+                        <button
+                          className="w-full py-3 rounded-lg bg-error/10 border border-error/30 text-error hover:bg-error/20 text-xs font-black uppercase tracking-widest transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                          disabled={cancelling}
+                          onClick={handleCancel}
+                          type="button"
+                        >
+                          <span className="material-symbols-outlined text-base">cancel</span>
+                          {cancelling ? 'Cancelling...' : `Cancel Duel & Refund ${formatMoney(duel.entryFee)}`}
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                 </section>
               </>

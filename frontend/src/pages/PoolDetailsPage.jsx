@@ -22,7 +22,7 @@ export default function PoolDetailsPage() {
   const navigate = useNavigate();
   const { poolId } = useParams();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const {
     pool,
     loading,
@@ -57,6 +57,7 @@ export default function PoolDetailsPage() {
     poolId,
     initialPool: location.state?.pool || null,
     viewerUserId: user?.id || null,
+    onJoinSuccess: refreshUser,
   });
 
   return (

@@ -10,5 +10,6 @@ router.post('/login', authController.login);
 router.post('/validate-fpl', authMiddleware, authController.validateFpl);
 router.post('/setup-fpl', authMiddleware, authController.setupFpl);
 router.get('/me', authMiddleware, authController.me);
+router.put('/profile', authMiddleware, authController.updateProfile);
 
 module.exports = router;

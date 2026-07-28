@@ -154,14 +154,19 @@ async function assertPoolAccess(pool, userId) {
 async function createPool(input, userId) {
   await assertGameweekOpen(input.gameweek, 'create or join pools for this gameweek');
 
-  // Check if user has FPL team connected
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { fplTeamId: true },
+    select: { fplTeamId: true, walletBalance: true },
   });
 
   if (!user?.fplTeamId) {
     throw makeError(403, 'You must connect your Fantasy Premier League team before creating pools. Please set up your FPL team in your profile.');
+  }
+
+  const fee = Number(input.entryFee || 0);
+  const currentBalance = Number(user.walletBalance || 0);
+  if (fee > 0 && currentBalance < fee) {
+    throw makeError(400, `Insufficient wallet balance. You have GHS ${currentBalance.toFixed(2)} available, but entry fee is GHS ${fee.toFixed(2)}. Please deposit funds to continue.`);
   }
 
   const existingPool = await prisma.pool.findUnique({
@@ -183,6 +188,23 @@ async function createPool(input, userId) {
 
       try {
         const pool = await prisma.$transaction(async (tx) => {
+          if (fee > 0) {
+            await tx.user.update({
+              where: { id: userId },
+              data: { walletBalance: { decrement: fee } },
+            });
+            await tx.transaction.create({
+              data: {
+                userId,
+                amount: fee,
+                type: 'ENTRY_FEE',
+                status: 'SUCCESS',
+                reference: `fd_fee_pool_create_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+                description: `Pool Entry Fee: ${input.name}`,
+              },
+            });
+          }
+
           const createdPool = await tx.pool.create({
             data: {
               name: input.name,
@@ -533,7 +555,7 @@ async function joinPool(poolId, userId, { inviteCode }) {
   // Check if user has FPL team connected
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { fplTeamId: true },
+    select: { fplTeamId: true, walletBalance: true },
   });
 
   if (!user?.fplTeamId) {
@@ -573,6 +595,12 @@ async function joinPool(poolId, userId, { inviteCode }) {
     }
   }
 
+  const fee = Number(pool.entryFee || 0);
+  const currentBalance = Number(user.walletBalance || 0);
+  if (fee > 0 && currentBalance < fee) {
+    throw makeError(400, `Insufficient wallet balance. You have GHS ${currentBalance.toFixed(2)} available, but entry fee is GHS ${fee.toFixed(2)}. Please deposit funds to continue.`);
+  }
+
   let participant;
   try {
     participant = await prisma.$transaction(async (tx) => {
@@ -608,7 +636,23 @@ async function joinPool(poolId, userId, { inviteCode }) {
         }
       }
 
-      // TODO(wallet): for paid pools, enforce balance checks and atomic wallet debit before join.
+      if (fee > 0) {
+        await tx.user.update({
+          where: { id: userId },
+          data: { walletBalance: { decrement: fee } },
+        });
+        await tx.transaction.create({
+          data: {
+            userId,
+            amount: fee,
+            type: 'ENTRY_FEE',
+            status: 'SUCCESS',
+            reference: `fd_fee_pool_join_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+            description: `Pool Entry Fee: ${pool.name}`,
+          },
+        });
+      }
+
       return tx.poolParticipant.create({
         data: {
           poolId,

@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/', authMiddleware, duelController.createDuel);
 router.post('/join-by-code', authMiddleware, duelController.joinDuelByCode);
 router.post('/:id/settle', authMiddleware, duelController.settleDuel);
+router.post('/:id/cancel', authMiddleware, duelController.cancelDuel);
 router.get('/', authMiddleware, duelController.listDuels);
 router.get('/:id', authMiddleware, duelController.getDuelById);
 

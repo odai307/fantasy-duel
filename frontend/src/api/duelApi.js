@@ -37,6 +37,13 @@ export function settleDuel(id) {
   }).then(validateDuelByIdResponse);
 }
 
+export function cancelDuel(id) {
+  return apiRequest(`/api/duels/${id}/cancel`, {
+    method: 'POST',
+    auth: true,
+  }).then(validateDuelByIdResponse);
+}
+
 export function listDuels({ status = 'all', page = 1, limit = 30 } = {}) {
   const query = new URLSearchParams({
     status,
