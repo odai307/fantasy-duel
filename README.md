@@ -96,10 +96,10 @@ Create a `.env` file in `backend/`:
 ```env
 PORT=3000
 NODE_ENV=development
-DATABASE_URL=postgresql://postgres:password@localhost:5432/fantasyduel?schema=public
-JWT_SECRET=your_super_secret_jwt_key
-PAYSTACK_SECRET_KEY=sk_test_2e5f70afb78c048c431b7c2eb06a24fbc81019b7
-PAYSTACK_WEBHOOK_SECRET=sk_test_2e5f70afb78c048c431b7c2eb06a24fbc81019b7
+DATABASE_URL=postgresql://your_db_user:your_db_password@localhost:5432/fantasyduel?schema=public
+JWT_SECRET=your_jwt_secret_key_here
+PAYSTACK_SECRET_KEY=your_paystack_secret_key_here
+PAYSTACK_WEBHOOK_SECRET=your_paystack_webhook_secret_here
 ```
 
 Push database schema migrations to PostgreSQL:
@@ -129,7 +129,7 @@ Create a `.env` file in `frontend/`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:3000
-VITE_PAYSTACK_PUBLIC_KEY=pk_test_ed28bfd86569538d376d375d38e375d51ef77737
+VITE_PAYSTACK_PUBLIC_KEY=your_paystack_public_key_here
 ```
 
 Start the frontend development server:
