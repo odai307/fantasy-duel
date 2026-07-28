@@ -1,6 +1,7 @@
 import { clearAuthToken, getAuthToken } from '../utils/authUtils';
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+export const API_BASE_URL = rawBaseUrl.replace(/\/+$/, '');
 
 function buildHeaders(headers, body, auth, optionalAuth) {
   const nextHeaders = { ...headers };
@@ -32,7 +33,8 @@ function parseJsonSafely(text) {
 
 export async function apiRequest(path, options = {}) {
   const { method = 'GET', body, headers = {}, auth = false, optionalAuth = false, signal } = options;
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const response = await fetch(`${API_BASE_URL}${cleanPath}`, {
     method,
     headers: buildHeaders(headers, body, auth, optionalAuth),
     body: body && !(body instanceof FormData) ? JSON.stringify(body) : body,
