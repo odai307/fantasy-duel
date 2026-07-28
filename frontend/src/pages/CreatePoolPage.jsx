@@ -298,7 +298,7 @@ export default function CreatePoolPage() {
                             onChange={(event) => setMaxParticipants(event.target.value)}
                             required
                             type="number"
-                            value={participantsValue}
+                            value={maxParticipants}
                           />
                         </div>
                       )}
@@ -329,7 +329,7 @@ export default function CreatePoolPage() {
                         required
                         step="0.01"
                         type="number"
-                        value={entryFeeValue}
+                        value={entryFee}
                       />
                     </div>
                   </div>
