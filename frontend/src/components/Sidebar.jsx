@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const NAV_ITEMS = [
@@ -19,48 +19,40 @@ export default function Sidebar({
 }) {
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
   const userName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Manager';
 
   const closeMobile = () => setMobileOpen(false);
 
   return (
     <>
-      {/* Mobile Top Header (Visible on < lg screens) */}
-      <div className={`lg:hidden fixed top-0 left-0 right-0 h-16 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 px-4 flex items-center justify-between z-40`}>
-        <Link to="/dashboard" className="flex items-center gap-2" onClick={closeMobile}>
-          <span className="text-lg font-black text-primary tracking-widest font-headline">FantasyDuel GH</span>
-        </Link>
+      {/* ── Mobile Floating Hamburger Button (FAB) ── */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        aria-label="Open navigation menu"
+        className={`lg:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-on-primary shadow-xl shadow-black/40 flex items-center justify-center hover:brightness-110 active:scale-95 transition-all ${
+          mobileOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+        }`}
+        style={{ zIndex: 60 }}
+      >
+        <span className="material-symbols-outlined text-2xl">menu</span>
+      </button>
 
-        <div className="flex items-center gap-3">
-          {user ? (
-            <Link to="/wallet" className="text-primary font-bold border border-primary/20 bg-primary/10 px-2.5 py-1 rounded-full text-[11px] tracking-tight">
-              {Number(user?.walletBalance || 0).toFixed(2)} GHS
-            </Link>
-          ) : null}
-
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle navigation menu"
-            className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center border border-outline-variant/30 text-on-surface hover:text-primary transition-colors"
-          >
-            <span className="material-symbols-outlined text-2xl">{mobileOpen ? 'close' : 'menu'}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Backdrop Overlay */}
+      {/* ── Mobile Backdrop Overlay ── */}
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 transition-opacity"
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+          style={{ zIndex: 60 }}
           onClick={closeMobile}
         />
       )}
 
-      {/* Mobile Slide-Out Drawer Navigation Panel */}
+      {/* ── Mobile Slide-Out Drawer ── */}
       <div
-        className={`lg:hidden fixed top-0 left-0 h-full w-72 bg-surface border-r border-outline-variant/30 p-6 flex flex-col gap-4 z-50 transition-transform duration-300 ease-in-out shadow-2xl ${
+        className={`lg:hidden fixed top-0 left-0 h-full w-72 bg-surface border-r border-outline-variant/30 p-6 flex flex-col gap-4 transition-transform duration-300 ease-in-out shadow-2xl ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        style={{ zIndex: 61 }}
       >
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -133,7 +125,7 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* Desktop Sidebar (Visible on >= lg screens) */}
+      {/* ── Desktop Sidebar (>= lg screens) ── */}
       <aside
         className={`h-screen w-64 hidden ${breakpoint}:flex flex-col border-r border-outline-variant/30 bg-surface py-8 px-4 gap-4 fixed left-0 ${topOffsetClass} z-40`}
       >
@@ -171,7 +163,6 @@ export default function Sidebar({
             {ctaLabel}
           </Link>
 
-          {/* User Card & Logout Button */}
           {user ? (
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/15 flex items-center justify-between">
               <Link to="/profile" className="flex items-center gap-2.5 min-w-0">
